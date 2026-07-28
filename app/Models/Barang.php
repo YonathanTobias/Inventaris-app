@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Barang extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    // Relasi ke Kategori
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
+    }
+
+    // Relasi ke Ruangan
+    public function ruangan()
+    {
+        return $this->belongsTo(Ruangan::class);
+    }
+
+    // Relasi ke Riwayat Mutasi
+    public function mutasis()
+    {
+        return $this->hasMany(Mutasi::class);
+    }
+}
