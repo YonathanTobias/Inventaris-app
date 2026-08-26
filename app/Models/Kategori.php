@@ -9,7 +9,9 @@ class Kategori extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'nama_kategori',
+    ];
 
     // Relasi: Satu kategori bisa dimiliki oleh banyak barang
     public function barangs()

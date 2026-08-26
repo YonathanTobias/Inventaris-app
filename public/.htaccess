@@ -5,6 +5,56 @@
 
     RewriteEngine On
 
+    # ----------------------------------------------------------------------
+    # 1. BLOKIR AKSES KE FILE TERSEMBUNYI & FILE SENSITIF (.env, .git, .sql, .log, dll)
+    # ----------------------------------------------------------------------
+    <FilesMatch "^\.">
+        <IfModule mod_authz_core.c>
+            Require all denied
+        </IfModule>
+        <IfModule !mod_authz_core.c>
+            Order allow,deny
+            Deny from all
+        </IfModule>
+    </FilesMatch>
+
+    <FilesMatch "\.(env|log|sql|ini|conf|bak|config|sh|bat|yml|yaml|blade\.php|lock|json)$">
+        <IfModule mod_authz_core.c>
+            Require all denied
+        </IfModule>
+        <IfModule !mod_authz_core.c>
+            Order allow,deny
+            Deny from all
+        </IfModule>
+    </FilesMatch>
+
+    # ----------------------------------------------------------------------
+    # 2. BLOKIR EKSEKUSI WEBSHELL / BACKDOOR PHP DI DALAM PUBLIC (KECUALI index.php)
+    # ----------------------------------------------------------------------
+    # Jika hacker berhasil upload file backdoor.php, shell.php, alfa.php, wso.php, dll,
+    # Apache akan memblokir 403 Forbidden secara total dan menolak mengeksekusinya.
+    <FilesMatch "^(?!index\.php$).*\.(php|php[0-9]|phtml|phar|inc|cgi|pl|exe|sh)$">
+        <IfModule mod_authz_core.c>
+            Require all denied
+        </IfModule>
+        <IfModule !mod_authz_core.c>
+            Order allow,deny
+            Deny from all
+        </IfModule>
+    </FilesMatch>
+
+    # ----------------------------------------------------------------------
+    # 3. BLOKIR QUERY INJEKSI MALICIOUS / EXPLOIT STRINGS
+    # ----------------------------------------------------------------------
+    RewriteCond %{QUERY_STRING} (eval\(|base64_decode|passthru|shell_exec|system\(|popen\(|proc_open) [NC,OR]
+    RewriteCond %{QUERY_STRING} (GLOBALS|_REQUEST|_SERVER|HTTP_USER_AGENT) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\.\./|\.\.\\|/etc/passwd|/proc/self/environ) [NC,OR]
+    RewriteCond %{QUERY_STRING} (<script|%3Cscript|javascript:) [NC]
+    RewriteRule .* - [F,L]
+
+    # ----------------------------------------------------------------------
+    # 4. LARAVEL ROUTING & AUTHORIZATION HEADERS
+    # ----------------------------------------------------------------------
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -18,8 +68,31 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # Send Requests To Front Controller (index.php)...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# 5. HTTP SECURITY HEADERS
+# ----------------------------------------------------------------------
+<IfModule mod_headers.c>
+    # Mencegah Clickjacking (Website tidak bisa di-embed di iframe situs penipu)
+    Header set X-Frame-Options "SAMEORIGIN"
+
+    # Mencegah MIME Type Sniffing
+    Header set X-Content-Type-Options "nosniff"
+
+    # Proteksi XSS Filter di browser lawas
+    Header set X-XSS-Protection "1; mode=block"
+
+    # Mengontrol pengiriman data referrer
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Menonaktifkan fitur sensitif browser yang tidak digunakan
+    Header set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+
+    # Hapus informasi versi server yang berpotensi dibaca hacker
+    Header unset X-Powered-By
 </IfModule>

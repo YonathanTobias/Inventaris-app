@@ -14,44 +14,85 @@ class BarangController extends Controller
     {
         $query = Barang::with(['kategori', 'ruangan']);
 
-        // Filter Pencarian & Ruangan
-        if ($request->search) {
-            $query->where('nama_barang', 'like', '%' . $request->search . '%')
-                  ->orWhere('kode_barang', 'like', '%' . $request->search . '%');
+        // Filter Pencarian & Ruangan & Kondisi & Kategori
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama_barang', 'like', '%' . $search . '%')
+                  ->orWhere('kode_barang', 'like', '%' . $search . '%')
+                  ->orWhere('tahun_pengadaan', 'like', '%' . $search . '%');
+            });
         }
-        if ($request->ruangan_id) {
+        if ($request->filled('ruangan_id')) {
             $query->where('ruangan_id', $request->ruangan_id);
+        }
+        if ($request->filled('kategori_id')) {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+        if ($request->filled('kondisi')) {
+            $query->where('kondisi', $request->kondisi);
         }
 
         $barangs = $query->latest()->get();
         $ruangans = Ruangan::all();
         $kategoris = Kategori::all();
 
-        return view('barang.index', compact('barangs', 'ruangans', 'kategoris'));
+        $stats = [
+            'total_jenis'   => Barang::count(),
+            'total_unit'    => Barang::sum('jumlah'),
+            'total_baik'    => Barang::where('kondisi', 'Baik')->sum('jumlah'),
+            'total_rusak'   => Barang::whereIn('kondisi', ['Rusak Ringan', 'Rusak Berat'])->sum('jumlah'),
+            'total_ruangan' => Ruangan::count(),
+            'total_kategori'=> Kategori::count(),
+        ];
+
+        return view('barang.index', compact('barangs', 'ruangans', 'kategoris', 'stats'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'kode_barang' => 'required|unique:barangs,kode_barang',
-            'nama_barang' => 'required',
-            'kategori_id' => 'required',
-            'ruangan_id'  => 'required',
-            'jumlah'      => 'required|numeric|min:1',
-            'kondisi'     => 'required',
+        $validated = $request->validate([
+            'kode_barang'     => 'required|string|max:100|unique:barangs,kode_barang',
+            'nama_barang'     => 'required|string|max:255',
+            'kategori_id'     => 'required|exists:kategoris,id',
+            'ruangan_id'      => 'required|exists:ruangans,id',
+            'jumlah'          => 'required|integer|min:1',
+            'kondisi'         => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'tahun_pengadaan' => 'nullable|string|max:20',
+            'keterangan'      => 'nullable|string|max:1000',
         ]);
 
-        Barang::create($request->all());
+        Barang::create($validated);
 
         return redirect()->back()->with('success', 'Aset baru berhasil ditambahkan!');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $barang = Barang::findOrFail($id);
+        $validated = $request->validate([
+            'kode_barang'     => 'required|string|max:100|unique:barangs,kode_barang,' . $id,
+            'nama_barang'     => 'required|string|max:255',
+            'kategori_id'     => 'required|exists:kategoris,id',
+            'ruangan_id'      => 'required|exists:ruangans,id',
+            'jumlah'          => 'required|integer|min:0',
+            'kondisi'         => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'tahun_pengadaan' => 'nullable|string|max:20',
+            'keterangan'      => 'nullable|string|max:1000',
+        ]);
+
+        $barang->update($validated);
+
+        return redirect()->back()->with('success', 'Data aset berhasil diperbarui!');
     }
 
     // Fitur Mutasi: Pindah Ruangan
     public function pindahRuangan(Request $request, $id)
     {
         $request->validate([
-            'ruangan_tujuan_id' => 'required',
-            'jumlah'            => 'required|numeric|min:1',
+            'ruangan_tujuan_id' => 'required|exists:ruangans,id',
+            'jumlah'            => 'required|integer|min:1',
+            'keterangan'        => 'nullable|string|max:500',
         ]);
 
         $barangAsal = Barang::findOrFail($id);
@@ -126,5 +167,129 @@ class BarangController extends Controller
     {
         Barang::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Data aset berhasil dihapus!');
+    }
+
+    // Fitur Cetak Label Stiker Aset (Ukuran 5cm x 2.5cm)
+    public function cetakLabel(Request $request, $id)
+    {
+        $barang = Barang::with(['kategori', 'ruangan'])->findOrFail($id);
+        $mode = $request->get('mode', 'jenis'); // 'jenis' (1 stiker) atau 'unit' (sesuai jumlah stok)
+        $type = $request->get('type', 'qr'); // 'qr' (QR Code) atau 'barcode' (Barcode 128)
+        
+        $barangsList = collect([$barang]);
+        if ($mode === 'unit') {
+            $expanded = collect();
+            $qty = max(1, (int)$barang->jumlah);
+            for ($i = 1; $i <= $qty; $i++) {
+                $itemCopy = clone $barang;
+                $itemCopy->unit_seq = $i;
+                $itemCopy->total_seq = $qty;
+                $itemCopy->unique_print_id = $barang->id . '-' . $i;
+                $expanded->push($itemCopy);
+            }
+            $barangsList = $expanded;
+        }
+
+        $barangs = $barangsList;
+        $allRuangans = Ruangan::all();
+        $title = "Cetak Label {$barang->kode_barang}";
+
+        return view('barang.label', compact('barangs', 'title', 'allRuangans', 'mode', 'type'));
+    }
+
+    // Cetak Label Seluruh Aset dalam 1 Ruangan Tertentu Menjadi 1 Dokumen
+    public function cetakLabelRuangan(Request $request, $id)
+    {
+        $ruangan = Ruangan::findOrFail($id);
+        $rawBarangs = Barang::with(['kategori', 'ruangan'])->where('ruangan_id', $id)->latest()->get();
+        $mode = $request->get('mode', 'jenis');
+        $type = $request->get('type', 'qr');
+
+        if ($mode === 'unit') {
+            $expanded = collect();
+            foreach ($rawBarangs as $b) {
+                $qty = max(1, (int)$b->jumlah);
+                for ($i = 1; $i <= $qty; $i++) {
+                    $itemCopy = clone $b;
+                    $itemCopy->unit_seq = $i;
+                    $itemCopy->total_seq = $qty;
+                    $itemCopy->unique_print_id = $b->id . '-' . $i;
+                    $expanded->push($itemCopy);
+                }
+            }
+            $barangs = $expanded;
+        } else {
+            $barangs = $rawBarangs;
+        }
+
+        $allRuangans = Ruangan::all();
+        $title = "Label Aset Ruang: {$ruangan->nama_ruangan} ({$ruangan->kode_ruangan})";
+
+        return view('barang.label', compact('barangs', 'title', 'ruangan', 'allRuangans', 'mode', 'type'));
+    }
+
+    public function cetakLabelMassal(Request $request)
+    {
+        $query = Barang::with(['kategori', 'ruangan']);
+
+        if ($request->filled('ruangan_id')) {
+            $query->where('ruangan_id', $request->ruangan_id);
+        }
+        if ($request->filled('kategori_id')) {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama_barang', 'like', '%' . $search . '%')
+                  ->orWhere('kode_barang', 'like', '%' . $search . '%');
+            });
+        }
+
+        $rawBarangs = $query->latest()->get();
+        $mode = $request->get('mode', 'jenis');
+        $type = $request->get('type', 'qr');
+
+        if ($mode === 'unit') {
+            $expanded = collect();
+            foreach ($rawBarangs as $b) {
+                $qty = max(1, (int)$b->jumlah);
+                for ($i = 1; $i <= $qty; $i++) {
+                    $itemCopy = clone $b;
+                    $itemCopy->unit_seq = $i;
+                    $itemCopy->total_seq = $qty;
+                    $itemCopy->unique_print_id = $b->id . '-' . $i;
+                    $expanded->push($itemCopy);
+                }
+            }
+            $barangs = $expanded;
+        } else {
+            $barangs = $rawBarangs;
+        }
+
+        $allRuangans = Ruangan::all();
+        $selectedRuangan = $request->filled('ruangan_id') ? Ruangan::find($request->ruangan_id) : null;
+        $title = $selectedRuangan 
+            ? "Label Aset Ruangan: {$selectedRuangan->nama_ruangan}" 
+            : "Cetak Label Stiker Massal (" . $barangs->count() . " Label)";
+
+        return view('barang.label', [
+            'barangs'     => $barangs,
+            'title'       => $title,
+            'ruangan'     => $selectedRuangan,
+            'allRuangans' => $allRuangans,
+            'mode'        => $mode,
+            'type'        => $type,
+        ]);
+    }
+
+    // Halaman Publik Verifikasi Aset dari Scan QR Code
+    public function cekAsetPublik($kode_barang)
+    {
+        $barang = Barang::with(['kategori', 'ruangan', 'mutasis' => function($q) {
+            $q->with(['ruanganAsal', 'ruanganTujuan'])->latest();
+        }])->where('kode_barang', $kode_barang)->firstOrFail();
+
+        return view('barang.cek_publik', compact('barang'));
     }
 }

@@ -22,9 +22,16 @@ class LaporanController extends Controller
         $barangs = $query->latest()->get();
 
         // Riwayat Mutasi / Pindah / Kerusakan
-        $mutasis = Mutasi::with(['barang', 'ruanganAsal', 'ruanganTujuan'])->latest()->take(20)->get();
+        $mutasis = Mutasi::with(['barang', 'ruanganAsal', 'ruanganTujuan'])->latest()->take(30)->get();
 
-        return view('laporan.index', compact('barangs', 'ruangans', 'mutasis'));
+        $stats = [
+            'total_aset_tercatat' => $barangs->count(),
+            'total_unit_tercatat' => $barangs->sum('jumlah'),
+            'total_ruangan'       => $ruangans->count(),
+            'total_mutasi'        => Mutasi::count(),
+        ];
+
+        return view('laporan.index', compact('barangs', 'ruangans', 'mutasis', 'stats'));
     }
 
     public function exportExcel(Request $request)

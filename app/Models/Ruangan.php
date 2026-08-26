@@ -9,7 +9,10 @@ class Ruangan extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'kode_ruangan',
+        'nama_ruangan',
+    ];
 
     // Relasi: Satu ruangan bisa memiliki banyak barang aset
     public function barangs()

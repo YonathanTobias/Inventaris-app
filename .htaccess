@@ -1,0 +1,31 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    Options -Indexes
+
+    # ----------------------------------------------------------------------
+    # 1. BLOKIR MUTLAK AKSES KE FILE/FOLDER SENSITIF LARAVEL
+    # ----------------------------------------------------------------------
+    # Jangan biarkan siapapun mengakses .env, vendor, storage, app, routes, dll dari browser
+    RewriteRule ^\.env - [F,L,NC]
+    RewriteRule ^artisan - [F,L,NC]
+    RewriteRule ^composer\.(json|lock) - [F,L,NC]
+    RewriteRule ^package\.(json|lock) - [F,L,NC]
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)(/.*)?$ - [F,L,NC]
+
+    # Blokir semua file dotfiles (.git, .env, .htaccess, dll)
+    <FilesMatch "^\.">
+        <IfModule mod_authz_core.c>
+            Require all denied
+        </IfModule>
+        <IfModule !mod_authz_core.c>
+            Order allow,deny
+            Deny from all
+        </IfModule>
+    </FilesMatch>
+
+    # ----------------------------------------------------------------------
+    # 2. ALIKAN SELURUH TRAFIK KE FOLDER /public
+    # ----------------------------------------------------------------------
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

@@ -9,7 +9,14 @@ class Mutasi extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'barang_id',
+        'jenis_mutasi',
+        'ruangan_asal_id',
+        'ruangan_tujuan_id',
+        'jumlah',
+        'keterangan',
+    ];
 
     // Relasi ke Barang
     public function barang()

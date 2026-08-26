@@ -1,75 +1,227 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Page Header -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
+            <span class="p-2 rounded-3 bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                <i class="fa-solid fa-door-open"></i>
+            </span>
+            <span>Master Data Ruangan & Lokasi</span>
+        </h4>
+        <p class="text-muted small mb-0 ms-md-5">Kelola data ruangan, penempatan fisik inventaris, dan penanggung jawab aset.</p>
+    </div>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card-stat">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="stat-label">Total Ruangan</div>
+                    <div class="stat-value mt-1">{{ number_format($stats['total_ruangan'] ?? $ruangans->count()) }}</div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-building text-primary me-1"></i>Lokasi Terdaftar</div>
+                </div>
+                <div class="stat-icon primary">
+                    <i class="fa-solid fa-door-open"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card-stat">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="stat-label">Ruangan Terisi</div>
+                    <div class="stat-value mt-1 text-success">{{ number_format($stats['ruangan_terisi'] ?? $ruangans->where('barangs_count', '>', 0)->count()) }}</div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-boxes-stacked text-success me-1"></i>Ada Aset Fisik</div>
+                </div>
+                <div class="stat-icon success">
+                    <i class="fa-solid fa-square-check"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card-stat">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="stat-label">Total Aset Tersebar</div>
+                    <div class="stat-value mt-1 text-info">{{ number_format($stats['total_aset'] ?? 0) }}</div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-cubes text-info me-1"></i>Unit Barang</div>
+                </div>
+                <div class="stat-icon info">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card-stat">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="stat-label">Aset Terbanyak</div>
+                    <div class="stat-value mt-1 text-truncate" style="font-size: 1.15rem; max-width: 140px;" title="{{ $stats['ruangan_terbanyak']->nama_ruangan ?? '-' }}">
+                        {{ $stats['ruangan_terbanyak']->nama_ruangan ?? '-' }}
+                    </div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;">
+                        <i class="fa-solid fa-trophy text-warning me-1"></i>{{ $stats['ruangan_terbanyak']->barangs_count ?? 0 }} Jenis Aset
+                    </div>
+                </div>
+                <div class="stat-icon warning">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row g-4">
     <!-- Form Tambah Ruangan -->
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-3">
-            <div class="card-header bg-white fw-bold py-3">
-                <i class="fa-solid fa-plus-circle me-1 text-primary"></i> Tambah Ruangan Baru
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header-modern">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-circle-plus text-primary"></i>
+                    <span>Tambah Ruangan Baru</span>
+                </div>
             </div>
-            <div class="card-body">
+            <div class="card-body p-4">
                 <form action="{{ route('ruangan.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Kode Ruangan</label>
-                        <input type="text" name="kode_ruangan" class="form-control" placeholder="Contoh: R-001, LAB-01" required>
+                        <label class="form-label">Kode Ruangan <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fa-solid fa-hashtag"></i></span>
+                            <input type="text" name="kode_ruangan" class="form-control font-monospace" placeholder="Misal: R-LAB-01" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Nama Ruangan</label>
-                        <input type="text" name="nama_ruangan" class="form-control" placeholder="Contoh: Ruang Perpustakaan" required>
+                    <div class="mb-4">
+                        <label class="form-label">Nama Ruangan <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fa-solid fa-door-open"></i></span>
+                            <input type="text" name="nama_ruangan" class="form-control" placeholder="Misal: Lab Komputer 1" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Penanggung Jawab (PJ)</label>
-                        <input type="text" name="penanggung_jawab" class="form-control" placeholder="Nama Kepala Ruangan / PJ">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 fw-bold">Simpan Ruangan</button>
+                    <button type="submit" class="btn btn-modern-primary w-100 justify-content-center">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Simpan Ruangan</span>
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 
     <!-- Tabel Daftar Ruangan -->
-    <div class="col-md-8">
-        <div class="card border-0 shadow-sm rounded-3">
-            <div class="card-header bg-white fw-bold py-3">
-                <i class="fa-solid fa-door-open me-1 text-primary"></i> Daftar Master Ruangan
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header-modern">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-building text-primary"></i>
+                    <span>Daftar Ruangan Terdaftar</span>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill ms-2">{{ $ruangans->count() }} Ruangan</span>
+                </div>
             </div>
             <div class="card-body p-0">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-3">Kode</th>
-                            <th>Nama Ruangan</th>
-                            <th>Penanggung Jawab</th>
-                            <th class="text-center">Total Barang</th>
-                            <th class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($ruangans as $r)
-                        <tr>
-                            <td class="ps-3 fw-bold"><span class="badge bg-secondary">{{ $r->kode_ruangan }}</span></td>
-                            <td class="fw-semibold">{{ $r->nama_ruangan }}</td>
-                            <td>{{ $r->penanggung_jawab ?? '-' }}</td>
-                            <td class="text-center"><span class="badge bg-info text-dark">{{ $r->barangs_count }} Aset</span></td>
-                            <td class="text-center">
-                                <form action="{{ route('ruangan.destroy', $r->id) }}" method="POST" onsubmit="return confirm('Hapus ruangan ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-4">Belum ada data ruangan.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-modern align-middle">
+                        <thead>
+                            <tr>
+                                <th class="ps-4" style="width: 140px;">Kode Ruangan</th>
+                                <th>Nama Ruangan</th>
+                                <th class="text-center" style="width: 150px;">Koleksi Aset</th>
+                                <th class="text-center pe-4" style="width: 130px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($ruangans as $r)
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="badge-room-code">{{ $r->kode_ruangan }}</span>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">{{ $r->nama_ruangan }}</div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-info-subtle text-info-emphasis border px-2.5 py-1 fw-bold rounded-pill" style="font-size: 0.8rem;">
+                                        <i class="fa-solid fa-box-archive me-1"></i>{{ $r->barangs_count }} Jenis
+                                    </span>
+                                </td>
+                                <td class="text-center pe-4">
+                                    <div class="d-inline-flex gap-1">
+                                        <!-- Tombol Cetak Label 1 Ruangan -->
+                                        <a href="{{ route('ruangan.label', $r->id) }}" target="_blank" class="btn-icon btn-icon-info border" data-bs-toggle="tooltip" title="Cetak Label Seluruh Aset di Ruangan Ini ({{ $r->barangs_count }} Jenis)">
+                                            <i class="fa-solid fa-barcode text-primary"></i>
+                                        </a>
+
+                                        <!-- Tombol Edit -->
+                                        <button type="button" class="btn-icon btn-icon-primary" data-bs-toggle="modal" data-bs-target="#modalEditRuangan{{ $r->id }}" data-bs-toggle="tooltip" title="Edit Ruangan">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+
+                                        <!-- Tombol Hapus -->
+                                        <form action="{{ route('ruangan.destroy', $r->id) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, this, 'ruangan {{ $r->nama_ruangan }}')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn-icon btn-icon-danger" data-bs-toggle="tooltip" title="Hapus Ruangan">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- MODAL EDIT RUANGAN -->
+                                    <div class="modal fade text-start" id="modalEditRuangan{{ $r->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary text-white">
+                                                    <h5 class="modal-title fw-bold">
+                                                        <i class="fa-solid fa-pen-to-square me-2"></i>Edit Data Ruangan
+                                                    </h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <form action="{{ route('ruangan.update', $r->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Kode Ruangan <span class="text-danger">*</span></label>
+                                                            <input type="text" name="kode_ruangan" class="form-control font-monospace" value="{{ $r->kode_ruangan }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Nama Ruangan <span class="text-danger">*</span></label>
+                                                            <input type="text" name="nama_ruangan" class="form-control" value="{{ $r->nama_ruangan }}" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-primary fw-bold">
+                                                            <i class="fa-solid fa-floppy-disk me-1"></i> Simpan Perubahan
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-5">
+                                    <div class="text-muted mb-2">
+                                        <i class="fa-solid fa-door-closed fa-3x opacity-50"></i>
+                                    </div>
+                                    <h6 class="fw-bold text-secondary mb-1">Belum Ada Data Ruangan</h6>
+                                    <p class="text-muted small mb-0">Tambahkan ruangan baru menggunakan form di sebelah kiri.</p>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
+@endsection

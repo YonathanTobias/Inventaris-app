@@ -10,17 +10,23 @@ class RuanganController extends Controller
     public function index()
     {
         $ruangans = Ruangan::withCount('barangs')->latest()->get();
-        return view('ruangan.index', compact('ruangans'));
+        $stats = [
+            'total_ruangan'     => $ruangans->count(),
+            'ruangan_terisi'    => $ruangans->where('barangs_count', '>', 0)->count(),
+            'total_aset'        => \App\Models\Barang::sum('jumlah'),
+            'ruangan_terbanyak' => $ruangans->sortByDesc('barangs_count')->first(),
+        ];
+        return view('ruangan.index', compact('ruangans', 'stats'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'kode_ruangan' => 'required|unique:ruangans,kode_ruangan',
-            'nama_ruangan' => 'required',
+        $validated = $request->validate([
+            'kode_ruangan' => 'required|string|max:50|unique:ruangans,kode_ruangan',
+            'nama_ruangan' => 'required|string|max:255',
         ]);
 
-        Ruangan::create($request->all());
+        Ruangan::create($validated);
 
         return redirect()->back()->with('success', 'Data ruangan berhasil ditambahkan!');
     }
@@ -28,12 +34,12 @@ class RuanganController extends Controller
     public function update(Request $request, $id)
     {
         $ruangan = Ruangan::findOrFail($id);
-        $request->validate([
-            'kode_ruangan' => 'required|unique:ruangans,kode_ruangan,' . $id,
-            'nama_ruangan' => 'required',
+        $validated = $request->validate([
+            'kode_ruangan' => 'required|string|max:50|unique:ruangans,kode_ruangan,' . $id,
+            'nama_ruangan' => 'required|string|max:255',
         ]);
 
-        $ruangan->update($request->all());
+        $ruangan->update($validated);
 
         return redirect()->back()->with('success', 'Data ruangan berhasil diperbarui!');
     }
@@ -41,6 +47,12 @@ class RuanganController extends Controller
     public function destroy($id)
     {
         $ruangan = Ruangan::findOrFail($id);
+        
+        // Proteksi integritas data: Cek apakah masih ada aset di ruangan ini
+        if ($ruangan->barangs()->count() > 0) {
+            return redirect()->back()->with('error', 'Ruangan tidak dapat dihapus karena masih berisi data aset. Silakan pindahkan aset ke ruangan lain terlebih dahulu.');
+        }
+
         $ruangan->delete();
 
         return redirect()->back()->with('success', 'Data ruangan berhasil dihapus!');
