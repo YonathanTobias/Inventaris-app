@@ -269,28 +269,6 @@
             </tr>
         </tfoot>
     </table>
-
-    <!-- Tanda Tangan Pengesahan (Signature Block) -->
-    <div style="margin-top: 28px; page-break-inside: avoid;">
-        <table style="width: 100%; font-size: 8.5pt; text-align: center; border: none;">
-            <tr>
-                <td style="width: 50%; border: none;">
-                    Mengetahui,<br>
-                    <strong>Biro Sarana & Prasarana (SARPRAS)</strong>
-                    <br><br><br><br><br>
-                    <strong>( ........................................................... )</strong><br>
-                    <span style="color: #444;">NIP / NIDN.</span>
-                </td>
-                <td style="width: 50%; border: none;">
-                    Malang, {{ date('d F Y') }}<br>
-                    <strong>Penanggung Jawab / Petugas Ruangan</strong>
-                    <br><br><br><br><br>
-                    <strong>( ........................................................... )</strong><br>
-                    <span style="color: #444;">NIP / NIDN.</span>
-                </td>
-            </tr>
-        </table>
-    </div>
 </div>
 
 <!-- Preview Data Laporan & Log Mutasi (TAMPILAN WEB) -->
