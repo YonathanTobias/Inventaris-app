@@ -171,10 +171,9 @@
 
 <!-- DOKUMEN CETAK RESMI KARTU INVENTARIS RUANGAN (KIR) - HANYA TAMPIL SAAT PRINT -->
 <div class="d-none d-print-block kir-print-document mb-4">
-    <!-- Kop Surat Resmi (Tanpa Logo) -->
+    <!-- Kop Surat Resmi (Tanpa Logo & Tanpa Yayasan) -->
     <div style="text-align: center; margin-bottom: 6px;">
-        <div style="font-size: 11pt; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 2px;">YAYASAN PANTI WALUYA SAWAHAN MALANG</div>
-        <div style="font-size: 13.5pt; font-weight: 800; color: #000; margin-bottom: 3px;">SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG</div>
+        <div style="font-size: 14pt; font-weight: 800; color: #000; margin-bottom: 3px;">SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG</div>
         <div style="font-size: 8.5pt; color: #222;">Jl. Yulius Usman No. 62, Malang 65117 | Telp. (0341) 369003 | Website: www.stikespantiwaluya.ac.id</div>
     </div>
     
