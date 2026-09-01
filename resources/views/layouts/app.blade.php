@@ -529,20 +529,28 @@
 
         /* Print Style */
         @media print {
-            .navbar-custom, .btn, .no-print, .card-stat, form, .modal {
+            .navbar-custom, .btn, .no-print, .card-stat, form, .modal, .footer-custom {
                 display: none !important;
             }
             body {
                 background: #ffffff !important;
                 color: #000000 !important;
+                font-family: Arial, Helvetica, sans-serif !important;
             }
             .card {
                 box-shadow: none !important;
-                border: 1px solid #000 !important;
+                border: none !important;
+                background: transparent !important;
             }
             .container {
                 max-width: 100% !important;
+                width: 100% !important;
                 padding: 0 !important;
+                margin: 0 !important;
+            }
+            @page {
+                size: portrait;
+                margin: 10mm 12mm;
             }
         }
     </style>

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Page Header -->
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+<!-- Page Header (Hanya Tampil di Layar Web, Dihilangkan Total Saat Cetak) -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 no-print d-print-none page-web-header">
     <div>
         <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
             <span class="p-2 rounded-3 bg-success-subtle text-success d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
@@ -130,25 +130,171 @@
     </div>
 </div>
 
-<!-- Preview Print Header (Only appears when printing) -->
-<div class="d-none d-print-block mb-4">
-    <div class="d-flex align-items-center justify-content-center gap-3 mb-2">
-        <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 70px; width: auto;">
-        <div class="text-center">
-            <h4 class="fw-bold mb-0">SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG</h4>
-            <h5 class="fw-bold text-secondary mb-0">KARTU INVENTARIS RUANGAN (KIR)</h5>
-            <div class="small">Lokasi: <strong>{{ request('ruangan_id') ? ($ruangans->firstWhere('id', request('ruangan_id'))->nama_ruangan ?? 'Semua Ruangan') : 'Rekapitulasi Global (Seluruh Ruangan)' }}</strong></div>
-        </div>
+<style>
+    @media print {
+        .page-web-header, .navbar-custom, .no-print, .d-print-none, .card-stat, form, .modal, .footer-custom, .alert {
+            display: none !important;
+        }
+        .kir-print-document {
+            display: block !important;
+            width: 100%;
+            color: #000000 !important;
+            background: #ffffff !important;
+        }
+        .table-kir-print {
+            width: 100%;
+            border-collapse: collapse !important;
+            font-size: 8.5pt !important;
+            margin-top: 8px;
+            color: #000000 !important;
+        }
+        .table-kir-print th, .table-kir-print td {
+            border: 1px solid #000000 !important;
+            padding: 5px 6px !important;
+            vertical-align: middle;
+        }
+        .table-kir-print th {
+            background-color: #f1f5f9 !important;
+            font-weight: 700;
+            text-align: center;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .table-kir-print tfoot td {
+            background-color: #f8fafc !important;
+            font-weight: 700;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+</style>
+
+<!-- DOKUMEN CETAK RESMI KARTU INVENTARIS RUANGAN (KIR) - HANYA TAMPIL SAAT PRINT -->
+<div class="d-none d-print-block kir-print-document mb-4">
+    <!-- Kop Surat Resmi (Tanpa Logo) -->
+    <div style="text-align: center; margin-bottom: 6px;">
+        <div style="font-size: 10.5pt; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 2px;">YAYASAN PANTI WALUYA SAWAHAN MALANG</div>
+        <div style="font-size: 13pt; font-weight: 800; color: #000; margin-bottom: 3px;">SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG</div>
+        <div style="font-size: 8pt; color: #222; margin-bottom: 2px;">Program Studi: Profesi Ners &bull; Sarjana Keperawatan &bull; D-III Keperawatan &bull; D-III Kebidanan &bull; Sarjana Farmasi</div>
+        <div style="font-size: 8pt; color: #222;">Jl. Yulius Usman No. 62, Malang 65117 | Telp. (0341) 369003 | Website: www.pantiwaluya.ac.id</div>
     </div>
-    <div class="d-flex justify-content-between small text-muted border-top pt-2 mt-2">
-        <span>Dicetak oleh: {{ auth()->user()->name ?? 'Admin' }} ({{ auth()->user()->role === 'it' ? 'Admin IT' : 'Admin SARPRAS' }})</span>
-        <span>Tanggal Cetak: {{ date('d F Y, H:i') }} WIB</span>
+    
+    <!-- Garis Kop Surat Ganda Formal -->
+    <div style="border-top: 2px solid #000000; border-bottom: 1px solid #000000; height: 3px; margin: 4px 0 14px 0;"></div>
+
+    <!-- Judul Dokumen -->
+    <div style="text-align: center; margin-bottom: 14px;">
+        <h4 style="font-size: 12pt; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.04em;">KARTU INVENTARIS RUANGAN (KIR)</h4>
+        <div style="font-size: 8.5pt; font-weight: 600; text-transform: uppercase; color: #333;">TAHUN ANGGARAN {{ date('Y') }}</div>
     </div>
-    <hr style="border-top: 2px solid #000; margin-top: 0.5rem;">
+
+    <!-- Metadata Informasi Ruangan -->
+    @php
+        $selectedRuangan = request('ruangan_id') ? $ruangans->firstWhere('id', request('ruangan_id')) : null;
+    @endphp
+    <table style="width: 100%; font-size: 8.5pt; margin-bottom: 8px; line-height: 1.5; border: none;">
+        <tr>
+            <td style="width: 17%; font-weight: bold; border: none;">Ruangan / Unit</td>
+            <td style="width: 2%; border: none;">:</td>
+            <td style="width: 46%; border: none;"><strong>{{ $selectedRuangan ? $selectedRuangan->nama_ruangan : 'Rekapitulasi Global (Seluruh Ruangan)' }}</strong></td>
+            <td style="width: 15%; font-weight: bold; border: none;">Tanggal Cetak</td>
+            <td style="width: 2%; border: none;">:</td>
+            <td style="width: 18%; border: none;">{{ date('d F Y') }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; border: none;">Kode Ruangan</td>
+            <td style="border: none;">:</td>
+            <td style="border: none;"><strong>{{ $selectedRuangan ? $selectedRuangan->kode_ruangan : '-' }}</strong></td>
+            <td style="font-weight: bold; border: none;">Petugas Cetak</td>
+            <td style="border: none;">:</td>
+            <td style="border: none;">{{ auth()->user()->name ?? 'Admin Sarpras' }}</td>
+        </tr>
+    </table>
+
+    <!-- Tabel Daftar Aset Formal untuk Cetak KIR -->
+    <table class="table-kir-print">
+        <thead>
+            <tr>
+                <th style="width: 28px; text-align: center;">No</th>
+                <th style="width: 125px; text-align: center;">Kode Aset</th>
+                <th>Nama Barang / Aset</th>
+                <th style="width: 130px;">Kategori</th>
+                @if(!$selectedRuangan)
+                    <th style="width: 120px;">Ruangan</th>
+                @endif
+                <th style="width: 50px; text-align: center;">Tahun</th>
+                <th style="width: 75px; text-align: center;">Kondisi</th>
+                <th style="width: 60px; text-align: center;">Jumlah</th>
+                <th style="width: 110px;">Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($barangs as $index => $b)
+            <tr>
+                <td style="text-align: center;">{{ $index + 1 }}</td>
+                <td style="text-align: center; font-family: monospace; font-weight: 700; white-space: nowrap;">
+                    {{ $b->kode_barang }}
+                </td>
+                <td>
+                    <strong>{{ $b->nama_barang }}</strong>
+                </td>
+                <td>{{ $b->kategori->nama_kategori ?? '-' }}</td>
+                @if(!$selectedRuangan)
+                    <td>{{ $b->ruangan->nama_ruangan ?? '-' }}</td>
+                @endif
+                <td style="text-align: center;">{{ $b->tahun_pengadaan ?? '-' }}</td>
+                <td style="text-align: center;">
+                    {{ $b->kondisi }}
+                </td>
+                <td style="text-align: center; font-weight: 700;">
+                    {{ number_format($b->jumlah) }} Unit
+                </td>
+                <td style="font-size: 7.5pt; color: #333;">{{ $b->keterangan ?? '-' }}</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="{{ $selectedRuangan ? '8' : '9' }}" style="text-align: center; padding: 14px;">
+                    Tidak ada data aset terdaftar pada ruangan ini.
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+        <tfoot>
+            <tr style="background-color: #f1f5f9; font-weight: 700;">
+                <td colspan="{{ $selectedRuangan ? '6' : '7' }}" style="text-align: right; padding-right: 8px;">
+                    Total Keseluruhan:
+                </td>
+                <td style="text-align: center;">{{ number_format($barangs->sum('jumlah')) }} Unit</td>
+                <td>({{ $barangs->count() }} Jenis Aset)</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <!-- Tanda Tangan Pengesahan (Signature Block) -->
+    <div style="margin-top: 28px; page-break-inside: avoid;">
+        <table style="width: 100%; font-size: 8.5pt; text-align: center; border: none;">
+            <tr>
+                <td style="width: 50%; border: none;">
+                    Mengetahui,<br>
+                    <strong>Biro Sarana & Prasarana (SARPRAS)</strong>
+                    <br><br><br><br><br>
+                    <strong>( ........................................................... )</strong><br>
+                    <span style="color: #444;">NIP / NIDN.</span>
+                </td>
+                <td style="width: 50%; border: none;">
+                    Malang, {{ date('d F Y') }}<br>
+                    <strong>Penanggung Jawab / Petugas Ruangan</strong>
+                    <br><br><br><br><br>
+                    <strong>( ........................................................... )</strong><br>
+                    <span style="color: #444;">NIP / NIDN.</span>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
-<!-- Preview Data Laporan & Log Mutasi -->
-<div class="row g-4">
+<!-- Preview Data Laporan & Log Mutasi (TAMPILAN WEB) -->
+<div class="row g-4 no-print">
     <!-- Preview Tabel Aset -->
     <div class="col-lg-8">
         <div class="card">
