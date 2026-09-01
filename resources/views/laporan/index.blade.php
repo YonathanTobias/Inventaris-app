@@ -173,10 +173,9 @@
 <div class="d-none d-print-block kir-print-document mb-4">
     <!-- Kop Surat Resmi (Tanpa Logo) -->
     <div style="text-align: center; margin-bottom: 6px;">
-        <div style="font-size: 10.5pt; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 2px;">YAYASAN PANTI WALUYA SAWAHAN MALANG</div>
-        <div style="font-size: 13pt; font-weight: 800; color: #000; margin-bottom: 3px;">SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG</div>
-        <div style="font-size: 8pt; color: #222; margin-bottom: 2px;">Program Studi: Profesi Ners &bull; Sarjana Keperawatan &bull; D-III Keperawatan &bull; D-III Kebidanan &bull; Sarjana Farmasi</div>
-        <div style="font-size: 8pt; color: #222;">Jl. Yulius Usman No. 62, Malang 65117 | Telp. (0341) 369003 | Website: www.pantiwaluya.ac.id</div>
+        <div style="font-size: 11pt; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 2px;">YAYASAN PANTI WALUYA SAWAHAN MALANG</div>
+        <div style="font-size: 13.5pt; font-weight: 800; color: #000; margin-bottom: 3px;">SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG</div>
+        <div style="font-size: 8.5pt; color: #222;">Jl. Yulius Usman No. 62, Malang 65117 | Telp. (0341) 369003 | Website: www.stikespantiwaluya.ac.id</div>
     </div>
     
     <!-- Garis Kop Surat Ganda Formal -->
