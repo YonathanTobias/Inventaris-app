@@ -13,9 +13,13 @@
         <p class="text-muted small mb-0 ms-md-5">Kelola, pantau, dan mutasikan seluruh data inventaris aset secara terstruktur.</p>
     </div>
     <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-info text-white fw-bold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalPindahAsetGlobal">
+            <i class="fa-solid fa-right-left"></i>
+            <span>Pindah Aset</span>
+        </button>
         <a href="{{ route('barang.label.massal', request()->query()) }}" target="_blank" class="btn btn-outline-dark fw-semibold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm">
             <i class="fa-solid fa-barcode text-primary"></i>
-            <span>Cetak Label Stiker (Massal)</span>
+            <span>Cetak Label Stiker</span>
         </a>
         <button class="btn btn-modern-primary" data-bs-toggle="modal" data-bs-target="#modalTambahBarang">
             <i class="fa-solid fa-circle-plus"></i>
@@ -353,8 +357,20 @@
                                                     </select>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Jumlah Dipindahkan (Maks: {{ $b->jumlah }}) <span class="text-danger">*</span></label>
-                                                    <input type="number" name="jumlah" class="form-control" max="{{ $b->jumlah }}" min="1" value="1" required>
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <label class="form-label mb-0">Jumlah Unit Dipindahkan <span class="text-danger">*</span></label>
+                                                        <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold" style="font-size: 0.78rem;" onclick="document.getElementById('inputJumlahPindah{{ $b->id }}').value = {{ $b->jumlah }}">
+                                                            <i class="fa-solid fa-arrows-to-circle me-1"></i>Pindahkan Semua ({{ $b->jumlah }})
+                                                        </button>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light"><i class="fa-solid fa-cubes"></i></span>
+                                                        <input type="number" id="inputJumlahPindah{{ $b->id }}" name="jumlah" class="form-control" max="{{ $b->jumlah }}" min="1" value="{{ $b->jumlah }}" required>
+                                                        <span class="input-group-text bg-light">Unit</span>
+                                                    </div>
+                                                    <small class="text-muted" style="font-size: 0.75rem;">
+                                                        <i class="fa-solid fa-circle-info me-1"></i>Jika memindahkan sebagian unit, sistem akan memecah stok secara otomatis.
+                                                    </small>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Keterangan / Alasan Pemindahan</label>
@@ -517,4 +533,167 @@
         </div>
     </div>
 </div>
+
+<!-- MODAL GLOBAL PINDAH ASET KE RUANGAN LAIN -->
+<div class="modal fade" id="modalPindahAsetGlobal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-right-left"></i>
+                    <span>Mutasi & Pemindahan Aset Antar Ruangan</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ route('barang.pindah.global') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-info py-2 small mb-3 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-info fa-lg"></i>
+                        <div>
+                            Fitur ini digunakan untuk memindahkan aset atau mendistribusikan unit inventaris dari satu ruangan/lab ke ruangan/lab lainnya.
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <!-- Pilih Aset Asal -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Pilih Aset yang Akan Dipindahkan <span class="text-danger">*</span></label>
+                            <select name="barang_id" id="selectAsetGlobal" class="form-select form-select-lg" required onchange="handlePindahGlobalSelect(this)">
+                                <option value="">-- Pilih Barang / Aset --</option>
+                                @foreach($allBarangs as $ab)
+                                    <option value="{{ $ab->id }}" 
+                                            data-nama="{{ $ab->nama_barang }}"
+                                            data-kode="{{ $ab->kode_barang }}"
+                                            data-ruangan-id="{{ $ab->ruangan_id }}"
+                                            data-ruangan-nama="{{ $ab->ruangan->nama_ruangan ?? 'Belum Ditentukan' }}"
+                                            data-jumlah="{{ $ab->jumlah }}">
+                                        {{ $ab->nama_barang }} ({{ $ab->kode_barang }}) &mdash; Lokasi: {{ $ab->ruangan->nama_ruangan ?? '-' }} [Stok: {{ $ab->jumlah }} Unit]
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Card Detail Aset Asal Terpilih -->
+                        <div class="col-12" id="cardAsetTerpilihGlobal" style="display: none;">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <div class="row g-2">
+                                    <div class="col-sm-6">
+                                        <small class="text-muted d-block">Kode & Nama Aset:</small>
+                                        <div class="fw-bold text-dark" id="displayNamaAsetGlobal">-</div>
+                                        <span class="badge-code py-0 mt-1" id="displayKodeAsetGlobal">-</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <small class="text-muted d-block">Lokasi Saat Ini & Stok Fisik:</small>
+                                        <div class="d-flex align-items-center gap-2 mt-1">
+                                            <span class="badge bg-primary-subtle text-primary" id="displayRuanganAsalGlobal">-</span>
+                                            <span class="badge bg-dark" id="displayStokAsalGlobal">0 Unit</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pilih Ruangan Tujuan -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Ruangan Tujuan Pemindahan <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa-solid fa-door-open text-primary"></i></span>
+                                <select name="ruangan_tujuan_id" id="selectRuanganTujuanGlobal" class="form-select" required>
+                                    <option value="">-- Pilih Ruangan Tujuan --</option>
+                                    @foreach($ruangans as $r)
+                                        <option value="{{ $r->id }}" id="optRuanganTujuan{{ $r->id }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Jumlah Unit Dipindahkan -->
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label fw-bold mb-0">Jumlah Unit <span class="text-danger">*</span></label>
+                                <button type="button" id="btnPindahSemuaGlobal" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold" style="font-size: 0.78rem;" onclick="setPindahSemuaUnitGlobal()">
+                                    <i class="fa-solid fa-arrows-to-circle me-1"></i>Pindahkan Semua
+                                </button>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa-solid fa-cubes"></i></span>
+                                <input type="number" id="inputJumlahGlobal" name="jumlah" class="form-control" min="1" value="1" required>
+                                <span class="input-group-text bg-light">Unit</span>
+                            </div>
+                            <small class="text-muted" style="font-size: 0.75rem;" id="hintPindahGlobal">
+                                Masukkan jumlah unit yang ingin dialihkan.
+                            </small>
+                        </div>
+
+                        <!-- Alasan / Catatan Pemindahan -->
+                        <div class="col-12">
+                            <label class="form-label">Keterangan / Alasan Pemindahan</label>
+                            <textarea name="keterangan" class="form-control" rows="2" placeholder="Contoh: Kebutuhan Praktikum Mahasiswa / Distribusi Aset Baru / Instruksi Pimpinan Lab..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-info text-white fw-bold px-4">
+                        <i class="fa-solid fa-paper-plane me-1"></i> Proses Pemindahan Aset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handlePindahGlobalSelect(selectElement) {
+        let opt = selectElement.options[selectElement.selectedIndex];
+        let card = document.getElementById('cardAsetTerpilihGlobal');
+        let selectTujuan = document.getElementById('selectRuanganTujuanGlobal');
+        let inputJumlah = document.getElementById('inputJumlahGlobal');
+
+        if (!opt.value) {
+            card.style.display = 'none';
+            inputJumlah.max = '';
+            return;
+        }
+
+        let nama = opt.getAttribute('data-nama');
+        let kode = opt.getAttribute('data-kode');
+        let ruanganId = opt.getAttribute('data-ruangan-id');
+        let ruanganNama = opt.getAttribute('data-ruangan-nama');
+        let jumlah = parseInt(opt.getAttribute('data-jumlah')) || 1;
+
+        document.getElementById('displayNamaAsetGlobal').innerText = nama;
+        document.getElementById('displayKodeAsetGlobal').innerText = kode;
+        document.getElementById('displayRuanganAsalGlobal').innerText = ruanganNama;
+        document.getElementById('displayStokAsalGlobal').innerText = jumlah + ' Unit Tersedia';
+        card.style.display = 'block';
+
+        inputJumlah.max = jumlah;
+        inputJumlah.value = jumlah;
+        document.getElementById('hintPindahGlobal').innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i>Maksimal ' + jumlah + ' unit. Jika memindahkan seluruh unit, lokasi aset langsung dipindahkan.';
+
+        // Disable option ruangan asal pada ruangan tujuan
+        for (let i = 0; i < selectTujuan.options.length; i++) {
+            let option = selectTujuan.options[i];
+            if (option.value === ruanganId) {
+                option.disabled = true;
+                if (selectTujuan.value === ruanganId) {
+                    selectTujuan.value = '';
+                }
+            } else {
+                option.disabled = false;
+            }
+        }
+    }
+
+    function setPindahSemuaUnitGlobal() {
+        let select = document.getElementById('selectAsetGlobal');
+        let opt = select.options[select.selectedIndex];
+        if (opt && opt.value) {
+            let maxJml = opt.getAttribute('data-jumlah');
+            document.getElementById('inputJumlahGlobal').value = maxJml;
+        }
+    }
+</script>
 @endsection

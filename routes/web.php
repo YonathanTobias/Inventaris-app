@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('barang/label/massal', [BarangController::class, 'cetakLabelMassal'])->name('barang.label.massal');
     Route::get('barang/{id}/label', [BarangController::class, 'cetakLabel'])->name('barang.label');
     Route::resource('barang', BarangController::class)->except(['create', 'edit', 'show']);
+    Route::post('barang/pindah', [BarangController::class, 'pindahRuangan'])->name('barang.pindah.global');
     Route::post('barang/{id}/pindah', [BarangController::class, 'pindahRuangan'])->name('barang.pindah');
     Route::post('barang/{id}/kurangi', [BarangController::class, 'kurangiStok'])->name('barang.kurangi');
 

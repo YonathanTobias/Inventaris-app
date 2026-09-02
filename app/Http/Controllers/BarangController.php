@@ -46,7 +46,9 @@ class BarangController extends Controller
             'total_kategori'=> Kategori::count(),
         ];
 
-        return view('barang.index', compact('barangs', 'ruangans', 'kategoris', 'stats'));
+        $allBarangs = Barang::with('ruangan')->where('jumlah', '>', 0)->orderBy('nama_barang')->get();
+
+        return view('barang.index', compact('barangs', 'ruangans', 'kategoris', 'stats', 'allBarangs'));
     }
 
     public function store(Request $request)
@@ -86,54 +88,96 @@ class BarangController extends Controller
         return redirect()->back()->with('success', 'Data aset berhasil diperbarui!');
     }
 
-    // Fitur Mutasi: Pindah Ruangan
-    public function pindahRuangan(Request $request, $id)
+    // Fitur Mutasi: Pindah Ruangan (Mendukung Pindah Seluruh Unit maupun Sebagian Unit)
+    public function pindahRuangan(Request $request, $id = null)
     {
+        $targetId = $id ?: $request->input('barang_id');
+
         $request->validate([
+            'barang_id'         => $id ? 'nullable' : 'required|exists:barangs,id',
             'ruangan_tujuan_id' => 'required|exists:ruangans,id',
             'jumlah'            => 'required|integer|min:1',
             'keterangan'        => 'nullable|string|max:500',
         ]);
 
-        $barangAsal = Barang::findOrFail($id);
+        $barangAsal = Barang::with('ruangan')->findOrFail($targetId);
 
         if ($request->jumlah > $barangAsal->jumlah) {
-            return redirect()->back()->with('error', 'Jumlah pemindahan melebihi stok yang ada!');
+            return redirect()->back()->with('error', "Jumlah pemindahan ({$request->jumlah}) melebihi stok yang ada ({$barangAsal->jumlah})!");
         }
 
-        // 1. Kurangi stok di ruangan asal
-        $barangAsal->decrement('jumlah', $request->jumlah);
-
-        // 2. Cek apakah barang yang sama sudah ada di ruangan tujuan
-        $barangTujuan = Barang::where('kode_barang', $barangAsal->kode_barang)
-            ->where('ruangan_id', $request->ruangan_tujuan_id)
-            ->first();
-
-        if ($barangTujuan) {
-            $barangTujuan->increment('jumlah', $request->jumlah);
-        } else {
-            Barang::create([
-                'kode_barang'    => $barangAsal->kode_barang,
-                'nama_barang'    => $barangAsal->nama_barang,
-                'kategori_id'    => $barangAsal->kategori_id,
-                'ruangan_id'     => $request->ruangan_tujuan_id,
-                'jumlah'         => $request->jumlah,
-                'kondisi'        => $barangAsal->kondisi,
-                'tahun_pengadaan'=> $barangAsal->tahun_pengadaan,
-            ]);
+        if ($request->ruangan_tujuan_id == $barangAsal->ruangan_id) {
+            return redirect()->back()->with('error', 'Ruangan tujuan tidak boleh sama dengan ruangan asal!');
         }
 
-        // 3. Catat Riwayat Mutasi
-        Mutasi::create([
-            'barang_id'         => $barangAsal->id,
-            'jenis_mutasi'      => 'Pindah Ruangan',
-            'ruangan_asal_id'   => $barangAsal->ruangan_id,
-            'ruangan_tujuan_id' => $request->ruangan_tujuan_id,
-            'jumlah'            => $request->jumlah,
-            'keterangan'        => $request->keterangan ?? 'Pemindahan Lokasi Aset',
-        ]);
+        $ruanganAsalId = $barangAsal->ruangan_id;
+        $ruanganAsalNama = $barangAsal->ruangan->nama_ruangan ?? 'Ruangan Asal';
+        $ruanganTujuan = Ruangan::findOrFail($request->ruangan_tujuan_id);
 
-        return redirect()->back()->with('success', 'Berhasil memindahkan aset ke ruangan tujuan!');
+        \DB::beginTransaction();
+        try {
+            $catatanMutasi = $request->filled('keterangan') 
+                ? $request->keterangan 
+                : "Pemindahan dari {$ruanganAsalNama} ke {$ruanganTujuan->nama_ruangan}";
+
+            // SKENARIO 1: Pindah SELURUH Unit (Relokasi Penuh Aset)
+            if ($request->jumlah >= $barangAsal->jumlah) {
+                $barangAsal->ruangan_id = $request->ruangan_tujuan_id;
+                $barangAsal->save();
+
+                Mutasi::create([
+                    'barang_id'         => $barangAsal->id,
+                    'jenis_mutasi'      => 'Pindah Ruangan',
+                    'ruangan_asal_id'   => $ruanganAsalId,
+                    'ruangan_tujuan_id' => $request->ruangan_tujuan_id,
+                    'jumlah'            => $request->jumlah,
+                    'keterangan'        => $catatanMutasi,
+                ]);
+            } else {
+                // SKENARIO 2: Pindah SEBAGIAN Unit (Pecah / Split Stok)
+                $barangAsal->decrement('jumlah', $request->jumlah);
+
+                // Buat kode aset unik baru untuk unit yang dipisah agar tidak melanggar unique key constraint
+                $kodeBaru = $this->generateUniqueSplitKode($barangAsal->kode_barang);
+
+                Barang::create([
+                    'kode_barang'     => $kodeBaru,
+                    'nama_barang'     => $barangAsal->nama_barang,
+                    'kategori_id'     => $barangAsal->kategori_id,
+                    'ruangan_id'      => $request->ruangan_tujuan_id,
+                    'jumlah'          => $request->jumlah,
+                    'kondisi'         => $barangAsal->kondisi,
+                    'tahun_pengadaan' => $barangAsal->tahun_pengadaan,
+                    'keterangan'      => ($barangAsal->keterangan ? $barangAsal->keterangan . ' | ' : '') . "Pindahan dari {$ruanganAsalNama}",
+                ]);
+
+                Mutasi::create([
+                    'barang_id'         => $barangAsal->id,
+                    'jenis_mutasi'      => 'Pindah Ruangan',
+                    'ruangan_asal_id'   => $ruanganAsalId,
+                    'ruangan_tujuan_id' => $request->ruangan_tujuan_id,
+                    'jumlah'            => $request->jumlah,
+                    'keterangan'        => "{$catatanMutasi} (Kode Aset Baru: {$kodeBaru})",
+                ]);
+            }
+
+            \DB::commit();
+            return redirect()->back()->with('success', "Aset {$barangAsal->nama_barang} ({$request->jumlah} unit) berhasil dipindahkan ke {$ruanganTujuan->nama_ruangan}!");
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal memindahkan aset: ' . $e->getMessage());
+        }
+    }
+
+    private function generateUniqueSplitKode($baseKode)
+    {
+        $counter = 1;
+        $candidate = $baseKode . '-B' . $counter;
+        while (Barang::where('kode_barang', $candidate)->exists()) {
+            $counter++;
+            $candidate = $baseKode . '-B' . $counter;
+        }
+        return $candidate;
     }
 
     // Fitur Pengurangan / Kerusakan Barang
