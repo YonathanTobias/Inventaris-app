@@ -478,13 +478,6 @@
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Kode Aset / Barcode <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fa-solid fa-barcode"></i></span>
-                                <input type="text" name="kode_barang" class="form-control font-monospace" placeholder="Misal: AST-LAB-001" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
                             <label class="form-label">Nama Barang / Aset <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="fa-solid fa-box"></i></span>
@@ -492,20 +485,38 @@
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label">Lokasi / Ruangan <span class="text-danger">*</span></label>
+                            <select name="ruangan_id" id="selectRuanganTambah" class="form-select" required onchange="handleRuanganTambahChange(this)">
+                                <option value="">-- Pilih Ruangan --</option>
+                                @foreach($ruangans as $r)
+                                    <option value="{{ $r->id }}" data-kode-ruangan="{{ $r->kode_ruangan }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label mb-0">Kode Aset / Barcode</label>
+                                <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeBarangTambah()">
+                                    <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Generate Ulang
+                                </button>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa-solid fa-barcode"></i></span>
+                                <input type="text" id="inputKodeBarangTambah" name="kode_barang" class="form-control font-monospace" placeholder="Otomatis mengikuti ruangan (atau ketik manual)">
+                                <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangTambah()" title="Generate Otomatis">
+                                    <i class="fa-solid fa-bolt text-warning"></i> Auto
+                                </button>
+                            </div>
+                            <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
+                                <i class="fa-solid fa-circle-check text-success me-1"></i>Kode otomatis terisi saat memilih ruangan (bisa diedit jika perlu).
+                            </small>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label">Kategori <span class="text-danger">*</span></label>
                             <select name="kategori_id" class="form-select" required>
                                 <option value="">-- Pilih Kategori --</option>
                                 @foreach($kategoris as $k)
                                     <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Lokasi / Ruangan <span class="text-danger">*</span></label>
-                            <select name="ruangan_id" class="form-select" required>
-                                <option value="">-- Pilih Ruangan --</option>
-                                @foreach($ruangans as $r)
-                                    <option value="{{ $r->id }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -760,6 +771,34 @@
         if (opt && opt.value) {
             let maxJml = opt.getAttribute('data-jumlah');
             document.getElementById('inputJumlahGlobal').value = maxJml;
+        }
+    }
+
+    // Auto-Generate Kode Aset pada Modal Tambah Barang
+    const nextAssetCodesMap = @json($nextAssetCodes ?? []);
+    let manualKodeBarangEdited = false;
+
+    document.getElementById('inputKodeBarangTambah')?.addEventListener('input', function() {
+        manualKodeBarangEdited = this.value.trim().length > 0;
+    });
+
+    function handleRuanganTambahChange(selectEl) {
+        let rId = selectEl.value;
+        let inputKode = document.getElementById('inputKodeBarangTambah');
+        if (rId && nextAssetCodesMap[rId] && !manualKodeBarangEdited) {
+            inputKode.value = nextAssetCodesMap[rId];
+        }
+    }
+
+    function triggerAutoKodeBarangTambah() {
+        manualKodeBarangEdited = false;
+        let selectRuangan = document.getElementById('selectRuanganTambah');
+        let rId = selectRuangan.value;
+        let inputKode = document.getElementById('inputKodeBarangTambah');
+        if (rId && nextAssetCodesMap[rId]) {
+            inputKode.value = nextAssetCodesMap[rId];
+        } else if (!rId) {
+            alert('Silakan pilih lokasi / ruangan terlebih dahulu untuk membuat kode aset otomatis.');
         }
     }
 </script>

@@ -48,11 +48,24 @@ class BarangController extends Controller
 
         $allBarangs = Barang::with('ruangan')->where('jumlah', '>', 0)->orderBy('nama_barang')->get();
 
-        return view('barang.index', compact('barangs', 'ruangans', 'kategoris', 'stats', 'allBarangs'));
+        $nextAssetCodes = [];
+        foreach ($ruangans as $r) {
+            $nextAssetCodes[$r->id] = self::generateKodeBarangBaru($r);
+        }
+
+        return view('barang.index', compact('barangs', 'ruangans', 'kategoris', 'stats', 'allBarangs', 'nextAssetCodes'));
     }
 
     public function store(Request $request)
     {
+        // Otomatis generate kode aset jika tidak diisi manual oleh user
+        if (!$request->filled('kode_barang') && $request->filled('ruangan_id')) {
+            $ruangan = Ruangan::find($request->ruangan_id);
+            if ($ruangan) {
+                $request->merge(['kode_barang' => self::generateKodeBarangBaru($ruangan)]);
+            }
+        }
+
         $validated = $request->validate([
             'kode_barang'     => 'required|string|max:100|unique:barangs,kode_barang',
             'nama_barang'     => 'required|string|max:255',
@@ -66,7 +79,7 @@ class BarangController extends Controller
 
         Barang::create($validated);
 
-        return redirect()->back()->with('success', 'Aset baru berhasil ditambahkan!');
+        return redirect()->back()->with('success', "Aset baru {$validated['nama_barang']} ({$validated['kode_barang']}) berhasil ditambahkan!");
     }
 
     public function update(Request $request, $id)
@@ -182,7 +195,7 @@ class BarangController extends Controller
     }
 
     // Helper: Generate Kode Aset Unik Otomatis Berdasarkan Ruangan Tujuan
-    private function generateKodeBarangBaru(Ruangan $ruangan)
+    public static function generateKodeBarangBaru(Ruangan $ruangan)
     {
         $parts = explode('-', $ruangan->kode_ruangan);
         $seg = '';
