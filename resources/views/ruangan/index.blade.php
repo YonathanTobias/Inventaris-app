@@ -92,18 +92,29 @@
                 <form action="{{ route('ruangan.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label">Kode Ruangan <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="fa-solid fa-hashtag"></i></span>
-                            <input type="text" name="kode_ruangan" class="form-control font-monospace" placeholder="Misal: R-LAB-01" required>
-                        </div>
-                    </div>
-                    <div class="mb-4">
                         <label class="form-label">Nama Ruangan <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="fa-solid fa-door-open"></i></span>
-                            <input type="text" name="nama_ruangan" class="form-control" placeholder="Misal: Lab Komputer 1" required>
+                            <input type="text" id="inputNamaRuangan" name="nama_ruangan" class="form-control" placeholder="Misal: Lab Kebidanan & Komunitas" required oninput="autoGenerateKodeRuangan(this.value)">
                         </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label mb-0">Kode Ruangan</label>
+                            <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeRuangan()">
+                                <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Generate Ulang
+                            </button>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fa-solid fa-hashtag"></i></span>
+                            <input type="text" id="inputKodeRuangan" name="kode_ruangan" class="form-control font-monospace" placeholder="Otomatis (atau ketik manual)">
+                            <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeRuangan()" title="Otomatis Buat Kode">
+                                <i class="fa-solid fa-bolt text-warning"></i> Auto
+                            </button>
+                        </div>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
+                            <i class="fa-solid fa-circle-check text-success me-1"></i>Kode otomatis terisi mengikuti nama ruangan & bisa diedit jika perlu.
+                        </small>
                     </div>
                     <button type="submit" class="btn btn-modern-primary w-100 justify-content-center">
                         <i class="fa-solid fa-floppy-disk"></i>
@@ -222,6 +233,65 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
+
+<script>
+    let manualKodeEdited = false;
+
+    document.getElementById('inputKodeRuangan')?.addEventListener('input', function() {
+        manualKodeEdited = this.value.trim().length > 0;
+    });
+
+    function autoGenerateKodeRuangan(nama) {
+        if (manualKodeEdited) return;
+        generateKodeFromText(nama);
+    }
+
+    function triggerAutoKodeRuangan() {
+        manualKodeEdited = false;
+        let nama = document.getElementById('inputNamaRuangan').value;
+        generateKodeFromText(nama);
+    }
+
+    function generateKodeFromText(nama) {
+        if (!nama || nama.trim() === '') {
+            document.getElementById('inputKodeRuangan').value = '';
+            return;
+        }
+
+        let clean = nama.trim().toUpperCase();
+        let prefix = 'RNG';
+        let sub = '';
+
+        if (clean.includes('LAB')) {
+            prefix = 'LAB';
+            let words = clean.replace(/LABORATORIUM|LAB/g, '').trim().split(/[\s\-_]+/);
+            if (words.length > 0 && words[0]) {
+                sub = words[0].substring(0, 3);
+            }
+        } else if (clean.includes('KULIAH') || clean.includes('KELAS') || clean.includes('TEORI')) {
+            prefix = 'RK';
+            let words = clean.replace(/RUANG|KULIAH|KELAS|TEORI/g, '').trim().split(/[\s\-_]+/);
+            if (words.length > 0 && words[0]) {
+                sub = words[0].substring(0, 3);
+            }
+        } else if (clean.includes('GUDANG')) {
+            prefix = 'GDG';
+        } else if (clean.includes('PERPUS')) {
+            prefix = 'PERPUS';
+        } else if (clean.includes('AULA')) {
+            prefix = 'AULA';
+        } else {
+            let words = clean.replace(/RUANG|RUANGAN|KANTOR/g, '').trim().split(/[\s\-_]+/);
+            if (words.length > 0 && words[0]) {
+                sub = words[0].substring(0, 3);
+            }
+        }
+
+        let count = {{ $ruangans->count() + 1 }};
+        let seq = count < 10 ? '0' + count : count;
+        let finalCode = sub ? `${prefix}-${sub}-${seq}` : `${prefix}-${seq}`;
+        document.getElementById('inputKodeRuangan').value = finalCode;
+    }
+</script>
 @endsection
