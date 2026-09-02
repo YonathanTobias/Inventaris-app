@@ -8,10 +8,11 @@ use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Redirect root to dashboard (or login if guest)
-Route::get('/', function () {
-    return redirect()->route('barang.index');
-});
+// Halaman Utama Publik: Portal Peminjaman Aset Mandiri (Dosen & Mahasiswa)
+Route::get('/', [\App\Http\Controllers\PeminjamanPublikController::class, 'index'])->name('home');
+Route::post('/pinjam', [\App\Http\Controllers\PeminjamanPublikController::class, 'store'])->name('publik.store');
+Route::get('/pinjam/lacak', [\App\Http\Controllers\PeminjamanPublikController::class, 'lacak'])->name('publik.lacak');
+Route::get('/pinjam/sukses/{kode}', [\App\Http\Controllers\PeminjamanPublikController::class, 'sukses'])->name('publik.sukses');
 
 // Halaman Publik: Verifikasi Scan QR Code Aset (Bisa diakses tanpa login)
 Route::get('/cek/{kode_barang}', [BarangController::class, 'cekAsetPublik'])->name('aset.cek');
@@ -38,6 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::post('barang/pindah', [BarangController::class, 'pindahRuangan'])->name('barang.pindah.global');
     Route::post('barang/{id}/pindah', [BarangController::class, 'pindahRuangan'])->name('barang.pindah');
     Route::post('barang/{id}/kurangi', [BarangController::class, 'kurangiStok'])->name('barang.kurangi');
+
+    // Manajemen Peminjaman Aset (Approval Sarpras, Serah Terima, & Pengembalian)
+    Route::resource('peminjaman', \App\Http\Controllers\PeminjamanController::class)->only(['index', 'store', 'destroy']);
+    Route::post('peminjaman/{id}/approve', [\App\Http\Controllers\PeminjamanController::class, 'approve'])->name('peminjaman.approve');
+    Route::post('peminjaman/{id}/reject', [\App\Http\Controllers\PeminjamanController::class, 'reject'])->name('peminjaman.reject');
+    Route::post('peminjaman/{id}/serahkan', [\App\Http\Controllers\PeminjamanController::class, 'serahkan'])->name('peminjaman.serahkan');
+    Route::post('peminjaman/{id}/kembalikan', [\App\Http\Controllers\PeminjamanController::class, 'kembalikan'])->name('peminjaman.kembalikan');
 
     // Laporan & Export Excel
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');

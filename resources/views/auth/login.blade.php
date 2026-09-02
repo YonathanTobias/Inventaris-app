@@ -178,6 +178,12 @@
                     <span>Masuk ke Sistem</span>
                     <i class="fa-solid fa-arrow-right-to-bracket"></i>
                 </button>
+
+                <div class="text-center mt-3 pt-2">
+                    <a href="{{ url('/') }}" class="text-decoration-none small text-muted fw-semibold">
+                        <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Portal Peminjaman Aset
+                    </a>
+                </div>
             </form>
         </div>
     </div>

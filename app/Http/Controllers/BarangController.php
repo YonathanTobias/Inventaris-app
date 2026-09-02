@@ -73,9 +73,12 @@ class BarangController extends Controller
             'ruangan_id'      => 'required|exists:ruangans,id',
             'jumlah'          => 'required|integer|min:1',
             'kondisi'         => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'bisa_dipinjam'   => 'nullable|boolean',
             'tahun_pengadaan' => 'nullable|string|max:20',
             'keterangan'      => 'nullable|string|max:1000',
         ]);
+
+        $validated['bisa_dipinjam'] = $request->has('bisa_dipinjam');
 
         Barang::create($validated);
 
@@ -92,9 +95,12 @@ class BarangController extends Controller
             'ruangan_id'      => 'required|exists:ruangans,id',
             'jumlah'          => 'required|integer|min:0',
             'kondisi'         => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'bisa_dipinjam'   => 'nullable|boolean',
             'tahun_pengadaan' => 'nullable|string|max:20',
             'keterangan'      => 'nullable|string|max:1000',
         ]);
+
+        $validated['bisa_dipinjam'] = $request->has('bisa_dipinjam');
 
         $barang->update($validated);
 

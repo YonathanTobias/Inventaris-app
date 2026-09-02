@@ -581,6 +581,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link-custom {{ request()->routeIs('peminjaman.*') ? 'active' : '' }}" href="{{ route('peminjaman.index') }}">
+                            <i class="fa-solid fa-hand-holding-hand"></i>
+                            <span>Peminjaman</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link-custom {{ request()->routeIs('ruangan.*') ? 'active' : '' }}" href="{{ route('ruangan.index') }}">
                             <i class="fa-solid fa-door-open"></i>
                             <span>Ruangan</span>

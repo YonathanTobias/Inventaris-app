@@ -16,8 +16,13 @@ class Barang extends Model
         'ruangan_id',
         'jumlah',
         'kondisi',
+        'bisa_dipinjam',
         'tahun_pengadaan',
         'keterangan',
+    ];
+
+    protected $casts = [
+        'bisa_dipinjam' => 'boolean',
     ];
 
     // Relasi ke Kategori
@@ -36,5 +41,11 @@ class Barang extends Model
     public function mutasis()
     {
         return $this->hasMany(Mutasi::class);
+    }
+
+    // Relasi ke Riwayat Peminjaman
+    public function peminjamans()
+    {
+        return $this->hasMany(Peminjaman::class);
     }
 }

@@ -210,6 +210,18 @@
                             @else
                                 <span class="badge-status badge-status-berat">Rusak Berat</span>
                             @endif
+
+                            <div class="mt-1">
+                                @if($b->bisa_dipinjam)
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Aset ini diizinkan untuk dipinjam">
+                                        <i class="fa-solid fa-hand-holding-hand me-0.5"></i>Bisa Dipinjam
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary-subtle text-muted border border-secondary-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Aset ini khusus di dalam ruangan">
+                                        <i class="fa-solid fa-lock me-0.5"></i>Khusus Ruangan
+                                    </span>
+                                @endif
+                            </div>
                         </td>
                         <td class="text-center pe-4">
                             <div class="d-inline-flex gap-1">
@@ -305,6 +317,17 @@
                                                     <div class="col-12">
                                                         <label class="form-label">Keterangan / Spesifikasi</label>
                                                         <textarea name="keterangan" class="form-control" rows="2" placeholder="Catatan tambahan spesifikasi barang...">{{ $b->keterangan }}</textarea>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="p-3 bg-light rounded-3 border d-flex align-items-center justify-content-between">
+                                                            <div>
+                                                                <h6 class="fw-bold mb-0 small text-dark"><i class="fa-solid fa-hand-holding-hand text-primary me-2"></i>Status Izin Peminjaman Aset</h6>
+                                                                <small class="text-muted" style="font-size: 0.75rem;">Aktifkan jika aset ini boleh dipinjam oleh civitas kampus.</small>
+                                                            </div>
+                                                            <div class="form-check form-switch fs-5 mb-0">
+                                                                <input class="form-check-input" type="checkbox" name="bisa_dipinjam" id="switchBisaDipinjamEdit{{ $b->id }}" value="1" {{ $b->bisa_dipinjam ? 'checked' : '' }}>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -539,6 +562,17 @@
                         <div class="col-12">
                             <label class="form-label">Keterangan / Spesifikasi (Opsional)</label>
                             <textarea name="keterangan" class="form-control" rows="2" placeholder="Catatan spesifikasi teknis atau nomor seri tambahan..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <div class="p-3 bg-light rounded-3 border d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="fw-bold mb-0 small text-dark"><i class="fa-solid fa-hand-holding-hand text-primary me-2"></i>Status Izin Peminjaman Aset</h6>
+                                    <small class="text-muted" style="font-size: 0.75rem;">Aktifkan jika aset ini diizinkan untuk dipinjam oleh mahasiswa, dosen, atau unit kerja lain.</small>
+                                </div>
+                                <div class="form-check form-switch fs-5 mb-0">
+                                    <input class="form-check-input" type="checkbox" name="bisa_dipinjam" id="switchBisaDipinjamTambah" value="1" checked>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
