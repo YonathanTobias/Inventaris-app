@@ -171,11 +171,26 @@
 
 <!-- DOKUMEN CETAK RESMI KARTU INVENTARIS RUANGAN (KIR) - HANYA TAMPIL SAAT PRINT -->
 <div class="d-none d-print-block kir-print-document mb-4">
-    <!-- Kop Surat Resmi (Tanpa Logo & Tanpa Yayasan) -->
-    <div style="text-align: center; margin-bottom: 6px;">
-        <div style="font-size: 14pt; font-weight: 800; color: #000; margin-bottom: 3px;">SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG</div>
-        <div style="font-size: 8.5pt; color: #222;">Jl. Yulius Usman No. 62, Malang 65117 | Telp. (0341) 369003 | Website: www.stikespantiwaluya.ac.id</div>
-    </div>
+    <!-- Kop Surat Resmi dengan Logo STIKES Panti Waluya -->
+    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 6px;">
+        <tr>
+            <td style="width: 75px; vertical-align: middle; text-align: center; border: none; padding-right: 12px;">
+                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 68px; width: auto; object-fit: contain; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+            </td>
+            <td style="vertical-align: middle; text-align: center; border: none;">
+                <div style="font-size: 13.5pt; font-weight: 800; color: #000; line-height: 1.25; text-transform: uppercase; letter-spacing: 0.02em;">
+                    SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG
+                </div>
+                <div style="font-size: 9.5pt; font-weight: 700; color: #1e1b4b; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.03em;">
+                    BIRO SARANA DAN PRASARANA (SARPRAS)
+                </div>
+                <div style="font-size: 8pt; color: #222; margin-top: 2px;">
+                    Jl. Yulius Usman No. 62, Malang 65117 | Telp. (0341) 369003 | Website: www.stikespantiwaluya.ac.id
+                </div>
+            </td>
+            <td style="width: 75px; border: none;"></td> <!-- Spacer penyeimbang agar teks tetap di tengah halaman -->
+        </tr>
+    </table>
     
     <!-- Garis Kop Surat Ganda Formal -->
     <div style="border-top: 2px solid #000000; border-bottom: 1px solid #000000; height: 3px; margin: 4px 0 14px 0;"></div>
