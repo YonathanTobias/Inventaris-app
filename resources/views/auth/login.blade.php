@@ -117,37 +117,6 @@
             box-shadow: 0 10px 24px rgba(79, 70, 229, 0.45);
             color: #ffffff;
         }
-
-        .demo-credential-box {
-            background-color: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            border-radius: 14px;
-            padding: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .demo-btn {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            padding: 0.45rem 0.75rem;
-            border-radius: 8px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 0.4rem;
-        }
-
-        .demo-btn:hover {
-            background: #eef2ff;
-            border-color: #c7d2fe;
-            color: var(--primary);
-        }
     </style>
 </head>
 <body>
@@ -210,30 +179,6 @@
                     <i class="fa-solid fa-arrow-right-to-bracket"></i>
                 </button>
             </form>
-
-            <!-- Quick Demo Credentials Box -->
-            <div class="demo-credential-box">
-                <div class="d-flex align-items-center gap-1.5 mb-2">
-                    <i class="fa-solid fa-circle-info text-primary" style="font-size: 0.85rem;"></i>
-                    <span class="small fw-bold text-dark">Pilih Akun Login (Klik Cepat):</span>
-                </div>
-                
-                <button type="button" class="demo-btn" onclick="fillCredentials('adminit@pantiwaluya.ac.id', 'password123')">
-                    <div>
-                        <span class="badge bg-primary me-1">Admin IT</span>
-                        <span class="text-secondary font-monospace">adminit@pantiwaluya.ac.id</span>
-                    </div>
-                    <i class="fa-solid fa-arrow-turn-down text-muted" style="font-size: 0.75rem;"></i>
-                </button>
-
-                <button type="button" class="demo-btn mb-0" onclick="fillCredentials('sarpras@pantiwaluya.ac.id', 'password123')">
-                    <div>
-                        <span class="badge bg-success me-1">Admin SARPRAS</span>
-                        <span class="text-secondary font-monospace">sarpras@pantiwaluya.ac.id</span>
-                    </div>
-                    <i class="fa-solid fa-arrow-turn-down text-muted" style="font-size: 0.75rem;"></i>
-                </button>
-            </div>
         </div>
     </div>
 
@@ -252,11 +197,6 @@
                 toggleIcon.classList.remove('fa-eye-slash');
                 toggleIcon.classList.add('fa-eye');
             }
-        }
-
-        function fillCredentials(email, password) {
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = password;
         }
     </script>
 </body>
