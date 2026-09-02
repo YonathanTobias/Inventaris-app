@@ -281,23 +281,13 @@
             color: #1e293b;
             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
             font-size: 0.82rem;
-            padding: 0.32rem 0.65rem;
+            padding: 0.28rem 0.6rem;
             border-radius: 8px;
             font-weight: 700;
             border: 1px solid #cbd5e1;
             letter-spacing: 0.02em;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
+            display: inline-block;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-        }
-
-        .badge-code::before {
-            content: '\f02a';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: #4f46e5;
-            font-size: 0.8rem;
         }
 
         .badge-room-code {
@@ -305,22 +295,12 @@
             color: #4338ca;
             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
             font-size: 0.82rem;
-            padding: 0.32rem 0.65rem;
+            padding: 0.28rem 0.6rem;
             border-radius: 8px;
             font-weight: 700;
             border: 1px solid #c7d2fe;
             letter-spacing: 0.02em;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-
-        .badge-room-code::before {
-            content: '\f52a';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: #4f46e5;
-            font-size: 0.8rem;
+            display: inline-block;
         }
 
         .badge-category {
