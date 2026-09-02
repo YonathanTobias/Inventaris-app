@@ -162,11 +162,6 @@
                                 </td>
                                 <td class="text-center pe-4">
                                     <div class="d-inline-flex gap-1">
-                                        <!-- Tombol Cetak Label 1 Ruangan -->
-                                        <a href="{{ route('ruangan.label', $r->id) }}" target="_blank" class="btn-icon btn-icon-info border" data-bs-toggle="tooltip" title="Cetak Label Seluruh Aset di Ruangan Ini ({{ $r->barangs_count }} Jenis)">
-                                            <i class="fa-solid fa-barcode text-primary"></i>
-                                        </a>
-
                                         <!-- Tombol Edit -->
                                         <button type="button" class="btn-icon btn-icon-primary" data-bs-toggle="modal" data-bs-target="#modalEditRuangan{{ $r->id }}" data-bs-toggle="tooltip" title="Edit Ruangan">
                                             <i class="fa-solid fa-pen-to-square"></i>

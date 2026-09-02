@@ -326,10 +326,7 @@
                                     <div class="small text-muted">{{ $b->kategori->nama_kategori ?? '-' }}</div>
                                 </td>
                                 <td>
-                                    <div class="d-flex align-items-center gap-1.5 text-secondary">
-                                        <i class="fa-solid fa-door-open text-primary" style="font-size: 0.8rem;"></i>
-                                        <span class="fw-medium">{{ $b->ruangan->nama_ruangan ?? '-' }}</span>
-                                    </div>
+                                    <span class="fw-medium text-dark">{{ $b->ruangan->nama_ruangan ?? '-' }}</span>
                                 </td>
                                 <td class="text-center">
                                     <span class="badge bg-dark-subtle text-dark border px-2.5 py-1.5 fw-bold rounded-pill">

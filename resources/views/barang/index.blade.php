@@ -190,12 +190,7 @@
                             </span>
                         </td>
                         <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="p-1 rounded bg-light border text-primary d-inline-flex">
-                                    <i class="fa-solid fa-door-open" style="font-size: 0.85rem;"></i>
-                                </div>
-                                <span class="fw-medium">{{ $b->ruangan->nama_ruangan ?? '-' }}</span>
-                            </div>
+                            <span class="fw-medium text-dark">{{ $b->ruangan->nama_ruangan ?? '-' }}</span>
                         </td>
                         <td class="text-center">
                             <span class="badge bg-dark-subtle text-dark border px-2.5 py-1.5 fw-bold rounded-pill" style="font-size: 0.85rem;">
@@ -225,11 +220,6 @@
                         </td>
                         <td class="text-center pe-4">
                             <div class="d-inline-flex gap-1">
-                                <!-- Tombol Cetak Label 5x2.5cm -->
-                                <a href="{{ route('barang.label', $b->id) }}" target="_blank" class="btn-icon btn-icon-dark border" data-bs-toggle="tooltip" title="Cetak Label Stiker (5 x 2.5 cm)">
-                                    <i class="fa-solid fa-barcode text-dark"></i>
-                                </a>
-
                                 <!-- Tombol Edit -->
                                 <button type="button" class="btn-icon btn-icon-primary" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $b->id }}" data-bs-toggle="tooltip" title="Edit Aset">
                                     <i class="fa-solid fa-pen-to-square"></i>

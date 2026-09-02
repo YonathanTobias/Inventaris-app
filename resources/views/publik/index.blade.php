@@ -505,7 +505,7 @@
                         </div>
                         <h6 class="fw-bold text-dark mb-1">{{ $item->nama_barang }}</h6>
                         <p class="text-muted small mb-2" style="font-size: 0.8rem;">
-                            <i class="fa-solid fa-door-open text-primary me-1"></i>{{ $item->ruangan->nama_ruangan ?? '-' }}
+                            Lokasi: {{ $item->ruangan->nama_ruangan ?? '-' }}
                         </p>
                         @if($item->keterangan)
                             <p class="text-secondary small mb-0 text-truncate" style="font-size: 0.75rem;" title="{{ $item->keterangan }}">
