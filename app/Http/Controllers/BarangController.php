@@ -88,7 +88,7 @@ class BarangController extends Controller
         return redirect()->back()->with('success', 'Data aset berhasil diperbarui!');
     }
 
-    // Fitur Mutasi: Pindah Ruangan (Mendukung Pindah Seluruh Unit maupun Sebagian Unit)
+    // Fitur Mutasi: Pindah Ruangan (Otomatis Menyesuaikan Kode Aset dengan Ruangan Tujuan)
     public function pindahRuangan(Request $request, $id = null)
     {
         $targetId = $id ?: $request->input('barang_id');
@@ -97,6 +97,7 @@ class BarangController extends Controller
             'barang_id'         => $id ? 'nullable' : 'required|exists:barangs,id',
             'ruangan_tujuan_id' => 'required|exists:ruangans,id',
             'jumlah'            => 'required|integer|min:1',
+            'kode_baru'         => 'nullable|string|max:100',
             'keterangan'        => 'nullable|string|max:500',
         ]);
 
@@ -114,6 +115,19 @@ class BarangController extends Controller
         $ruanganAsalNama = $barangAsal->ruangan->nama_ruangan ?? 'Ruangan Asal';
         $ruanganTujuan = Ruangan::findOrFail($request->ruangan_tujuan_id);
 
+        // Buat Kode Aset Baru yang otomatis menyesuaikan dengan kode Ruangan Tujuan
+        $kodeBaru = $request->filled('kode_baru') 
+            ? trim($request->kode_baru) 
+            : $this->generateKodeBarangBaru($ruanganTujuan);
+
+        // Pastikan kode baru tidak tabrakan dengan aset lain di database
+        $cekBentrok = Barang::where('kode_barang', $kodeBaru)->where('id', '!=', $barangAsal->id)->exists();
+        if ($cekBentrok) {
+            $kodeBaru = $this->generateKodeBarangBaru($ruanganTujuan);
+        }
+
+        $oldKode = $barangAsal->kode_barang;
+
         \DB::beginTransaction();
         try {
             $catatanMutasi = $request->filled('keterangan') 
@@ -123,6 +137,7 @@ class BarangController extends Controller
             // SKENARIO 1: Pindah SELURUH Unit (Relokasi Penuh Aset)
             if ($request->jumlah >= $barangAsal->jumlah) {
                 $barangAsal->ruangan_id = $request->ruangan_tujuan_id;
+                $barangAsal->kode_barang = $kodeBaru; // Kode aset otomatis disesuaikan!
                 $barangAsal->save();
 
                 Mutasi::create([
@@ -131,24 +146,21 @@ class BarangController extends Controller
                     'ruangan_asal_id'   => $ruanganAsalId,
                     'ruangan_tujuan_id' => $request->ruangan_tujuan_id,
                     'jumlah'            => $request->jumlah,
-                    'keterangan'        => $catatanMutasi,
+                    'keterangan'        => "{$catatanMutasi} (Kode Aset diperbarui: {$oldKode} → {$kodeBaru})",
                 ]);
             } else {
                 // SKENARIO 2: Pindah SEBAGIAN Unit (Pecah / Split Stok)
                 $barangAsal->decrement('jumlah', $request->jumlah);
 
-                // Buat kode aset unik baru untuk unit yang dipisah agar tidak melanggar unique key constraint
-                $kodeBaru = $this->generateUniqueSplitKode($barangAsal->kode_barang);
-
-                Barang::create([
-                    'kode_barang'     => $kodeBaru,
+                $barangBaru = Barang::create([
+                    'kode_barang'     => $kodeBaru, // Kode aset baru di ruangan tujuan!
                     'nama_barang'     => $barangAsal->nama_barang,
                     'kategori_id'     => $barangAsal->kategori_id,
                     'ruangan_id'      => $request->ruangan_tujuan_id,
                     'jumlah'          => $request->jumlah,
                     'kondisi'         => $barangAsal->kondisi,
                     'tahun_pengadaan' => $barangAsal->tahun_pengadaan,
-                    'keterangan'      => ($barangAsal->keterangan ? $barangAsal->keterangan . ' | ' : '') . "Pindahan dari {$ruanganAsalNama}",
+                    'keterangan'      => ($barangAsal->keterangan ? $barangAsal->keterangan . ' | ' : '') . "Pindahan dari {$ruanganAsalNama} (Eks {$oldKode})",
                 ]);
 
                 Mutasi::create([
@@ -162,21 +174,48 @@ class BarangController extends Controller
             }
 
             \DB::commit();
-            return redirect()->back()->with('success', "Aset {$barangAsal->nama_barang} ({$request->jumlah} unit) berhasil dipindahkan ke {$ruanganTujuan->nama_ruangan}!");
+            return redirect()->back()->with('success', "Aset {$barangAsal->nama_barang} berhasil dipindahkan ke {$ruanganTujuan->nama_ruangan}! Kode aset telah otomatis diperbarui menjadi [{$kodeBaru}].");
         } catch (\Exception $e) {
             \DB::rollBack();
             return redirect()->back()->with('error', 'Gagal memindahkan aset: ' . $e->getMessage());
         }
     }
 
-    private function generateUniqueSplitKode($baseKode)
+    // Helper: Generate Kode Aset Unik Otomatis Berdasarkan Ruangan Tujuan
+    private function generateKodeBarangBaru(Ruangan $ruangan)
     {
-        $counter = 1;
-        $candidate = $baseKode . '-B' . $counter;
-        while (Barang::where('kode_barang', $candidate)->exists()) {
-            $counter++;
-            $candidate = $baseKode . '-B' . $counter;
+        $parts = explode('-', $ruangan->kode_ruangan);
+        $seg = '';
+        if (count($parts) >= 2) {
+            if (in_array(strtoupper($parts[0]), ['LAB', 'R', 'RK', 'RUANG'])) {
+                $seg = strtoupper(substr($parts[1], 0, 4));
+            } else {
+                $seg = strtoupper(substr($parts[0], 0, 4));
+            }
+        } else {
+            $seg = strtoupper(substr($ruangan->kode_ruangan, 0, 3));
         }
+
+        $prefix = "AST-PW-{$seg}";
+
+        $lastBarangs = Barang::where('kode_barang', 'like', "{$prefix}-%")->get();
+        $maxNum = 0;
+        foreach ($lastBarangs as $lb) {
+            if (preg_match('/-(\d+)$/', $lb->kode_barang, $m)) {
+                $num = (int)$m[1];
+                if ($num > $maxNum) {
+                    $maxNum = $num;
+                }
+            }
+        }
+
+        $nextNum = $maxNum + 1;
+        $candidate = sprintf('%s-%03d', $prefix, $nextNum);
+        while (Barang::where('kode_barang', $candidate)->exists()) {
+            $nextNum++;
+            $candidate = sprintf('%s-%03d', $prefix, $nextNum);
+        }
+
         return $candidate;
     }
 

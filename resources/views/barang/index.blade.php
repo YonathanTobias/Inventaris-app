@@ -349,12 +349,21 @@
 
                                                 <div class="mb-3">
                                                     <label class="form-label">Pilih Ruangan Tujuan <span class="text-danger">*</span></label>
-                                                    <select name="ruangan_tujuan_id" class="form-select" required>
+                                                    <select name="ruangan_tujuan_id" class="form-select" required onchange="handleRowPindahChange(this, '{{ $b->id }}', '{{ $b->kode_barang }}')">
                                                         <option value="">-- Pilih Tujuan --</option>
                                                         @foreach($ruangans->where('id', '!=', $b->ruangan_id) as $r)
-                                                            <option value="{{ $r->id }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
+                                                            <option value="{{ $r->id }}" data-kode-ruangan="{{ $r->kode_ruangan }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
                                                         @endforeach
                                                     </select>
+                                                    <div class="mt-2 p-2 bg-light border rounded-3 small" id="boxKodeBaruRow{{ $b->id }}" style="display: none;">
+                                                        <div class="text-muted small">Penyesuaian Kode Aset Otomatis:</div>
+                                                        <div class="d-flex align-items-center gap-2 mt-1">
+                                                            <span class="badge-code py-0">{{ $b->kode_barang }}</span>
+                                                            <i class="fa-solid fa-arrow-right text-primary"></i>
+                                                            <span class="badge bg-success-subtle text-success border border-success fw-bold font-monospace" id="previewKodeBaruRow{{ $b->id }}">-</span>
+                                                        </div>
+                                                        <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">*Kode aset otomatis di-update agar sinkron dengan ruangan baru.</small>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -599,12 +608,17 @@
                             <label class="form-label fw-bold">Ruangan Tujuan Pemindahan <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="fa-solid fa-door-open text-primary"></i></span>
-                                <select name="ruangan_tujuan_id" id="selectRuanganTujuanGlobal" class="form-select" required>
+                                <select name="ruangan_tujuan_id" id="selectRuanganTujuanGlobal" class="form-select" required onchange="handlePindahGlobalTujuanChange(this)">
                                     <option value="">-- Pilih Ruangan Tujuan --</option>
                                     @foreach($ruangans as $r)
-                                        <option value="{{ $r->id }}" id="optRuanganTujuan{{ $r->id }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
+                                        <option value="{{ $r->id }}" data-kode-ruangan="{{ $r->kode_ruangan }}" id="optRuanganTujuan{{ $r->id }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="mt-2 p-2 bg-light border rounded-3 small" id="boxKodeBaruGlobal" style="display: none;">
+                                <div class="text-muted small">Penyesuaian Kode Aset Baru:</div>
+                                <span class="badge bg-success-subtle text-success border border-success fw-bold font-monospace mt-1" id="previewKodeBaruGlobal">-</span>
+                                <small class="text-muted d-block mt-0.5" style="font-size: 0.72rem;">*Kode aset otomatis di-generate mengikuti identitas ruangan tujuan.</small>
                             </div>
                         </div>
 
@@ -645,6 +659,55 @@
 </div>
 
 <script>
+    function computeTargetCode(oldKode, kodeRuangan) {
+        if (!kodeRuangan) return oldKode;
+        let parts = kodeRuangan.split('-');
+        let seg = '';
+        if (parts.length >= 2) {
+            let first = parts[0].toUpperCase();
+            if (['LAB', 'R', 'RK', 'RUANG'].includes(first)) {
+                seg = parts[1].substring(0, 4).toUpperCase();
+            } else {
+                seg = parts[0].substring(0, 4).toUpperCase();
+            }
+        } else {
+            seg = kodeRuangan.substring(0, 3).toUpperCase();
+        }
+        return 'AST-PW-' + seg + '-xxx';
+    }
+
+    function handleRowPindahChange(selectEl, rowId, oldKode) {
+        let opt = selectEl.options[selectEl.selectedIndex];
+        let box = document.getElementById('boxKodeBaruRow' + rowId);
+        let preview = document.getElementById('previewKodeBaruRow' + rowId);
+        if (opt && opt.value) {
+            let kodeRuangan = opt.getAttribute('data-kode-ruangan') || '';
+            let targetCode = computeTargetCode(oldKode, kodeRuangan);
+            preview.innerText = targetCode;
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+        }
+    }
+
+    function handlePindahGlobalTujuanChange(selectEl) {
+        let opt = selectEl.options[selectEl.selectedIndex];
+        let box = document.getElementById('boxKodeBaruGlobal');
+        let preview = document.getElementById('previewKodeBaruGlobal');
+        let selectAset = document.getElementById('selectAsetGlobal');
+        let optAset = selectAset.options[selectAset.selectedIndex];
+
+        if (opt && opt.value && optAset && optAset.value) {
+            let oldKode = optAset.getAttribute('data-kode') || '';
+            let kodeRuangan = opt.getAttribute('data-kode-ruangan') || '';
+            let targetCode = computeTargetCode(oldKode, kodeRuangan);
+            preview.innerText = targetCode;
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+        }
+    }
+
     function handlePindahGlobalSelect(selectElement) {
         let opt = selectElement.options[selectElement.selectedIndex];
         let card = document.getElementById('cardAsetTerpilihGlobal');
@@ -654,6 +717,7 @@
         if (!opt.value) {
             card.style.display = 'none';
             inputJumlah.max = '';
+            document.getElementById('boxKodeBaruGlobal').style.display = 'none';
             return;
         }
 
@@ -671,7 +735,7 @@
 
         inputJumlah.max = jumlah;
         inputJumlah.value = jumlah;
-        document.getElementById('hintPindahGlobal').innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i>Maksimal ' + jumlah + ' unit. Jika memindahkan seluruh unit, lokasi aset langsung dipindahkan.';
+        document.getElementById('hintPindahGlobal').innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i>Maksimal ' + jumlah + ' unit. Kode aset akan otomatis diperbarui mengikuti ruangan baru.';
 
         // Disable option ruangan asal pada ruangan tujuan
         for (let i = 0; i < selectTujuan.options.length; i++) {
@@ -685,6 +749,9 @@
                 option.disabled = false;
             }
         }
+
+        // Trigger preview if destination room already chosen
+        handlePindahGlobalTujuanChange(selectTujuan);
     }
 
     function setPindahSemuaUnitGlobal() {
