@@ -188,7 +188,7 @@
                         </div>
                         @if($p->waktu_masuk)
                             <div class="small text-info mt-0.5" style="font-size: 0.72rem;">
-                                Kunci: {{ $p->waktu_masuk->isoFormat('D MMM, HH:mm') }}
+                                Dibuka: {{ $p->waktu_masuk->isoFormat('D MMM, HH:mm') }}
                             </div>
                         @endif
                         @if($p->waktu_selesai)
@@ -208,7 +208,7 @@
                             </span>
                         @elseif($p->status === 'Digunakan')
                             <span class="badge bg-info text-dark border border-info px-2.5 py-1 rounded-pill">
-                                <i class="fa-solid fa-key me-1"></i>Sedang Digunakan
+                                <i class="fa-solid fa-door-open me-1"></i>Sedang Digunakan
                             </span>
                         @elseif($p->status === 'Selesai')
                             <span class="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill">
@@ -224,35 +224,32 @@
                         @endif
                     </td>
                     <td class="text-center pe-4">
-                        <div class="d-inline-flex flex-wrap gap-1 justify-content-center">
+                        <div class="d-flex justify-content-center align-items-center gap-1.5 flex-wrap">
                             <!-- AKSI TAHAP 1: APPROVAL KEPALA SARPRAS -->
                             @if($p->status === 'Menunggu')
-                                <!-- Tombol Setujui -->
-                                <form action="{{ route('peminjaman-ruangan.approve', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin MENYETUJUI booking ruangan ini sebagai Kepala Sarpras?')">
+                                <form action="{{ route('peminjaman-ruangan.setujui', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Setujui permohonan booking ruangan ini? Jadwal akan dikunci untuk pemohon.')">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-primary fw-bold" title="Setujui Booking">
+                                    <button type="submit" class="btn btn-sm btn-primary fw-bold shadow-sm" title="Setujui Booking">
                                         <i class="fa-solid fa-check me-1"></i>Setujui
                                     </button>
                                 </form>
-
-                                <!-- Tombol Tolak (Buka Modal) -->
                                 <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalTolakRuangan{{ $p->id }}" title="Tolak Booking">
                                     <i class="fa-solid fa-xmark"></i> Tolak
                                 </button>
 
-                            <!-- AKSI TAHAP 2: SERAH TERIMA KUNCI (RUANGAN MULAI DIGUNAKAN) -->
+                            <!-- AKSI TAHAP 2: PETUGAS MEMBUKA RUANGAN (RUANGAN MULAI DIGUNAKAN) -->
                             @elseif($p->status === 'Disetujui')
-                                <form action="{{ route('peminjaman-ruangan.serahkan', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Konfirmasi penyerahan kunci ruangan ke pemohon? Status akan berubah menjadi [Sedang Digunakan].')">
+                                <form action="{{ route('peminjaman-ruangan.serahkan', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Konfirmasi ruangan telah dibuka untuk kegiatan pemohon? Status akan berubah menjadi [Sedang Digunakan].')">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-info text-white fw-bold shadow-sm" title="Serahkan Kunci Ruangan">
-                                        <i class="fa-solid fa-key me-1"></i>Serahkan Kunci
+                                    <button type="submit" class="btn btn-sm btn-info text-white fw-bold shadow-sm" title="Buka Ruangan untuk Kegiatan">
+                                        <i class="fa-solid fa-door-open me-1"></i>Buka Ruangan
                                     </button>
                                 </form>
 
-                            <!-- AKSI TAHAP 3: SELESAI PEMAKAIAN RUANGAN -->
+                            <!-- AKSI TAHAP 3: SELESAI & RUANGAN DIKUNCI KEMBALI OLEH PETUGAS -->
                             @elseif($p->status === 'Digunakan')
-                                <button type="button" class="btn btn-sm btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#modalSelesaiRuangan{{ $p->id }}" title="Selesai & Kunci Diterima">
-                                    <i class="fa-solid fa-check-circle me-1"></i>Selesai
+                                <button type="button" class="btn btn-sm btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#modalSelesaiRuangan{{ $p->id }}" title="Selesai & Kunci Ruangan">
+                                    <i class="fa-solid fa-check-circle me-1"></i>Selesai & Kunci
                                 </button>
                             @endif
 
@@ -336,13 +333,13 @@
 
                                             <div class="alert alert-info py-2 px-3 small mb-0 rounded-3">
                                                 <i class="fa-solid fa-circle-info me-1"></i>
-                                                Setelah dikonfirmasi, status booking akan selesai dan kunci ruangan tercatat telah kembali.
+                                                Setelah dikonfirmasi, status booking akan selesai dan ruangan tercatat telah dikunci kembali oleh petugas Sarpras.
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                                             <button type="submit" class="btn btn-success fw-bold px-4">
-                                                <i class="fa-solid fa-check-circle me-1"></i> Konfirmasi Selesai
+                                                <i class="fa-solid fa-check-circle me-1"></i> Selesai & Kunci Ruangan
                                             </button>
                                         </div>
                                     </form>

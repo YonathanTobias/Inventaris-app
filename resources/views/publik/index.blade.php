@@ -375,11 +375,11 @@
                         </div>
                         <div class="d-flex align-items-center gap-2 small">
                             <span class="badge bg-primary text-white fw-bold rounded-circle" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;">3</span>
-                            <span>Serah Terima Fisik / Kunci</span>
+                            <span>Buka Ruangan / Serah Terima Aset</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 small">
                             <span class="badge bg-success text-white fw-bold rounded-circle" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;">4</span>
-                            <span>Pengembalian Tepat Waktu</span>
+                            <span>Selesai & Ruangan Dikunci Petugas</span>
                         </div>
                     </div>
                 </div>
@@ -719,7 +719,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small text-secondary">Nomor WhatsApp Aktif <span class="text-danger">*</span></label>
-                                <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi kunci & approval)" value="{{ old('kontak_peminjam') }}" required>
+                                <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi buka ruangan & approval)" value="{{ old('kontak_peminjam') }}" required>
                             </div>
 
                             <div class="col-12">
@@ -733,7 +733,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="checkPernyataanRuangan" required>
                                 <label class="form-check-label small text-secondary" for="checkPernyataanRuangan">
-                                    Saya bertanggung jawab penuh atas penggunaan ruangan, menjaga kebersihan, mematikan AC/lampu/perangkat proyektor setelah selesai, serta mengembalikan kunci ke Sarpras tepat waktu.
+                                    Saya bertanggung jawab penuh atas penggunaan ruangan, menjaga kebersihan, mematikan AC/lampu/perangkat proyektor setelah selesai, serta mengonfirmasi kepada petugas Sarpras saat kegiatan telah selesai agar ruangan dapat dikunci kembali.
                                 </label>
                             </div>
                         </div>

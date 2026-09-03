@@ -192,13 +192,13 @@
                             @if(in_array($booking->status, ['Digunakan', 'Selesai']))
                                 <i class="fa-solid fa-circle-check text-success fs-5"></i>
                             @elseif($booking->status === 'Disetujui')
-                                <i class="fa-solid fa-key text-success fs-5"></i>
+                                <i class="fa-solid fa-door-open text-success fs-5"></i>
                             @else
                                 <i class="fa-regular fa-circle text-muted fs-5"></i>
                             @endif
                             <div>
                                 <strong class="d-block small text-dark">3. Penggunaan</strong>
-                                <small class="text-muted" style="font-size: 0.72rem;">Serah Kunci</small>
+                                <small class="text-muted" style="font-size: 0.72rem;">Ruangan Dibuka</small>
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
                             @endif
                             <div>
                                 <strong class="d-block small text-dark">4. Selesai</strong>
-                                <small class="text-muted" style="font-size: 0.72rem;">Kunci Kembali</small>
+                                <small class="text-muted" style="font-size: 0.72rem;">Ruangan Dikunci</small>
                             </div>
                         </div>
                     </div>
@@ -230,14 +230,14 @@
                         <div class="alert alert-success mb-0 small rounded-3 border-success d-flex align-items-center gap-2">
                             <i class="fa-solid fa-circle-check fs-5"></i>
                             <div>
-                                <strong>Booking Disetujui!</strong> Jadwal pemakaian ruangan telah dikunci untuk Anda. Silakan datang ke Ruang Sarpras sebelum jam kegiatan dimulai untuk mengambil kunci ruangan.
+                                <strong>Booking Disetujui!</strong> Jadwal pemakaian ruangan telah dikunci untuk kegiatan Anda. Petugas Bagian Sarpras akan membukakan pintu ruangan pada jam pelaksanaan kegiatan.
                             </div>
                         </div>
                     @elseif($booking->status === 'Digunakan')
                         <div class="alert alert-info mb-0 small rounded-3 border-info d-flex align-items-center gap-2">
-                            <i class="fa-solid fa-key fs-5"></i>
+                            <i class="fa-solid fa-door-open fs-5"></i>
                             <div>
-                                <strong>Ruangan Sedang Digunakan:</strong> Kunci telah diserahkan pada {{ $booking->waktu_masuk ? $booking->waktu_masuk->locale('id')->translatedFormat('l, d F Y, H:i') : '-' }}. Harap menjaga kebersihan dan mematikan AC/lampu serta mengembalikan kunci setelah selesai.
+                                <strong>Ruangan Sedang Digunakan:</strong> Ruangan telah dibuka oleh petugas pada {{ $booking->waktu_masuk ? $booking->waktu_masuk->locale('id')->translatedFormat('l, d F Y, H:i') : '-' }}. Harap menjaga kebersihan dan mematikan AC/lampu serta mengonfirmasi petugas setelah kegiatan selesai agar ruangan dapat dikunci kembali.
                             </div>
                         </div>
                     @elseif($booking->status === 'Ditolak')
@@ -247,7 +247,7 @@
                         </div>
                     @elseif($booking->status === 'Selesai')
                         <div class="alert alert-success mb-0 small rounded-3 border-success">
-                            <i class="fa-solid fa-check-double me-1"></i> Pemakaian ruangan telah selesai pada {{ $booking->waktu_selesai ? $booking->waktu_selesai->locale('id')->translatedFormat('l, d F Y, H:i') : '-' }}. Kunci telah diterima kembali oleh petugas. Terima kasih!
+                            <i class="fa-solid fa-check-double me-1"></i> Pemakaian ruangan telah selesai pada {{ $booking->waktu_selesai ? $booking->waktu_selesai->locale('id')->translatedFormat('l, d F Y, H:i') : '-' }}. Ruangan telah dicek dan dikunci kembali oleh petugas Sarpras. Terima kasih!
                         </div>
                     @endif
                 </div>

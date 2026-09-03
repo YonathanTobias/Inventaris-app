@@ -113,13 +113,13 @@ class PeminjamanRuanganController extends Controller
         return redirect()->back()->with('success', "Permohonan booking [{$booking->kode_booking}] telah DITOLAK dengan alasan: {$request->alasan_penolakan}.");
     }
 
-    // Aksi 2: Serah Terima Kunci / Ruangan Mulai Digunakan
+    // Aksi 2: Ruangan Dibuka oleh Petugas / Ruangan Mulai Digunakan
     public function serahkan($id)
     {
         $booking = PeminjamanRuangan::with('ruangan')->findOrFail($id);
 
         if (!in_array($booking->status, ['Disetujui', 'Menunggu'])) {
-            return redirect()->back()->with('error', 'Ruangan hanya dapat diserahkan jika permohonan telah disetujui.');
+            return redirect()->back()->with('error', 'Ruangan hanya dapat dibuka jika permohonan telah disetujui.');
         }
 
         $booking->update([
@@ -128,10 +128,10 @@ class PeminjamanRuanganController extends Controller
             'waktu_masuk'     => now(),
         ]);
 
-        return redirect()->back()->with('success', "Kunci ruangan {$booking->ruangan->nama_ruangan} telah diserahkan ke {$booking->nama_peminjam}! Status: [Sedang Digunakan].");
+        return redirect()->back()->with('success', "Ruangan {$booking->ruangan->nama_ruangan} telah dibuka oleh petugas untuk kegiatan {$booking->nama_peminjam}! Status: [Sedang Digunakan].");
     }
 
-    // Aksi 3: Pengembalian Kunci / Selesai Pemakaian Ruangan
+    // Aksi 3: Selesai Pemakaian & Ruangan Dikunci Kembali oleh Petugas
     public function selesai(Request $request, $id)
     {
         $booking = PeminjamanRuangan::with('ruangan')->findOrFail($id);
@@ -146,7 +146,7 @@ class PeminjamanRuanganController extends Controller
             'catatan_kondisi' => $request->catatan_kondisi,
         ]);
 
-        return redirect()->back()->with('success', "Pemakaian ruangan {$booking->ruangan->nama_ruangan} telah selesai! Ruangan siap digunakan kembali untuk kegiatan berikutnya.");
+        return redirect()->back()->with('success', "Pemakaian ruangan {$booking->ruangan->nama_ruangan} telah selesai dan ruangan telah dikunci kembali oleh petugas!");
     }
 
     // Hapus data transaksi booking
