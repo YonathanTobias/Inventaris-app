@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lacak Status Pengajuan - STIKES Panti Waluya</title>
+    <title>Lacak Status Pengajuan - SPARTA-PW STIKES Panti Waluya</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
 
     <!-- Google Fonts -->
@@ -53,7 +53,10 @@
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2">
                 <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 38px;">
-                <span class="fw-bold text-dark small">STIKES PANTI WALUYA MALANG</span>
+                <div>
+                    <span class="fw-extrabold text-dark small d-block" style="line-height: 1.1;">SPARTA-PW</span>
+                    <small class="text-muted" style="font-size: 0.65rem;">STIKES PANTI WALUYA MALANG</small>
+                </div>
             </a>
             <div class="d-flex gap-2">
                 <a href="{{ url('/') }}" class="btn btn-sm btn-outline-secondary">
@@ -256,7 +259,7 @@
     <!-- FOOTER -->
     <footer class="mt-auto bg-white border-top py-3 text-center small text-muted">
         <div class="container">
-            <strong>STIKES Panti Waluya Malang</strong> &copy; {{ date('Y') }} &bull; Sistem Informasi Inventaris & Peminjaman Aset / Ruangan
+            <strong>SPARTA-PW</strong> &copy; {{ date('Y') }} &bull; STIKES Panti Waluya Malang &bull; Sistem Peminjaman Aset & Ruangan Terpadu Akademik
         </div>
     </footer>
 

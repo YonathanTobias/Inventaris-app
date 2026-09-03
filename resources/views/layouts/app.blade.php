@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Sistem Inventaris Aset' }} - STIKES Panti Waluya</title>
+    <title>@yield('title', 'Dashboard') &bull; SPARTA-PW STIKES Panti Waluya</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
@@ -543,8 +543,8 @@
             <a class="navbar-brand" href="{{ route('barang.index') }}">
                 <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 42px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));" class="me-1">
                 <div>
-                    <span class="d-block" style="line-height: 1.1; font-weight: 800; letter-spacing: -0.02em;">STIKES PANTI WALUYA</span>
-                    <small style="font-size: 0.65rem; color: #94a3b8; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">Sistem Inventaris & Aset Lab</small>
+                    <span class="d-block text-white" style="line-height: 1.1; font-weight: 800; letter-spacing: -0.02em;">SPARTA-PW</span>
+                    <small style="font-size: 0.65rem; color: #94a3b8; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">STIKES Panti Waluya Malang</small>
                 </div>
             </a>
             
@@ -659,7 +659,7 @@
     <footer class="footer-custom no-print">
         <div class="container text-center text-md-between d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
             <div>
-                <strong>STIKES Panti Waluya Malang</strong> &bull; Sistem Informasi Manajemen Aset &copy; {{ date('Y') }}
+                <strong>SPARTA-PW</strong> &bull; Sistem Peminjaman Aset & Ruangan Terpadu &copy; {{ date('Y') }} STIKES Panti Waluya Malang
             </div>
             <div class="text-muted small">
                 <i class="fa-solid fa-hospital text-primary me-1"></i> Lab Keperawatan, Kebidanan, & Sarpras

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Layanan Peminjaman Aset & Ruangan - STIKES Panti Waluya Malang</title>
+    <title>SPARTA-PW - Portal Peminjaman Aset & Ruangan STIKES Panti Waluya Malang</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
@@ -267,8 +267,8 @@
             <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2">
                 <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 44px; width: auto; object-fit: contain;">
                 <div>
-                    <h6 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.02em;">STIKES PANTI WALUYA MALANG</h6>
-                    <small class="text-muted" style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;">PORTAL LAYANAN PEMINJAMAN ASET & RUANGAN</small>
+                    <h5 class="fw-extrabold mb-0 text-dark" style="letter-spacing: -0.03em;">SPARTA-PW</h5>
+                    <small class="text-muted" style="font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em;">PORTAL PEMINJAMAN ASET & RUANGAN STIKES PANTI WALUYA</small>
                 </div>
             </a>
 
@@ -343,10 +343,10 @@
             <div class="row align-items-center">
                 <div class="col-lg-8">
                     <div class="badge bg-white bg-opacity-10 border border-white border-opacity-25 px-3 py-1.5 rounded-pill mb-3 text-light small fw-semibold">
-                        <i class="fa-solid fa-shield-halved text-warning me-1.5"></i>Layanan Mandiri Resmi Civitas Akademika
+                        <i class="fa-solid fa-shield-halved text-warning me-1.5"></i>SPARTA-PW &bull; Layanan Mandiri Civitas Akademika
                     </div>
                     <h1 class="fw-extrabold display-6 mb-2" style="letter-spacing: -0.03em;">
-                        Peminjaman Aset & Booking Ruangan
+                        Sistem Peminjaman Aset & Ruangan Terpadu
                     </h1>
                     <p class="lead text-light text-opacity-75 mb-0" style="font-size: 1.05rem;">
                         Layanan mandiri resmi bagi <strong>Dosen, Mahasiswa, dan Ormawa</strong> STIKES Panti Waluya Malang untuk meminjam alat laboratorium maupun memesan ruangan praktikum/kegiatan.
@@ -493,17 +493,17 @@
 
                             <div class="col-md-4">
                                 <label class="form-label fw-bold small text-secondary">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" name="nama_peminjam" class="form-control" placeholder="Nama lengkap beserta gelar" value="{{ old('nama_peminjam') }}" required>
+                                <input type="text" name="nama_peminjam" class="form-control" placeholder="Nama lengkap " value="{{ old('nama_peminjam') }}" required>
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label fw-bold small text-secondary">Nomor Identitas (NIM / NIP / NIDN) <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold small text-secondary">Nomor Identitas (NIM / NIP) <span class="text-danger">*</span></label>
                                 <input type="text" name="nomor_identitas" class="form-control font-monospace" placeholder="Misal: 202301045 / NIP. 198..." value="{{ old('nomor_identitas') }}" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small text-secondary">Program Studi / Unit Kerja <span class="text-danger">*</span></label>
-                                <input type="text" name="prodi_unit" class="form-control" placeholder="Contoh: S1 Keperawatan / D3 Kebidanan / Biro Akademik" value="{{ old('prodi_unit') }}" required>
+                                <input type="text" name="prodi_unit" class="form-control" placeholder="Contoh: S1 Keperawatan / D4 MIK/ S1 Farmasi / IKM" value="{{ old('prodi_unit') }}" required>
                             </div>
 
                             <div class="col-md-6">
@@ -537,7 +537,7 @@
 
                             <div class="col-12">
                                 <label class="form-label fw-bold small text-secondary">Keperluan / Alasan Peminjaman <span class="text-danger">*</span></label>
-                                <textarea name="keperluan" class="form-control" rows="3" placeholder="Contoh: Praktikum Simulasi GADAR di Lapangan / Ujian OSCE Keperawatan Medikal Bedah / Acara Seminar BEM..." required>{{ old('keperluan') }}</textarea>
+                                <textarea name="keperluan" class="form-control" rows="3" placeholder="Contoh: Acara Seminar IKM/HIMA, Kegiatan IKM/Prodi" required>{{ old('keperluan') }}</textarea>
                             </div>
                         </div>
 
@@ -638,14 +638,14 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-bold small text-secondary">Status Pemohon <span class="text-danger">*</span></label>
                                 <select name="kategori_peminjam" class="form-select" required>
-                                    <option value="Mahasiswa / Ormawa" {{ old('kategori_peminjam') == 'Mahasiswa / Ormawa' ? 'selected' : '' }}>Mahasiswa / Organisasi (BEM/HIMA)</option>
+                                    <option value="Mahasiswa / Ormawa" {{ old('kategori_peminjam') == 'Mahasiswa / Ormawa' ? 'selected' : '' }}>Mahasiswa / Organisasi (IKM/HIMA)</option>
                                     <option value="Dosen" {{ old('kategori_peminjam') == 'Dosen' ? 'selected' : '' }}>Dosen / Pengajar</option>
                                     <option value="Staf / Tendik" {{ old('kategori_peminjam') == 'Staf / Tendik' ? 'selected' : '' }}>Staf / Tenaga Kependidikan</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label fw-bold small text-secondary">Nama Pemohon / Ketua Kegiatan <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold small text-secondary">Nama Pemohon <span class="text-danger">*</span></label>
                                 <input type="text" name="nama_peminjam" class="form-control" placeholder="Nama lengkap" value="{{ old('nama_peminjam') }}" required>
                             </div>
 
@@ -656,7 +656,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small text-secondary">Program Studi / Nama Organisasi <span class="text-danger">*</span></label>
-                                <input type="text" name="prodi_unit" class="form-control" placeholder="Contoh: BEM STIKES / HIMA Keperawatan / D3 Kebidanan" value="{{ old('prodi_unit') }}" required>
+                                <input type="text" name="prodi_unit" class="form-control" placeholder="Contoh: IKM STIKES / HIMA/ Prodi" value="{{ old('prodi_unit') }}" required>
                             </div>
 
                             <div class="col-md-6">
@@ -669,7 +669,7 @@
 
                             <div class="col-12">
                                 <label class="form-label fw-bold small text-secondary">Keperluan / Acara Kegiatan <span class="text-danger">*</span></label>
-                                <textarea name="keperluan" class="form-control" rows="3" placeholder="Contoh: Rapat Kerja BEM / Pelatihan Skill Lab Keperawatan / Kuliah Pengganti Farmakologi..." required>{{ old('keperluan') }}</textarea>
+                                <textarea name="keperluan" class="form-control" rows="3" placeholder="Contoh: Acara Seminar IKM/HIMA, Kegiatan IKM/Prodi" required>{{ old('keperluan') }}</textarea>
                             </div>
                         </div>
 
@@ -757,7 +757,7 @@
     <!-- FOOTER -->
     <footer class="mt-auto bg-white border-top py-3.5 text-center small text-muted">
         <div class="container">
-            <strong>STIKES Panti Waluya Malang</strong> &copy; {{ date('Y') }} &bull; Sistem Informasi Inventaris & Peminjaman Aset / Ruangan
+            <strong>SPARTA-PW</strong> &copy; {{ date('Y') }} &bull; STIKES Panti Waluya Malang &bull; Sistem Peminjaman Aset & Ruangan Terpadu Akademik
         </div>
     </footer>
 

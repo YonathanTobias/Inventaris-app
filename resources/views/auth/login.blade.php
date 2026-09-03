@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - STIKES Panti Waluya Malang</title>
+    <title>Login SPARTA-PW - STIKES Panti Waluya Malang</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
@@ -124,9 +124,9 @@
     <div class="login-card">
         <!-- Brand Header -->
         <div class="brand-header">
-            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 85px; width: auto; object-fit: contain; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.12)); margin-bottom: 0.85rem;">
-            <h4 class="fw-bold mb-1" style="letter-spacing: -0.02em;">STIKES PANTI WALUYA</h4>
-            <p class="text-muted small mb-0">Sistem Inventaris & Aset Laboratorium</p>
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.12)); margin-bottom: 0.85rem;">
+            <h3 class="fw-extrabold mb-1 text-dark" style="letter-spacing: -0.03em;">SPARTA-PW</h3>
+            <p class="text-muted small mb-0">Sistem Peminjaman Aset & Ruangan Terpadu<br><strong class="text-primary">STIKES Panti Waluya Malang</strong></p>
         </div>
 
         <!-- Form Area -->

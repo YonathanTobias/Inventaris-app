@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiket Bukti Peminjaman Aset [{{ $peminjaman->kode_peminjaman }}] - STIKES Panti Waluya</title>
+    <title>Tiket Peminjaman Aset [{{ $peminjaman->kode_peminjaman }}] - SPARTA-PW STIKES Panti Waluya</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
 
     <!-- Google Fonts -->
@@ -98,7 +98,10 @@
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2">
                 <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 38px;">
-                <span class="fw-bold text-dark small">STIKES PANTI WALUYA MALANG</span>
+                <div>
+                    <span class="fw-extrabold text-dark small d-block" style="line-height: 1.1;">SPARTA-PW</span>
+                    <small class="text-muted" style="font-size: 0.65rem;">STIKES PANTI WALUYA MALANG</small>
+                </div>
             </a>
             <div class="d-flex gap-2">
                 <a href="{{ url('/') }}" class="btn btn-sm btn-outline-secondary">
