@@ -77,10 +77,16 @@
 <!-- Card Area Filter & Export Excel -->
 <div class="card mb-4 no-print">
     <div class="card-body p-4">
-        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-filter text-primary"></i>
-            <span>Pilih Ruangan & Ekspor Dokumen</span>
-        </h6>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-filter text-primary"></i>
+                <span>Pilih Ruangan & Ekspor Dokumen</span>
+            </h6>
+            <button class="btn btn-sm btn-outline-primary fw-semibold rounded-pill px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePengaturanTTD">
+                <i class="fa-solid fa-pen-nib me-1"></i> Atur Penandatangan KIR
+            </button>
+        </div>
+
         <form action="{{ route('laporan.export') }}" method="GET" class="row g-3 align-items-end">
             <div class="col-lg-4 col-md-12">
                 <label class="form-label">Filter Ruangan / Tipe Laporan</label>
@@ -127,6 +133,35 @@
                 </a>
             </div>
         </form>
+
+        <!-- FORM PENGATURAN PENANDATANGAN KIR (AUTO-SAVED & EDITABLE) -->
+        <div class="collapse show mt-3 pt-3 border-top" id="collapsePengaturanTTD">
+            <div class="p-3 bg-light rounded-3 border">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small fw-bold text-secondary text-uppercase" style="letter-spacing: 0.03em;">
+                        <i class="fa-solid fa-file-signature text-primary me-1"></i>Pejabat Penandatangan Dokumen Cetak KIR:
+                    </span>
+                    <small class="text-muted" style="font-size: 0.72rem;">Tersimpan otomatis di browser</small>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-secondary mb-1">Ketua STIKes Panti Waluya</label>
+                        <input type="text" id="inputNamaKetua" class="form-control form-control-sm mb-1" placeholder="Nama Lengkap & Gelar Ketua" oninput="syncKIRSignatures()">
+                        <input type="text" id="inputNipKetua" class="form-control form-control-sm font-monospace" placeholder="NIDN / NIP Ketua" oninput="syncKIRSignatures()">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-secondary mb-1">Kepala Bagian Sarpras</label>
+                        <input type="text" id="inputNamaKabag" class="form-control form-control-sm mb-1" placeholder="Nama Lengkap & Gelar Kabag Sarpras" oninput="syncKIRSignatures()">
+                        <input type="text" id="inputNipKabag" class="form-control form-control-sm font-monospace" placeholder="NIK / NIP Kabag Sarpras" oninput="syncKIRSignatures()">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-secondary mb-1">Tempat & Tanggal Dokumen</label>
+                        <input type="text" id="inputTglKIR" class="form-control form-control-sm mb-1" value="Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}" oninput="syncKIRSignatures()">
+                        <small class="text-muted d-block" style="font-size: 0.72rem;">Format: <em>Kota, Tanggal Bulan Tahun</em></small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -181,14 +216,14 @@
                 <div style="font-size: 13.5pt; font-weight: 800; color: #000; line-height: 1.25; text-transform: uppercase; letter-spacing: 0.02em;">
                     SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG
                 </div>
-                <div style="font-size: 9.5pt; font-weight: 700; color: #1e1b4b; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.03em;">
-                    BIRO SARANA DAN PRASARANA (SARPRAS)
+                <div style="font-size: 9.5pt; font-weight: 700; color: #0D47A1; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.03em;">
+                    BAGIAN SARANA DAN PRASARANA (SARPRAS)
                 </div>
                 <div style="font-size: 8pt; color: #222; margin-top: 2px;">
                     Jl. Yulius Usman No. 62, Malang 65117 | Telp. (0341) 369003 | Website: www.stikespantiwaluya.ac.id
                 </div>
             </td>
-            <td style="width: 75px; border: none;"></td> <!-- Spacer penyeimbang agar teks tetap di tengah halaman -->
+            <td style="width: 75px; border: none;"></td>
         </tr>
     </table>
     
@@ -212,7 +247,7 @@
             <td style="width: 46%; border: none;"><strong>{{ $selectedRuangan ? $selectedRuangan->nama_ruangan : 'Rekapitulasi Global (Seluruh Ruangan)' }}</strong></td>
             <td style="width: 15%; font-weight: bold; border: none;">Tanggal Cetak</td>
             <td style="width: 2%; border: none;">:</td>
-            <td style="width: 18%; border: none;">{{ date('d F Y') }}</td>
+            <td style="width: 18%; border: none;">{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</td>
         </tr>
         <tr>
             <td style="font-weight: bold; border: none;">Kode Ruangan</td>
@@ -281,6 +316,24 @@
                 <td>({{ $barangs->count() }} Jenis Aset)</td>
             </tr>
         </tfoot>
+    </table>
+
+    <!-- TANDA TANGAN RESMI CETAK KIR (KETUA STIKES & KEPALA BAGIAN SARPRAS) -->
+    <table style="width: 100%; margin-top: 28px; border: none; font-size: 9pt; page-break-inside: avoid;">
+        <tr>
+            <td style="width: 50%; text-align: center; border: none; vertical-align: top; padding: 0 20px;">
+                <div style="margin-bottom: 2px;">Mengetahui,</div>
+                <div style="font-weight: 700; margin-bottom: 64px;">Ketua STIKes Panti Waluya Malang</div>
+                <div style="font-weight: 700; text-decoration: underline;" id="printNamaKetua">Nama Ketua STIKes</div>
+                <div style="font-size: 8pt; margin-top: 2px;" id="printNipKetua">NIDN. -</div>
+            </td>
+            <td style="width: 50%; text-align: center; border: none; vertical-align: top; padding: 0 20px;">
+                <div id="printKotaTanggal" style="margin-bottom: 2px;">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</div>
+                <div style="font-weight: 700; margin-bottom: 64px;">Kepala Bagian Sarana & Prasarana</div>
+                <div style="font-weight: 700; text-decoration: underline;" id="printNamaKabag">Nama Kepala Bagian Sarpras</div>
+                <div style="font-size: 8pt; margin-top: 2px;" id="printNipKabag">NIK. -</div>
+            </td>
+        </tr>
     </table>
 </div>
 
@@ -419,4 +472,53 @@
         </div>
     </div>
 </div>
+
+<script>
+    function syncKIRSignatures() {
+        let namaKetua = document.getElementById('inputNamaKetua').value.trim();
+        let nipKetua = document.getElementById('inputNipKetua').value.trim();
+        let namaKabag = document.getElementById('inputNamaKabag').value.trim();
+        let nipKabag = document.getElementById('inputNipKabag').value.trim();
+        let tglKIR = document.getElementById('inputTglKIR').value.trim();
+
+        // Update dokumen print
+        document.getElementById('printNamaKetua').innerText = namaKetua || '...........................................';
+        document.getElementById('printNipKetua').innerText = nipKetua ? (nipKetua.startsWith('NIDN') || nipKetua.startsWith('NIP') ? nipKetua : 'NIDN/NIP. ' + nipKetua) : '';
+        
+        document.getElementById('printNamaKabag').innerText = namaKabag || '...........................................';
+        document.getElementById('printNipKabag').innerText = nipKabag ? (nipKabag.startsWith('NIK') || nipKabag.startsWith('NIP') ? nipKabag : 'NIK/NIP. ' + nipKabag) : '';
+
+        if (tglKIR) {
+            document.getElementById('printKotaTanggal').innerText = tglKIR;
+        }
+
+        // Simpan ke localStorage agar tidak perlu ketik ulang
+        try {
+            localStorage.setItem('stikes_kir_nama_ketua', namaKetua);
+            localStorage.setItem('stikes_kir_nip_ketua', nipKetua);
+            localStorage.setItem('stikes_kir_nama_kabag', namaKabag);
+            localStorage.setItem('stikes_kir_nip_kabag', nipKabag);
+            localStorage.setItem('stikes_kir_tgl', tglKIR);
+        } catch (e) {}
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load data tersimpan dari localStorage jika ada
+        try {
+            let savedNamaKetua = localStorage.getItem('stikes_kir_nama_ketua') || 'Wisoedhanie Widi Anugrahanti, S.KM., M.Kes';
+            let savedNipKetua = localStorage.getItem('stikes_kir_nip_ketua') || 'NIDN. 0725068201';
+            let savedNamaKabag = localStorage.getItem('stikes_kir_nama_kabag') || 'Stefanus Dedy Christian, S.Kom';
+            let savedNipKabag = localStorage.getItem('stikes_kir_nip_kabag') || 'NIK. 03.01.12.01';
+            let savedTgl = localStorage.getItem('stikes_kir_tgl');
+
+            if (savedNamaKetua) document.getElementById('inputNamaKetua').value = savedNamaKetua;
+            if (savedNipKetua) document.getElementById('inputNipKetua').value = savedNipKetua;
+            if (savedNamaKabag) document.getElementById('inputNamaKabag').value = savedNamaKabag;
+            if (savedNipKabag) document.getElementById('inputNipKabag').value = savedNipKabag;
+            if (savedTgl) document.getElementById('inputTglKIR').value = savedTgl;
+
+            syncKIRSignatures();
+        } catch (e) {}
+    });
+</script>
 @endsection

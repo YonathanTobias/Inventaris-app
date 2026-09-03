@@ -27,7 +27,7 @@ class StikesPantiWaluyaSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'sarpras@pantiwaluya.ac.id'],
             [
-                'name'     => 'Biro Sarana & Prasarana (SARPRAS)',
+                'name'     => 'Bagian Sarana & Prasarana (SARPRAS)',
                 'password' => Hash::make('password123'),
                 'role'     => 'sarpras',
             ]

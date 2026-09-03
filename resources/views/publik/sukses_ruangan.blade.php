@@ -223,7 +223,7 @@
                         <div class="alert alert-warning mb-0 small rounded-3 border-warning d-flex align-items-center gap-2">
                             <i class="fa-solid fa-circle-info fs-5"></i>
                             <div>
-                                <strong>Menunggu Persetujuan:</strong> Pengajuan booking Anda saat ini sedang dalam proses review oleh Kepala Biro Sarana & Prasarana. Simpan Kode Booking Anda (<strong>{{ $booking->kode_booking }}</strong>) untuk mengecek status sewaktu-waktu.
+                                <strong>Menunggu Persetujuan:</strong> Pengajuan booking Anda saat ini sedang dalam proses review oleh Kepala Bagian Sarana & Prasarana (SARPRAS). Simpan Kode Booking Anda (<strong>{{ $booking->kode_booking }}</strong>) untuk mengecek status sewaktu-waktu.
                             </div>
                         </div>
                     @elseif($booking->status === 'Disetujui')

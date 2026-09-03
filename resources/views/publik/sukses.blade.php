@@ -229,7 +229,7 @@
                         <div class="alert alert-warning mb-0 small rounded-3 border-warning d-flex align-items-center gap-2">
                             <i class="fa-solid fa-circle-info fs-5"></i>
                             <div>
-                                <strong>Menunggu Persetujuan:</strong> Pengajuan Anda saat ini sedang dalam antrean review oleh Kepala Biro Sarana & Prasarana. Simpan Kode Peminjaman Anda (<strong>{{ $peminjaman->kode_peminjaman }}</strong>) untuk mengecek status permohonan.
+                                <strong>Menunggu Persetujuan:</strong> Pengajuan Anda saat ini sedang dalam antrean review oleh Kepala Bagian Sarana & Prasarana (SARPRAS). Simpan Kode Peminjaman Anda (<strong>{{ $peminjaman->kode_peminjaman }}</strong>) untuk mengecek status permohonan.
                             </div>
                         </div>
                     @elseif($peminjaman->status === 'Disetujui')
