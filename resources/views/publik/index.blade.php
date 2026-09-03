@@ -618,14 +618,41 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small text-secondary">Pilih Ruangan <span class="text-danger">*</span></label>
-                                <select name="ruangan_id" id="selectRuanganPublik" class="form-select" required onchange="cekJadwalRuangan(this.value)">
-                                    <option value="">-- Pilih Ruangan (Hanya Ruangan yang Diizinkan Dipinjam) --</option>
-                                    @foreach($ruangans as $r)
-                                        <option value="{{ $r->id }}" {{ old('ruangan_id') == $r->id ? 'selected' : '' }}>
-                                            {{ $r->nama_ruangan }} [{{ $r->kode_ruangan }}]
-                                        </option>
-                                    @endforeach
-                                </select>
+                                
+                                <!-- Hidden input untuk nilai ruangan_id yang terpilih -->
+                                <input type="hidden" name="ruangan_id" id="selectRuanganPublik" value="{{ old('ruangan_id') }}" required>
+
+                                <!-- BOX RUANGAN TERPILIH -->
+                                <div id="selectedRuanganCard" class="p-2.5 bg-light rounded-3 border d-flex justify-content-between align-items-center {{ old('ruangan_id') ? '' : 'd-none' }}">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="p-2 rounded-2 bg-success-subtle text-success fw-bold" style="font-size: 0.9rem;">
+                                            <i class="fa-solid fa-door-open"></i>
+                                        </span>
+                                        <div>
+                                            <strong class="d-block text-dark small" id="selectedRuanganNamaText">-</strong>
+                                            <span class="badge-code py-0" id="selectedRuanganKodeText" style="font-size: 0.7rem;">-</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-1" onclick="resetSelectedRuangan()">
+                                        <i class="fa-solid fa-rotate-left me-1"></i> Ganti
+                                    </button>
+                                </div>
+
+                                <!-- INPUT PENCARIAN RUANGAN LIVE -->
+                                <div id="searchRuanganWrapper" class="position-relative {{ old('ruangan_id') ? 'd-none' : '' }}">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                                        <input type="text" id="inputSearchRuangan" class="form-control" placeholder="Ketik nama ruangan (contoh: Aula, Lab Komputer, Teori)..." autocomplete="off" oninput="handleSearchRuanganLive(this.value)" onfocus="handleSearchRuanganLive(this.value)">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="clearSearchRuanganInput()" title="Bersihkan">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- DROPDOWN HASIL PENCARIAN RUANGAN -->
+                                    <div id="dropdownRuanganResults" class="position-absolute w-100 bg-white shadow-lg rounded-3 border mt-1 p-2 d-none" style="z-index: 1050; max-height: 260px; overflow-y: auto;">
+                                        <!-- Diisi otomatis via JavaScript -->
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -946,7 +973,105 @@
             if (searchBox && !searchBox.contains(e.target) && e.target !== searchInput) {
                 searchBox.classList.add('d-none');
             }
+
+            let boxRuangan = document.getElementById('dropdownRuanganResults');
+            let inputRuangan = document.getElementById('inputSearchRuangan');
+            if (boxRuangan && !boxRuangan.contains(e.target) && e.target !== inputRuangan) {
+                boxRuangan.classList.add('d-none');
+            }
         });
+
+        @php
+            $ruanganSearchList = $ruangans->map(function($r) {
+                return [
+                    'id' => (string) $r->id,
+                    'nama' => $r->nama_ruangan,
+                    'kode' => $r->kode_ruangan ?? '-'
+                ];
+            });
+        @endphp
+        // Data Ruangan Tersedia untuk Pencarian Cepat
+        const allAvailableRuangans = {!! json_encode($ruanganSearchList) !!};
+
+        function handleSearchRuanganLive(keyword) {
+            let kw = (keyword || '').trim().toLowerCase();
+            let resultsBox = document.getElementById('dropdownRuanganResults');
+            if (!resultsBox) return;
+
+            if (kw.length === 0) {
+                renderRuanganSearchResults(allAvailableRuangans, '');
+                resultsBox.classList.remove('d-none');
+                return;
+            }
+
+            let filtered = allAvailableRuangans.filter(r => {
+                return r.nama.toLowerCase().includes(kw) || r.kode.toLowerCase().includes(kw);
+            });
+
+            renderRuanganSearchResults(filtered, kw);
+            resultsBox.classList.remove('d-none');
+        }
+
+        function renderRuanganSearchResults(items, kw) {
+            let resultsBox = document.getElementById('dropdownRuanganResults');
+            if (!resultsBox) return;
+
+            if (items.length === 0) {
+                resultsBox.innerHTML = `
+                    <div class="p-3 text-center text-muted small">
+                        <i class="fa-solid fa-circle-question me-1"></i> Tidak ditemukan ruangan dengan kata kunci "<strong>${kw}</strong>".
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="list-group list-group-flush small">';
+            items.forEach(r => {
+                let safeNama = r.nama.replace(/'/g, "\\'");
+                html += `
+                    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 px-2.5 rounded-2 mb-1 border-0" onclick="chooseRuangan('${r.id}', '${safeNama}', '${r.kode}')">
+                        <div class="text-start">
+                            <strong class="text-dark d-block">${r.nama}</strong>
+                            <span class="badge-code py-0" style="font-size: 0.68rem;">${r.kode}</span>
+                        </div>
+                        <span class="btn btn-sm btn-outline-success rounded-pill px-2.5 py-0.5 fw-bold" style="font-size: 0.72rem;">
+                            Pilih &rarr;
+                        </span>
+                    </button>
+                `;
+            });
+            html += '</div>';
+            resultsBox.innerHTML = html;
+        }
+
+        function chooseRuangan(id, nama, kode) {
+            document.getElementById('selectRuanganPublik').value = id;
+            document.getElementById('selectedRuanganNamaText').innerText = nama;
+            document.getElementById('selectedRuanganKodeText').innerText = kode;
+
+            document.getElementById('selectedRuanganCard').classList.remove('d-none');
+            document.getElementById('searchRuanganWrapper').classList.add('d-none');
+            document.getElementById('dropdownRuanganResults').classList.add('d-none');
+
+            // Cek jadwal langsung
+            cekJadwalRuangan(id);
+        }
+
+        function resetSelectedRuangan() {
+            document.getElementById('selectRuanganPublik').value = '';
+            document.getElementById('selectedRuanganCard').classList.add('d-none');
+            document.getElementById('searchRuanganWrapper').classList.remove('d-none');
+            document.getElementById('inputSearchRuangan').value = '';
+            document.getElementById('boxJadwalTerisi').style.display = 'none';
+            document.getElementById('inputSearchRuangan').focus();
+        }
+
+        function clearSearchRuanganInput() {
+            let input = document.getElementById('inputSearchRuangan');
+            if (input) input.value = '';
+            let resultsBox = document.getElementById('dropdownRuanganResults');
+            if (resultsBox) resultsBox.classList.add('d-none');
+        }
 
         // State keranjang tersimpan di LocalStorage
         let loanCart = [];
@@ -1211,6 +1336,15 @@
         // Inisialisasi saat load
         document.addEventListener('DOMContentLoaded', function() {
             renderCart();
+
+            // Restore old selected ruangan jika ada
+            let oldRuanganId = "{{ old('ruangan_id') }}";
+            if (oldRuanganId) {
+                let found = allAvailableRuangans.find(r => r.id == oldRuanganId);
+                if (found) {
+                    chooseRuangan(found.id, found.nama, found.kode);
+                }
+            }
 
             // Hash navigation tab support (misal: /#tab-ruangan)
             if (window.location.hash === '#tab-ruangan') {
