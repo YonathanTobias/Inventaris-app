@@ -115,4 +115,10 @@ class RuanganController extends Controller
         $ruangan->delete();
         return redirect()->back()->with('success', 'Ruangan berhasil dihapus!');
     }
+
+    public function exportExcel()
+    {
+        $filename = 'Master_Data_Ruangan_' . date('Ymd_His') . '.xlsx';
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\RuanganExport(), $filename);
+    }
 }

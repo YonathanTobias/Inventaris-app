@@ -13,6 +13,10 @@
         <p class="text-muted small mb-0 ms-md-5">Kelola, pantau, dan mutasikan seluruh data inventaris aset secara terstruktur.</p>
     </div>
     <div class="d-flex flex-wrap gap-2">
+        <a href="{{ route('laporan.export', request()->query()) }}" class="btn btn-success fw-bold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Export Excel (.xlsx)</span>
+        </a>
         <button type="button" class="btn btn-info text-white fw-bold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalPindahAsetGlobal">
             <i class="fa-solid fa-right-left"></i>
             <span>Pindah Aset</span>

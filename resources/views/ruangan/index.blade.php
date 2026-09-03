@@ -12,6 +12,12 @@
         </h4>
         <p class="text-muted small mb-0 ms-md-5">Kelola data ruangan, penempatan fisik inventaris, dan penanggung jawab aset.</p>
     </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{{ route('ruangan.export') }}" class="btn btn-success fw-bold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm px-3 py-2">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Export Data Ruangan (.xlsx)</span>
+        </a>
+    </div>
 </div>
 
 <!-- Stat Cards -->

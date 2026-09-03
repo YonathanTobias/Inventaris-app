@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Master Data Ruangan & Kategori
+    Route::get('ruangan/export', [RuanganController::class, 'exportExcel'])->name('ruangan.export');
     Route::get('ruangan/{id}/label', [BarangController::class, 'cetakLabelRuangan'])->name('ruangan.label');
     Route::resource('ruangan', RuanganController::class)->except(['create', 'edit', 'show']);
     Route::resource('kategori', KategoriController::class)->except(['create', 'edit', 'show']);

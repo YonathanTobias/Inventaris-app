@@ -43,9 +43,11 @@ class AsetExport implements FromCollection, WithHeadings, WithMapping, WithTitle
     public function headings(): array
     {
         return [
-            ['LAPORAN INVENTARIS ASET BARANG'],
-            ['LOKASI / RUANGAN: ' . strtoupper($this->ruanganNama)],
-            ['TANGGAL CETAK: ' . date('d-m-Y H:i')],
+            ['LAPORAN INVENTARIS DATA ASET & SARANA PRASARANA'],
+            ['SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG'],
+            ['BAGIAN SARANA DAN PRASARANA (SARPRAS)'],
+            ['LOKASI / RUANGAN : ' . strtoupper($this->ruanganNama)],
+            ['TANGGAL EKSPOR  : ' . date('d-m-Y H:i') . ' WIB'],
             [], // Baris kosong
             [
                 'No',
@@ -85,11 +87,11 @@ class AsetExport implements FromCollection, WithHeadings, WithMapping, WithTitle
     public function styles(Worksheet $sheet)
     {
         // Bold untuk Judul Header Laporan
-        $sheet->getStyle('A1:A3')->getFont()->setBold(true);
-        $sheet->getStyle('A1')->getFont()->setSize(14);
+        $sheet->getStyle('A1:A5')->getFont()->setBold(true);
+        $sheet->getStyle('A1')->getFont()->setSize(13);
         
-        // Bold untuk Heading Tabel (Baris ke-5)
-        $sheet->getStyle('A5:I5')->getFont()->setBold(true);
+        // Bold untuk Heading Tabel (Baris ke-7)
+        $sheet->getStyle('A7:I7')->getFont()->setBold(true);
 
         return [];
     }
