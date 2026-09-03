@@ -544,22 +544,26 @@
 
 <!-- 1. DOKUMEN CETAK KIR A4 -->
 <div id="printDocKIR" class="kir-print-document d-none">
-    <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom border-dark border-2">
-        <div style="width: 80px;" class="text-center">
-            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 75px; height: auto;" onerror="this.style.display='none'">
+    <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
+    <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
+        <div style="width: 85px;" class="text-center flex-shrink-0">
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 78px; height: auto;" onerror="this.style.display='none'">
         </div>
-        <div class="text-center flex-grow-1 px-3">
-            <h5 class="fw-bold mb-0 text-uppercase" style="font-size: 1.15rem; letter-spacing: 0.5px; font-family: 'Times New Roman', Times, serif;">
-                SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG
-            </h5>
-            <h6 class="fw-bold mb-1 text-uppercase text-secondary" style="font-size: 0.95rem; font-family: 'Times New Roman', Times, serif;">
-                BAGIAN SARANA DAN PRASARANA (SARPRAS)
-            </h6>
-            <p class="mb-0 text-muted" style="font-size: 0.75rem; font-family: 'Times New Roman', Times, serif;">
-                Jl. Yulius Usman No. 62 Malang, Jawa Timur | Telp: (0341) 369003 | Email: stikes@pantiwaluya.ac.id
+        <div class="text-center flex-grow-1 px-2">
+            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.3rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+                SEKOLAH TINGGI ILMU KESEHATAN
+            </h4>
+            <h3 class="fw-bold mb-1 text-uppercase" style="font-size: 1.55rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+                PANTI WALUYA MALANG
+            </h3>
+            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+                Jalan Yulius Usman No. 62 Malang &ndash; 65117 Telp (0341) 369003 Fax. 368737
+            </p>
+            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+                Email : <u>stikes.pantiwaluyamlg@gmail.com</u>, website : <u>www.stikespantiwaluya.ac.id</u>
             </p>
         </div>
-        <div style="width: 80px;"></div>
+        <div style="width: 85px;" class="flex-shrink-0"></div>
     </div>
 
     <div class="text-center mb-3">
@@ -627,22 +631,26 @@
 
 <!-- 2. DOKUMEN CETAK LAPORAN PEMINJAMAN ASET A4 -->
 <div id="printDocPinjamAset" class="kir-print-document d-none">
-    <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom border-dark border-2">
-        <div style="width: 80px;" class="text-center">
-            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 75px; height: auto;" onerror="this.style.display='none'">
+    <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
+    <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
+        <div style="width: 85px;" class="text-center flex-shrink-0">
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 78px; height: auto;" onerror="this.style.display='none'">
         </div>
-        <div class="text-center flex-grow-1 px-3">
-            <h5 class="fw-bold mb-0 text-uppercase" style="font-size: 1.15rem; font-family: 'Times New Roman', Times, serif;">
-                SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG
-            </h5>
-            <h6 class="fw-bold mb-1 text-uppercase text-secondary" style="font-size: 0.95rem; font-family: 'Times New Roman', Times, serif;">
-                BAGIAN SARANA DAN PRASARANA (SARPRAS)
-            </h6>
-            <p class="mb-0 text-muted" style="font-size: 0.75rem; font-family: 'Times New Roman', Times, serif;">
-                Jl. Yulius Usman No. 62 Malang, Jawa Timur | Telp: (0341) 369003 | Email: stikes@pantiwaluya.ac.id
+        <div class="text-center flex-grow-1 px-2">
+            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.3rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+                SEKOLAH TINGGI ILMU KESEHATAN
+            </h4>
+            <h3 class="fw-bold mb-1 text-uppercase" style="font-size: 1.55rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+                PANTI WALUYA MALANG
+            </h3>
+            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+                Jalan Yulius Usman No. 62 Malang &ndash; 65117 Telp (0341) 369003 Fax. 368737
+            </p>
+            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+                Email : <u>stikes.pantiwaluyamlg@gmail.com</u>, website : <u>www.stikespantiwaluya.ac.id</u>
             </p>
         </div>
-        <div style="width: 80px;"></div>
+        <div style="width: 85px;" class="flex-shrink-0"></div>
     </div>
 
     <div class="text-center mb-3">
@@ -725,22 +733,26 @@
 
 <!-- 3. DOKUMEN CETAK LAPORAN PEMINJAMAN RUANGAN A4 -->
 <div id="printDocPinjamRuangan" class="kir-print-document d-none">
-    <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom border-dark border-2">
-        <div style="width: 80px;" class="text-center">
-            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 75px; height: auto;" onerror="this.style.display='none'">
+    <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
+    <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
+        <div style="width: 85px;" class="text-center flex-shrink-0">
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 78px; height: auto;" onerror="this.style.display='none'">
         </div>
-        <div class="text-center flex-grow-1 px-3">
-            <h5 class="fw-bold mb-0 text-uppercase" style="font-size: 1.15rem; font-family: 'Times New Roman', Times, serif;">
-                SEKOLAH TINGGI ILMU KESEHATAN PANTI WALUYA MALANG
-            </h5>
-            <h6 class="fw-bold mb-1 text-uppercase text-secondary" style="font-size: 0.95rem; font-family: 'Times New Roman', Times, serif;">
-                BAGIAN SARANA DAN PRASARANA (SARPRAS)
-            </h6>
-            <p class="mb-0 text-muted" style="font-size: 0.75rem; font-family: 'Times New Roman', Times, serif;">
-                Jl. Yulius Usman No. 62 Malang, Jawa Timur | Telp: (0341) 369003 | Email: stikes@pantiwaluya.ac.id
+        <div class="text-center flex-grow-1 px-2">
+            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.3rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+                SEKOLAH TINGGI ILMU KESEHATAN
+            </h4>
+            <h3 class="fw-bold mb-1 text-uppercase" style="font-size: 1.55rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+                PANTI WALUYA MALANG
+            </h3>
+            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+                Jalan Yulius Usman No. 62 Malang &ndash; 65117 Telp (0341) 369003 Fax. 368737
+            </p>
+            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+                Email : <u>stikes.pantiwaluyamlg@gmail.com</u>, website : <u>www.stikespantiwaluya.ac.id</u>
             </p>
         </div>
-        <div style="width: 80px;"></div>
+        <div style="width: 85px;" class="flex-shrink-0"></div>
     </div>
 
     <div class="text-center mb-3">
