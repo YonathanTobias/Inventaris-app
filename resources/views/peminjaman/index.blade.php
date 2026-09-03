@@ -199,72 +199,72 @@
                     </td>
                     <td>
                         <div class="small">
-                            <span class="text-muted">Pinjam:</span> {{ \Carbon\Carbon::parse($p->tanggal_pinjam)->isoFormat('D MMM Y') }}
+                            <span class="text-muted">Pinjam:</span> {{ \Carbon\Carbon::parse($p->tanggal_pinjam)->locale('id')->translatedFormat('d M Y') }}
                         </div>
                         <div class="small">
                             <span class="text-muted">Tenggat:</span> 
                             <strong class="{{ in_array($p->status, ['Diambil', 'Terlambat']) && $p->tenggat_kembali < now()->toDateString() ? 'text-danger' : 'text-dark' }}">
-                                {{ \Carbon\Carbon::parse($p->tenggat_kembali)->isoFormat('D MMM Y') }}
+                                {{ \Carbon\Carbon::parse($p->tenggat_kembali)->locale('id')->translatedFormat('d M Y') }}
                             </strong>
                         </div>
                         @if($p->tanggal_diambil)
-                            <div class="small text-info" style="font-size: 0.72rem;">
-                                <i class="fa-solid fa-box-open me-1"></i>Diambil: {{ $p->tanggal_diambil->isoFormat('D MMM, HH:mm') }}
+                            <div class="small text-info mt-1" style="font-size: 0.72rem;">
+                                <i class="fa-solid fa-box-open me-1"></i>Diambil: {{ $p->tanggal_diambil->locale('id')->translatedFormat('d M, H:i') }}
                             </div>
                         @endif
                         @if($p->tanggal_kembali)
-                            <div class="small text-success" style="font-size: 0.72rem;">
-                                <i class="fa-solid fa-check-double me-1"></i>Kembali: {{ \Carbon\Carbon::parse($p->tanggal_kembali)->isoFormat('D MMM Y') }}
+                            <div class="small text-success mt-1" style="font-size: 0.72rem;">
+                                <i class="fa-solid fa-check-double me-1"></i>Kembali: {{ \Carbon\Carbon::parse($p->tanggal_kembali)->locale('id')->translatedFormat('d M Y') }}
                             </div>
                         @endif
                     </td>
-                    <td>
+                    <td class="text-center">
                         @if($p->status === 'Menunggu')
-                            <span class="badge bg-warning text-dark border border-warning px-2.5 py-1 rounded-pill">
-                                <i class="fa-solid fa-clock me-1"></i>Menunggu Persetujuan
+                            <span class="badge bg-warning text-dark border border-warning px-2.5 py-1.5 rounded-pill text-nowrap">
+                                <i class="fa-solid fa-clock me-1"></i>Menunggu
                             </span>
                         @elseif($p->status === 'Disetujui')
-                            <span class="badge bg-primary text-white border border-primary px-2.5 py-1 rounded-pill">
-                                <i class="fa-solid fa-circle-check me-1"></i>Disetujui (Siap Diambil)
+                            <span class="badge bg-primary text-white border border-primary px-2.5 py-1.5 rounded-pill text-nowrap">
+                                <i class="fa-solid fa-circle-check me-1"></i>Disetujui
                             </span>
                         @elseif($p->status === 'Diambil')
-                            <span class="badge bg-info text-dark border border-info px-2.5 py-1 rounded-pill">
-                                <i class="fa-solid fa-box-open me-1"></i>Barang Sudah Diambil
+                            <span class="badge bg-info text-dark border border-info px-2.5 py-1.5 rounded-pill text-nowrap">
+                                <i class="fa-solid fa-box-open me-1"></i>Diambil
                             </span>
                         @elseif($p->status === 'Kembali')
-                            <span class="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill">
-                                <i class="fa-solid fa-check-double me-1"></i>Sudah Dikembalikan
+                            <span class="badge bg-success-subtle text-success border border-success px-2.5 py-1.5 rounded-pill text-nowrap">
+                                <i class="fa-solid fa-check-double me-1"></i>Kembali
                             </span>
                             @if($p->kondisi_kembali)
                                 <div class="small text-muted mt-0.5" style="font-size: 0.72rem;">Kondisi: <strong>{{ $p->kondisi_kembali }}</strong></div>
                             @endif
                         @elseif($p->status === 'Ditolak')
-                            <span class="badge bg-danger text-white border border-danger px-2.5 py-1 rounded-pill">
+                            <span class="badge bg-danger text-white border border-danger px-2.5 py-1.5 rounded-pill text-nowrap">
                                 <i class="fa-solid fa-ban me-1"></i>Ditolak
                             </span>
                             @if($p->alasan_penolakan)
                                 <div class="small text-danger mt-0.5" style="font-size: 0.72rem;">Alasan: {{ $p->alasan_penolakan }}</div>
                             @endif
                         @else
-                            <span class="badge bg-danger text-white border border-danger px-2.5 py-1 rounded-pill">
+                            <span class="badge bg-danger text-white border border-danger px-2.5 py-1.5 rounded-pill text-nowrap">
                                 <i class="fa-solid fa-triangle-exclamation me-1"></i>Terlambat
                             </span>
                         @endif
                     </td>
                     <td class="text-center pe-4">
-                        <div class="d-inline-flex flex-wrap gap-1 justify-content-center">
+                        <div class="d-flex justify-content-center align-items-center gap-1.5 flex-nowrap">
                             <!-- AKSI TAHAP 1: APPROVAL KEPALA SARPRAS -->
                             @if($p->status === 'Menunggu')
                                 <!-- Tombol Setujui -->
                                 <form action="{{ route('peminjaman.approve', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin MENYETUJUI peminjaman aset ini sebagai Kepala Sarpras?')">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-primary fw-bold" title="Setujui Peminjaman">
+                                    <button type="submit" class="btn btn-sm btn-primary fw-bold text-nowrap" title="Setujui Peminjaman">
                                         <i class="fa-solid fa-check me-1"></i>Setujui
                                     </button>
                                 </form>
 
                                 <!-- Tombol Tolak (Buka Modal) -->
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalTolak{{ $p->id }}" title="Tolak Pengajuan">
+                                <button type="button" class="btn btn-sm btn-outline-danger text-nowrap" data-bs-toggle="modal" data-bs-target="#modalTolak{{ $p->id }}" title="Tolak Pengajuan">
                                     <i class="fa-solid fa-xmark"></i> Tolak
                                 </button>
 
@@ -272,14 +272,14 @@
                             @elseif($p->status === 'Disetujui')
                                 <form action="{{ route('peminjaman.serahkan', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Konfirmasi bahwa barang fisik telah diserahkan dan diambil oleh peminjam? Stok aset akan resmi dipotong.')">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-info text-white fw-bold shadow-sm" title="Serahkan Barang ke Pemohon">
+                                    <button type="submit" class="btn btn-sm btn-info text-white fw-bold shadow-sm text-nowrap" title="Serahkan Barang ke Pemohon">
                                         <i class="fa-solid fa-box-open me-1"></i>Serahkan Barang
                                     </button>
                                 </form>
 
                             <!-- AKSI TAHAP 3: PROSES PENGEMBALIAN BARANG -->
                             @elseif(in_array($p->status, ['Diambil', 'Terlambat']))
-                                <button type="button" class="btn btn-sm btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#modalKembali{{ $p->id }}" title="Proses Pengembalian Barang">
+                                <button type="button" class="btn btn-sm btn-success fw-bold shadow-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#modalKembali{{ $p->id }}" title="Proses Pengembalian Barang">
                                     <i class="fa-solid fa-rotate-left me-1"></i>Kembalikan
                                 </button>
                             @endif

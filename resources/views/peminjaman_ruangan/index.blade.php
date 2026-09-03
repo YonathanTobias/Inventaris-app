@@ -131,15 +131,15 @@
         <span class="badge bg-light text-secondary border font-monospace">{{ $peminjamans->count() }} Data</span>
     </div>
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0">
             <thead class="bg-light text-muted small text-uppercase">
                 <tr>
-                    <th class="ps-4" style="width: 40px;">No</th>
+                    <th class="ps-4" style="width: 50px;">No</th>
                     <th>Pemohon & Identitas</th>
                     <th>Ruangan</th>
                     <th>Jadwal & Waktu Pemakaian</th>
-                    <th>Status Booking</th>
-                    <th class="text-center pe-4" style="width: 220px;">Tindakan & Aksi</th>
+                    <th class="text-center">Status Booking</th>
+                    <th class="text-center pe-4" style="width: 240px; min-width: 240px;">Tindakan & Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -147,20 +147,20 @@
                 <tr>
                     <td class="ps-4 fw-semibold text-muted">{{ $index + 1 }}</td>
                     <td>
-                        <div class="d-flex align-items-center gap-1.5">
+                        <div class="d-flex align-items-center gap-1.5 mb-1">
                             <span class="badge bg-secondary-subtle text-secondary border px-2 py-0.5" style="font-size: 0.7rem;">{{ $p->kategori_peminjam ?? 'Mahasiswa / Ormawa' }}</span>
                             <span class="fw-bold text-dark">{{ $p->nama_peminjam }}</span>
                         </div>
-                        <div class="text-muted small font-monospace mt-0.5">
+                        <div class="text-muted small font-monospace">
                             {{ $p->nomor_identitas }}
                             @if($p->prodi_unit)
                                 &bull; <span class="text-secondary">{{ $p->prodi_unit }}</span>
                             @endif
                         </div>
                         @if($p->kontak_peminjam)
-                            <div class="text-muted small" style="font-size: 0.75rem;">
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $p->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none">
-                                    {{ $p->kontak_peminjam }}
+                            <div class="mt-0.5">
+                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $p->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none small fw-semibold">
+                                    <i class="fa-brands fa-whatsapp me-1"></i>{{ $p->kontak_peminjam }}
                                 </a>
                             </div>
                         @endif
@@ -169,71 +169,71 @@
                         </div>
                     </td>
                     <td>
-                        <div class="fw-bold text-dark fs-6">{{ $p->ruangan->nama_ruangan ?? 'Ruangan Telah Dihapus' }}</div>
-                        <div class="mt-0.5">
-                            <span class="badge bg-light text-dark border font-monospace" style="font-size: 0.75rem;">{{ $p->ruangan->kode_ruangan ?? '-' }}</span>
+                        <div class="fw-bold text-dark">{{ $p->ruangan->nama_ruangan ?? 'Ruangan Telah Dihapus' }}</div>
+                        <div class="mt-1">
+                            <span class="badge-code py-0">{{ $p->ruangan->kode_ruangan ?? '-' }}</span>
                         </div>
                         @if($p->keperluan)
-                            <div class="text-muted small text-truncate mt-1" style="max-width: 250px; font-size: 0.72rem;" title="{{ $p->keperluan }}">
+                            <div class="text-muted small text-truncate mt-1.5" style="max-width: 240px; font-size: 0.75rem;" title="{{ $p->keperluan }}">
                                 {{ $p->keperluan }}
                             </div>
                         @endif
                     </td>
                     <td>
                         <div class="fw-bold text-dark small">
-                            {{ \Carbon\Carbon::parse($p->tanggal_pemakaian)->isoFormat('dddd, D MMM Y') }}
+                            {{ \Carbon\Carbon::parse($p->tanggal_pemakaian)->locale('id')->translatedFormat('l, d M Y') }}
                         </div>
                         <div class="small text-primary font-monospace mt-0.5">
                             {{ date('H:i', strtotime($p->jam_mulai)) }} - {{ date('H:i', strtotime($p->jam_selesai)) }} WIB
                         </div>
                         @if($p->waktu_masuk)
-                            <div class="small text-info mt-0.5" style="font-size: 0.72rem;">
-                                Dibuka: {{ $p->waktu_masuk->isoFormat('D MMM, HH:mm') }}
+                            <div class="small text-info mt-1" style="font-size: 0.72rem;">
+                                Dibuka: {{ $p->waktu_masuk->locale('id')->translatedFormat('d M, H:i') }}
                             </div>
                         @endif
                         @if($p->waktu_selesai)
-                            <div class="small text-success mt-0.5" style="font-size: 0.72rem;">
-                                Selesai: {{ $p->waktu_selesai->isoFormat('D MMM, HH:mm') }}
+                            <div class="small text-success mt-1" style="font-size: 0.72rem;">
+                                Selesai: {{ $p->waktu_selesai->locale('id')->translatedFormat('d M, H:i') }}
                             </div>
                         @endif
                     </td>
-                    <td>
+                    <td class="text-center">
                         @if($p->status === 'Menunggu')
-                            <span class="badge bg-warning text-dark border border-warning px-2.5 py-1 rounded-pill">
-                                <i class="fa-solid fa-clock me-1"></i>Menunggu Persetujuan
+                            <span class="badge bg-warning text-dark border border-warning px-2.5 py-1.5 rounded-pill text-nowrap">
+                                <i class="fa-solid fa-clock me-1"></i>Menunggu
                             </span>
                         @elseif($p->status === 'Disetujui')
-                            <span class="badge bg-primary text-white border border-primary px-2.5 py-1 rounded-pill">
-                                <i class="fa-solid fa-circle-check me-1"></i>Disetujui (Terkunci)
+                            <span class="badge bg-primary text-white border border-primary px-2.5 py-1.5 rounded-pill text-nowrap">
+                                <i class="fa-solid fa-circle-check me-1"></i>Disetujui
                             </span>
                         @elseif($p->status === 'Digunakan')
-                            <span class="badge bg-info text-dark border border-info px-2.5 py-1 rounded-pill">
+                            <span class="badge bg-info text-dark border border-info px-2.5 py-1.5 rounded-pill text-nowrap">
                                 <i class="fa-solid fa-door-open me-1"></i>Sedang Digunakan
                             </span>
                         @elseif($p->status === 'Selesai')
-                            <span class="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill">
-                                <i class="fa-solid fa-check-double me-1"></i>Selesai Pemakaian
+                            <span class="badge bg-success-subtle text-success border border-success px-2.5 py-1.5 rounded-pill text-nowrap">
+                                <i class="fa-solid fa-check-double me-1"></i>Selesai
                             </span>
                         @elseif($p->status === 'Ditolak')
-                            <span class="badge bg-danger text-white border border-danger px-2.5 py-1 rounded-pill">
+                            <span class="badge bg-danger text-white border border-danger px-2.5 py-1.5 rounded-pill text-nowrap">
                                 <i class="fa-solid fa-ban me-1"></i>Ditolak
                             </span>
                             @if($p->alasan_penolakan)
-                                <div class="small text-danger mt-0.5" style="font-size: 0.72rem;">Alasan: {{ $p->alasan_penolakan }}</div>
+                                <div class="small text-danger mt-1" style="font-size: 0.72rem;">{{ $p->alasan_penolakan }}</div>
                             @endif
                         @endif
                     </td>
                     <td class="text-center pe-4">
-                        <div class="d-flex justify-content-center align-items-center gap-1.5 flex-wrap">
+                        <div class="d-flex justify-content-center align-items-center gap-1.5 flex-nowrap">
                             <!-- AKSI TAHAP 1: APPROVAL KEPALA SARPRAS -->
                             @if($p->status === 'Menunggu')
                                 <form action="{{ route('peminjaman-ruangan.setujui', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Setujui permohonan booking ruangan ini? Jadwal akan dikunci untuk pemohon.')">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-primary fw-bold shadow-sm" title="Setujui Booking">
+                                    <button type="submit" class="btn btn-sm btn-primary fw-bold shadow-sm text-nowrap" title="Setujui Booking">
                                         <i class="fa-solid fa-check me-1"></i>Setujui
                                     </button>
                                 </form>
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalTolakRuangan{{ $p->id }}" title="Tolak Booking">
+                                <button type="button" class="btn btn-sm btn-outline-danger text-nowrap" data-bs-toggle="modal" data-bs-target="#modalTolakRuangan{{ $p->id }}" title="Tolak Booking">
                                     <i class="fa-solid fa-xmark"></i> Tolak
                                 </button>
 
@@ -241,15 +241,15 @@
                             @elseif($p->status === 'Disetujui')
                                 <form action="{{ route('peminjaman-ruangan.serahkan', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Konfirmasi ruangan telah dibuka untuk kegiatan pemohon? Status akan berubah menjadi [Sedang Digunakan].')">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-info text-white fw-bold shadow-sm" title="Buka Ruangan untuk Kegiatan">
+                                    <button type="submit" class="btn btn-sm btn-info text-white fw-bold shadow-sm text-nowrap" title="Buka Ruangan untuk Kegiatan">
                                         <i class="fa-solid fa-door-open me-1"></i>Buka Ruangan
                                     </button>
                                 </form>
 
                             <!-- AKSI TAHAP 3: SELESAI & RUANGAN DIKUNCI KEMBALI OLEH PETUGAS -->
                             @elseif($p->status === 'Digunakan')
-                                <button type="button" class="btn btn-sm btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#modalSelesaiRuangan{{ $p->id }}" title="Selesai & Kunci Ruangan">
-                                    <i class="fa-solid fa-check-circle me-1"></i>Selesai & Kunci
+                                <button type="button" class="btn btn-sm btn-success fw-bold shadow-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#modalSelesaiRuangan{{ $p->id }}" title="Selesai & Kunci Ruangan">
+                                    <i class="fa-solid fa-circle-check me-1"></i>Selesai & Kunci
                                 </button>
                             @endif
 
