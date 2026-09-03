@@ -52,8 +52,18 @@ class PeminjamanRuangan extends Model
         return $this->belongsTo(User::class, 'disetujui_oleh');
     }
 
-    // Relasi ke Petugas yang menyerahkan kunci / mencatat check-in
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'disetujui_oleh');
+    }
+
+    // Relasi ke Petugas yang membukakan ruangan / mencatat check-in
     public function penyerah()
+    {
+        return $this->belongsTo(User::class, 'diserahkan_oleh');
+    }
+
+    public function petugasSerah()
     {
         return $this->belongsTo(User::class, 'diserahkan_oleh');
     }
