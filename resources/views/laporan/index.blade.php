@@ -543,7 +543,7 @@
 <!-- ========================================================================= -->
 
 <!-- 1. DOKUMEN CETAK KIR A4 -->
-<div id="printDocKIR" class="kir-print-document d-none">
+<div id="printDocKIR" class="kir-print-document">
     <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
     <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
         <div style="width: 85px;" class="text-center flex-shrink-0">
@@ -611,26 +611,26 @@
     <!-- Tanda Tangan KIR -->
     <div class="kir-ttd-container mt-4 pt-2">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
-            <div class="text-center" style="width: 250px;">
-                <p class="mb-0">Mengetahui,</p>
-                <p class="fw-bold mb-0">Ketua STIKes Panti Waluya</p>
-                <div style="height: 65px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
-                <p class="mb-0 small font-monospace print-nip-ketua">NIDN. 0725048201</p>
+            <div class="text-center" style="width: 320px;">
+                <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
+                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
+                <div style="height: 60px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">NIDN. 0725048201</p>
             </div>
-            <div class="text-center" style="width: 250px;">
-                <p class="mb-0 print-tgl-dokumen">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 65px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag">Petrus Tobias, S.Kom.</p>
-                <p class="mb-0 small font-monospace print-nip-kabag">NIK. 2021.08.045</p>
+            <div class="text-center" style="width: 320px;">
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
+                <div style="height: 60px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">Petrus Tobias, S.Kom.</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">NIK. 2021.08.045</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- 2. DOKUMEN CETAK LAPORAN PEMINJAMAN ASET A4 -->
-<div id="printDocPinjamAset" class="kir-print-document d-none">
+<div id="printDocPinjamAset" class="kir-print-document">
     <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
     <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
         <div style="width: 85px;" class="text-center flex-shrink-0">
@@ -713,26 +713,26 @@
     <!-- Tanda Tangan Laporan Aset -->
     <div class="kir-ttd-container mt-4 pt-2">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
-            <div class="text-center" style="width: 250px;">
-                <p class="mb-0">Mengetahui,</p>
-                <p class="fw-bold mb-0">Ketua STIKes Panti Waluya</p>
-                <div style="height: 65px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
-                <p class="mb-0 small font-monospace print-nip-ketua">NIDN. 0725048201</p>
+            <div class="text-center" style="width: 320px;">
+                <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
+                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
+                <div style="height: 60px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">NIDN. 0725048201</p>
             </div>
-            <div class="text-center" style="width: 250px;">
-                <p class="mb-0 print-tgl-dokumen">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 65px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag">Petrus Tobias, S.Kom.</p>
-                <p class="mb-0 small font-monospace print-nip-kabag">NIK. 2021.08.045</p>
+            <div class="text-center" style="width: 320px;">
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
+                <div style="height: 60px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">Petrus Tobias, S.Kom.</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">NIK. 2021.08.045</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- 3. DOKUMEN CETAK LAPORAN PEMINJAMAN RUANGAN A4 -->
-<div id="printDocPinjamRuangan" class="kir-print-document d-none">
+<div id="printDocPinjamRuangan" class="kir-print-document">
     <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
     <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
         <div style="width: 85px;" class="text-center flex-shrink-0">
@@ -813,34 +813,55 @@
     <!-- Tanda Tangan Laporan Ruangan -->
     <div class="kir-ttd-container mt-4 pt-2">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
-            <div class="text-center" style="width: 250px;">
-                <p class="mb-0">Mengetahui,</p>
-                <p class="fw-bold mb-0">Ketua STIKes Panti Waluya</p>
-                <div style="height: 65px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
-                <p class="mb-0 small font-monospace print-nip-ketua">NIDN. 0725048201</p>
+            <div class="text-center" style="width: 320px;">
+                <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
+                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
+                <div style="height: 60px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">NIDN. 0725048201</p>
             </div>
-            <div class="text-center" style="width: 250px;">
-                <p class="mb-0 print-tgl-dokumen">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 65px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag">Petrus Tobias, S.Kom.</p>
-                <p class="mb-0 small font-monospace print-nip-kabag">NIK. 2021.08.045</p>
+            <div class="text-center" style="width: 320px;">
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
+                <div style="height: 60px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">Petrus Tobias, S.Kom.</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">NIK. 2021.08.045</p>
             </div>
         </div>
     </div>
 </div>
 
 <style>
+    /* CSS Tampilan Web */
+    .kir-print-document {
+        display: none;
+    }
+
+    /* CSS Khusus Cetak Print A4 */
     @media print {
         @page {
             size: A4 portrait;
             margin: 10mm 12mm;
         }
-        .page-web-header, .navbar-custom, .no-print, .d-print-none, .card-stat, form, .modal, .footer-custom, .alert, .nav-pills {
+        .page-web-header, .navbar-custom, .no-print, .d-print-none, .card-stat, form, .modal, .footer-custom, .alert, .nav-pills, .card {
             display: none !important;
         }
         .kir-print-document {
+            display: none !important;
+        }
+        body.printing-kir #printDocKIR {
+            display: block !important;
+            width: 100%;
+            color: #000000 !important;
+            background: #ffffff !important;
+        }
+        body.printing-peminjaman-aset #printDocPinjamAset {
+            display: block !important;
+            width: 100%;
+            color: #000000 !important;
+            background: #ffffff !important;
+        }
+        body.printing-peminjaman-ruangan #printDocPinjamRuangan {
             display: block !important;
             width: 100%;
             color: #000000 !important;
@@ -850,12 +871,12 @@
             width: 100%;
             border-collapse: collapse;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 8pt;
+            font-size: 8.5pt;
             margin-bottom: 15px;
         }
         .table-kir-print th, .table-kir-print td {
             border: 1px solid #000000;
-            padding: 4px 6px;
+            padding: 5px 6px;
         }
         .table-kir-print th {
             background-color: #f0f0f0 !important;
@@ -866,6 +887,7 @@
         }
         .kir-ttd-container {
             page-break-inside: avoid;
+            margin-top: 20px;
         }
     }
 </style>
@@ -883,20 +905,24 @@
     function triggerPrintTab(target) {
         currentPrintTarget = target;
         
-        document.getElementById('printDocKIR').classList.add('d-none');
-        document.getElementById('printDocPinjamAset').classList.add('d-none');
-        document.getElementById('printDocPinjamRuangan').classList.add('d-none');
-
+        document.body.classList.remove('printing-kir', 'printing-peminjaman-aset', 'printing-peminjaman-ruangan');
+        
         if (target === 'kir') {
-            document.getElementById('printDocKIR').classList.remove('d-none');
+            document.body.classList.add('printing-kir');
         } else if (target === 'peminjaman-aset') {
-            document.getElementById('printDocPinjamAset').classList.remove('d-none');
+            document.body.classList.add('printing-peminjaman-aset');
         } else if (target === 'peminjaman-ruangan') {
-            document.getElementById('printDocPinjamRuangan').classList.remove('d-none');
+            document.body.classList.add('printing-peminjaman-ruangan');
         }
 
-        window.print();
+        setTimeout(function() {
+            window.print();
+        }, 150);
     }
+
+    window.addEventListener('afterprint', function() {
+        document.body.classList.remove('printing-kir', 'printing-peminjaman-aset', 'printing-peminjaman-ruangan');
+    });
 
     // Auto-save dan sinkronisasi penandatangan
     const DEFAULT_KETUA_NAMA = 'apt. Wida Padminingsih, S.Farm., M.Farm.';
