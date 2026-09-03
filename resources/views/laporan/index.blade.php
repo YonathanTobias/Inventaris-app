@@ -201,6 +201,10 @@
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
+        @page {
+            size: A4 portrait;
+            margin: 10mm 12mm;
+        }
     }
 </style>
 
