@@ -67,6 +67,8 @@ Route::middleware('auth')->group(function () {
     // Laporan & Export Excel
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('laporan/export', [LaporanController::class, 'exportExcel'])->name('laporan.export');
+    Route::get('laporan/peminjaman-aset/export', [LaporanController::class, 'exportPeminjamanAset'])->name('laporan.peminjaman-aset.export');
+    Route::get('laporan/peminjaman-ruangan/export', [LaporanController::class, 'exportPeminjamanRuangan'])->name('laporan.peminjaman-ruangan.export');
 
     // Manajemen Pengguna (Khusus Admin IT / Super User)
     Route::middleware('role:it')->group(function () {
