@@ -35,21 +35,21 @@
         }
 
         .ticket-header {
-            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #0d9488 100%);
+            background: linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #2196F3 100%);
             color: #ffffff;
             padding: 2rem;
             position: relative;
         }
 
         .badge-code {
-            background-color: #f1f5f9;
-            color: #1e293b;
+            background-color: #E3F2FD;
+            color: #0D47A1;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
             padding: 0.35rem 0.75rem;
             border-radius: 8px;
             font-weight: 700;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #90CAF9;
             display: inline-block;
         }
 
@@ -65,8 +65,8 @@
         }
 
         .timeline-step.active {
-            background: #ecfdf5;
-            border-color: #a7f3d0;
+            background: #E3F2FD;
+            border-color: #90CAF9;
         }
 
         .timeline-step.done {

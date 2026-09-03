@@ -19,22 +19,27 @@
 
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
-            --dark: #0f172a;
+            --color-navy: #0D47A1;
+            --color-vibrant: #2196F3;
+            --color-sky: #90CAF9;
+            --color-ice: #E3F2FD;
+            
+            --primary: #2196F3;
+            --primary-hover: #0D47A1;
+            --primary-gradient: linear-gradient(135deg, #0D47A1 0%, #2196F3 100%);
+            --dark: #0a192f;
             --card-bg: #ffffff;
-            --body-bg: #0b0f19;
-            --border-color: #e2e8f0;
+            --body-bg: #061126;
+            --border-color: #90CAF9;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--body-bg);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.25) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.2) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.8) 0px, transparent 100%);
+                radial-gradient(at 0% 0%, rgba(33, 150, 243, 0.35) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(13, 71, 161, 0.45) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(6, 17, 38, 0.85) 0px, transparent 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -46,8 +51,8 @@
         .login-card {
             background: #ffffff;
             border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(13, 71, 161, 0.45);
+            border: 1px solid var(--color-sky);
             overflow: hidden;
             width: 100%;
             max-width: 460px;
@@ -58,6 +63,8 @@
         .brand-header {
             text-align: center;
             padding: 2.25rem 2rem 1.25rem;
+            background: linear-gradient(180deg, #E3F2FD 0%, #ffffff 100%);
+            border-bottom: 1px solid #E3F2FD;
         }
 
         .brand-icon-large {
@@ -71,7 +78,7 @@
             color: white;
             font-size: 1.65rem;
             margin-bottom: 1rem;
-            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.35);
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.35);
         }
 
         .form-control {
@@ -84,15 +91,15 @@
         }
 
         .form-control:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+            border-color: #2196F3;
+            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.15);
         }
 
         .input-group-text {
             border: 1.5px solid #cbd5e1;
             border-radius: 12px;
-            background-color: #f8fafc;
-            color: #64748b;
+            background-color: var(--color-ice);
+            color: var(--color-navy);
         }
 
         .btn-login {
@@ -103,7 +110,7 @@
             font-size: 1rem;
             padding: 0.85rem 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+            box-shadow: 0 6px 18px rgba(33, 150, 243, 0.4);
             transition: all 0.2s ease;
             width: 100%;
             display: flex;
@@ -113,8 +120,9 @@
         }
 
         .btn-login:hover {
+            background: linear-gradient(135deg, #0a3880 0%, #1976D2 100%);
             transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(79, 70, 229, 0.45);
+            box-shadow: 0 10px 24px rgba(33, 150, 243, 0.5);
             color: #ffffff;
         }
     </style>

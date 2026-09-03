@@ -22,29 +22,34 @@
     
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --primary-light: #eef2ff;
-            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            --color-navy: #0D47A1;
+            --color-vibrant: #2196F3;
+            --color-sky: #90CAF9;
+            --color-ice: #E3F2FD;
+            
+            --primary: #2196F3;
+            --primary-hover: #0D47A1;
+            --primary-light: #E3F2FD;
+            --primary-gradient: linear-gradient(135deg, #0D47A1 0%, #2196F3 100%);
             --secondary: #64748b;
-            --accent: #06b6d4;
+            --accent: #0D47A1;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --dark: #0f172a;
+            --dark: #0a192f;
             --card-bg: #ffffff;
-            --body-bg: #f8fafc;
-            --border-color: #e2e8f0;
-            --text-main: #1e293b;
+            --body-bg: #f4f8fb;
+            --border-color: #dbeafe;
+            --text-main: #0f172a;
             --text-muted: #64748b;
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
             --radius-xl: 20px;
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
-            --shadow-lg: 0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 6px 12px -2px rgba(15, 23, 42, 0.03);
-            --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.25);
+            --shadow-sm: 0 1px 3px 0 rgba(13, 71, 161, 0.05);
+            --shadow-md: 0 4px 14px -2px rgba(13, 71, 161, 0.07), 0 2px 6px -1px rgba(13, 71, 161, 0.04);
+            --shadow-lg: 0 12px 28px -4px rgba(13, 71, 161, 0.12), 0 6px 12px -2px rgba(13, 71, 161, 0.04);
+            --shadow-glow: 0 0 20px rgba(33, 150, 243, 0.3);
         }
 
         body {
@@ -60,14 +65,13 @@
 
         /* Modern Glass Navbar */
         .navbar-custom {
-            background: rgba(15, 23, 42, 0.94);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #0D47A1 0%, #1565C0 100%);
+            border-bottom: 2px solid #2196F3;
             position: sticky;
             top: 0;
             z-index: 1030;
             padding: 0.75rem 0;
+            box-shadow: 0 4px 20px rgba(13, 71, 161, 0.25);
             transition: all 0.3s ease;
         }
 
@@ -91,11 +95,11 @@
             justify-content: center;
             color: white;
             font-size: 1.1rem;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
         }
 
         .nav-link-custom {
-            color: #94a3b8 !important;
+            color: #E3F2FD !important;
             font-weight: 600;
             font-size: 0.9rem;
             padding: 0.55rem 1rem !important;
@@ -109,14 +113,15 @@
 
         .nav-link-custom:hover {
             color: #ffffff !important;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateY(-1px);
         }
 
         .nav-link-custom.active {
-            color: #ffffff !important;
-            background: var(--primary-gradient);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+            color: #0D47A1 !important;
+            background: #ffffff !important;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
         }
 
         /* Modern Cards */
@@ -291,14 +296,14 @@
         }
 
         .badge-room-code {
-            background-color: #eef2ff;
-            color: #4338ca;
+            background-color: var(--color-ice);
+            color: var(--color-navy);
             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
             font-size: 0.82rem;
             padding: 0.28rem 0.6rem;
             border-radius: 8px;
             font-weight: 700;
-            border: 1px solid #c7d2fe;
+            border: 1px solid var(--color-sky);
             letter-spacing: 0.02em;
             display: inline-block;
         }
@@ -321,7 +326,7 @@
             font-weight: 600;
             padding: 0.6rem 1.25rem;
             border-radius: var(--radius-md);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            box-shadow: 0 4px 14px rgba(33, 150, 243, 0.35);
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
@@ -329,8 +334,9 @@
         }
 
         .btn-modern-primary:hover {
+            background: linear-gradient(135deg, #0a3880 0%, #1976D2 100%);
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+            box-shadow: 0 6px 18px rgba(33, 150, 243, 0.45);
             color: #ffffff;
         }
 
@@ -352,9 +358,9 @@
         }
 
         .btn-icon-primary {
-            background-color: #eef2ff;
-            color: var(--primary);
-            border-color: #c7d2fe;
+            background-color: var(--color-ice);
+            color: var(--color-navy);
+            border-color: var(--color-sky);
         }
         .btn-icon-primary:hover {
             background-color: var(--primary);
