@@ -120,19 +120,19 @@
             <!-- HEADER TIKET -->
             <div class="ticket-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-circle bg-white text-success d-flex align-items-center justify-content-center fw-bold fs-3 shadow-sm" style="width: 56px; height: 56px;">
+                    <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center fw-bold fs-3 shadow-sm" style="width: 56px; height: 56px;">
                         <i class="fa-solid fa-door-open"></i>
                     </div>
                     <div>
-                        <span class="badge bg-white bg-opacity-20 text-light border border-white border-opacity-25 px-2.5 py-1 rounded-pill small mb-1">
-                            Bukti Booking Ruangan Digital
+                        <span class="badge bg-white text-dark px-3 py-1 rounded-pill fw-bold mb-1 shadow-sm" style="font-size: 0.75rem; letter-spacing: 0.03em;">
+                            BUKTI BOOKING RUANGAN DIGITAL
                         </span>
                         <h4 class="fw-bold mb-0 text-white font-monospace">{{ $booking->kode_booking }}</h4>
                     </div>
                 </div>
 
                 <div class="text-md-end">
-                    <span class="small text-light text-opacity-75 d-block">Status Permohonan:</span>
+                    <span class="small text-white fw-semibold d-block mb-1">Status Permohonan:</span>
                     @if($booking->status === 'Menunggu')
                         <span class="badge bg-warning text-dark fs-6 px-3 py-1.5 rounded-pill shadow-sm">
                             <i class="fa-solid fa-clock me-1"></i> Menunggu Persetujuan
@@ -160,7 +160,7 @@
             <!-- TAHAPAN LIFECYCLE TRACKER -->
             <div class="p-4 bg-light border-bottom">
                 <h6 class="fw-bold text-dark small text-uppercase mb-3">
-                    <i class="fa-solid fa-timeline text-success me-1"></i> Alur Tahapan Booking Ruangan:
+                    Alur Tahapan Booking Ruangan:
                 </h6>
                 <div class="row g-2">
                     <div class="col-md-3">
@@ -230,14 +230,14 @@
                         <div class="alert alert-success mb-0 small rounded-3 border-success d-flex align-items-center gap-2">
                             <i class="fa-solid fa-circle-check fs-5"></i>
                             <div>
-                                <strong>Booking Disetujui!</strong> Jadwal pemakaian ruangan telah dikunci untuk Anda. Silakan datang ke Ruang Sarpras/Laboran sebelum jam kegiatan dimulai untuk mengambil kunci ruangan.
+                                <strong>Booking Disetujui!</strong> Jadwal pemakaian ruangan telah dikunci untuk Anda. Silakan datang ke Ruang Sarpras sebelum jam kegiatan dimulai untuk mengambil kunci ruangan.
                             </div>
                         </div>
                     @elseif($booking->status === 'Digunakan')
                         <div class="alert alert-info mb-0 small rounded-3 border-info d-flex align-items-center gap-2">
                             <i class="fa-solid fa-key fs-5"></i>
                             <div>
-                                <strong>Ruangan Sedang Digunakan:</strong> Kunci telah diserahkan pada {{ $booking->waktu_masuk ? $booking->waktu_masuk->isoFormat('D MMM Y, HH:mm') : '-' }}. Harap menjaga kebersihan dan mematikan AC/lampu serta mengembalikan kunci setelah selesai.
+                                <strong>Ruangan Sedang Digunakan:</strong> Kunci telah diserahkan pada {{ $booking->waktu_masuk ? $booking->waktu_masuk->locale('id')->translatedFormat('l, d F Y, H:i') : '-' }}. Harap menjaga kebersihan dan mematikan AC/lampu serta mengembalikan kunci setelah selesai.
                             </div>
                         </div>
                     @elseif($booking->status === 'Ditolak')
@@ -247,7 +247,7 @@
                         </div>
                     @elseif($booking->status === 'Selesai')
                         <div class="alert alert-success mb-0 small rounded-3 border-success">
-                            <i class="fa-solid fa-check-double me-1"></i> Pemakaian ruangan telah selesai pada {{ $booking->waktu_selesai ? $booking->waktu_selesai->isoFormat('D MMMM Y, HH:mm') : '-' }}. Kunci telah diterima kembali oleh petugas. Terima kasih!
+                            <i class="fa-solid fa-check-double me-1"></i> Pemakaian ruangan telah selesai pada {{ $booking->waktu_selesai ? $booking->waktu_selesai->locale('id')->translatedFormat('l, d F Y, H:i') : '-' }}. Kunci telah diterima kembali oleh petugas. Terima kasih!
                         </div>
                     @endif
                 </div>
@@ -277,7 +277,7 @@
                             </tr>
                             <tr>
                                 <td class="text-muted ps-0">No. WhatsApp</td>
-                                <td>: <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $booking->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none fw-semibold"><i class="fa-brands fa-whatsapp me-1"></i>{{ $booking->kontak_peminjam }}</a></td>
+                                <td>: <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $booking->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none fw-semibold">{{ $booking->kontak_peminjam }}</a></td>
                             </tr>
                         </table>
                     </div>
@@ -295,7 +295,7 @@
                             </tr>
                             <tr>
                                 <td class="text-muted ps-0">Tanggal Pakai</td>
-                                <td class="fw-bold text-dark">: {{ \Carbon\Carbon::parse($booking->tanggal_pemakaian)->isoFormat('dddd, D MMMM Y') }}</td>
+                                <td class="fw-bold text-dark">: {{ \Carbon\Carbon::parse($booking->tanggal_pemakaian)->locale('id')->translatedFormat('l, d F Y') }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted ps-0">Waktu / Jam</td>

@@ -170,18 +170,18 @@
                                     <div class="mt-1">
                                         @if($r->bisa_dipinjam)
                                             <span class="badge bg-success-subtle text-success border border-success-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Ruangan ini diizinkan untuk dipinjam publik">
-                                                <i class="fa-solid fa-check me-0.5"></i>Bisa Dipinjam
+                                                Bisa Dipinjam
                                             </span>
                                         @else
                                             <span class="badge bg-secondary-subtle text-muted border border-secondary-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Ruangan khusus internal">
-                                                <i class="fa-solid fa-lock me-0.5"></i>Khusus Internal
+                                                Khusus Internal
                                             </span>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="text-center">
                                     <span class="badge bg-info-subtle text-info-emphasis border px-2.5 py-1 fw-bold rounded-pill" style="font-size: 0.8rem;">
-                                        <i class="fa-solid fa-box-archive me-1"></i>{{ $r->barangs_count }} Jenis
+                                        {{ $r->barangs_count }} Jenis
                                     </span>
                                 </td>
                                 <td class="text-center pe-4">

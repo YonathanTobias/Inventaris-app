@@ -151,7 +151,7 @@
                             <span class="fw-bold text-dark">{{ $p->nama_peminjam }}</span>
                         </div>
                         <div class="text-muted small font-monospace mt-0.5">
-                            <i class="fa-solid fa-id-card me-1 text-primary"></i>{{ $p->nomor_identitas }}
+                            {{ $p->nomor_identitas }}
                             @if($p->prodi_unit)
                                 &bull; <span class="text-secondary">{{ $p->prodi_unit }}</span>
                             @endif
@@ -159,7 +159,7 @@
                         @if($p->kontak_peminjam)
                             <div class="text-muted small" style="font-size: 0.75rem;">
                                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $p->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none">
-                                    <i class="fa-brands fa-whatsapp me-1"></i>{{ $p->kontak_peminjam }}
+                                    {{ $p->kontak_peminjam }}
                                 </a>
                             </div>
                         @endif
@@ -171,7 +171,7 @@
                         @if($p->details && $p->details->count() > 1)
                             <div class="fw-bold text-dark">{{ $p->details->first()->barang->nama_barang ?? '-' }}</div>
                             <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#modalRincianAset{{ $p->id }}" style="font-size: 0.75rem;">
-                                <i class="fa-solid fa-cart-shopping me-1"></i>+ {{ $p->details->count() - 1 }} Aset Lainnya (Lihat Paket)
+                                + {{ $p->details->count() - 1 }} Aset Lainnya (Lihat Paket)
                             </button>
                         @elseif($p->details && $p->details->count() === 1)
                             <div class="fw-bold text-dark">{{ $p->details->first()->barang->nama_barang ?? '-' }}</div>
@@ -188,7 +188,7 @@
                         @endif
                         @if($p->keperluan)
                             <div class="text-muted small text-truncate mt-1" style="max-width: 250px; font-size: 0.72rem;" title="{{ $p->keperluan }}">
-                                <i class="fa-solid fa-circle-info me-1"></i>{{ $p->keperluan }}
+                                {{ $p->keperluan }}
                             </div>
                         @endif
                     </td>

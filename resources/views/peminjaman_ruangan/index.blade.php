@@ -152,7 +152,7 @@
                             <span class="fw-bold text-dark">{{ $p->nama_peminjam }}</span>
                         </div>
                         <div class="text-muted small font-monospace mt-0.5">
-                            <i class="fa-solid fa-id-card me-1 text-primary"></i>{{ $p->nomor_identitas }}
+                            {{ $p->nomor_identitas }}
                             @if($p->prodi_unit)
                                 &bull; <span class="text-secondary">{{ $p->prodi_unit }}</span>
                             @endif
@@ -160,7 +160,7 @@
                         @if($p->kontak_peminjam)
                             <div class="text-muted small" style="font-size: 0.75rem;">
                                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $p->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none">
-                                    <i class="fa-brands fa-whatsapp me-1"></i>{{ $p->kontak_peminjam }}
+                                    {{ $p->kontak_peminjam }}
                                 </a>
                             </div>
                         @endif
@@ -175,25 +175,25 @@
                         </div>
                         @if($p->keperluan)
                             <div class="text-muted small text-truncate mt-1" style="max-width: 250px; font-size: 0.72rem;" title="{{ $p->keperluan }}">
-                                <i class="fa-solid fa-circle-info me-1"></i>{{ $p->keperluan }}
+                                {{ $p->keperluan }}
                             </div>
                         @endif
                     </td>
                     <td>
                         <div class="fw-bold text-dark small">
-                            <i class="fa-regular fa-calendar text-primary me-1"></i>{{ \Carbon\Carbon::parse($p->tanggal_pemakaian)->isoFormat('dddd, D MMM Y') }}
+                            {{ \Carbon\Carbon::parse($p->tanggal_pemakaian)->isoFormat('dddd, D MMM Y') }}
                         </div>
                         <div class="small text-primary font-monospace mt-0.5">
-                            <i class="fa-regular fa-clock me-1"></i>{{ date('H:i', strtotime($p->jam_mulai)) }} - {{ date('H:i', strtotime($p->jam_selesai)) }} WIB
+                            {{ date('H:i', strtotime($p->jam_mulai)) }} - {{ date('H:i', strtotime($p->jam_selesai)) }} WIB
                         </div>
                         @if($p->waktu_masuk)
                             <div class="small text-info mt-0.5" style="font-size: 0.72rem;">
-                                <i class="fa-solid fa-key me-1"></i>Kunci diserahkan: {{ $p->waktu_masuk->isoFormat('D MMM, HH:mm') }}
+                                Kunci: {{ $p->waktu_masuk->isoFormat('D MMM, HH:mm') }}
                             </div>
                         @endif
                         @if($p->waktu_selesai)
                             <div class="small text-success mt-0.5" style="font-size: 0.72rem;">
-                                <i class="fa-solid fa-check-double me-1"></i>Selesai: {{ $p->waktu_selesai->isoFormat('D MMM, HH:mm') }}
+                                Selesai: {{ $p->waktu_selesai->isoFormat('D MMM, HH:mm') }}
                             </div>
                         @endif
                     </td>

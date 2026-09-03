@@ -354,13 +354,13 @@
             <div class="row align-items-center">
                 <div class="col-lg-8">
                     <div class="badge bg-white bg-opacity-10 border border-white border-opacity-25 px-3 py-1.5 rounded-pill mb-3 text-light small fw-semibold">
-                        <i class="fa-solid fa-shield-halved text-warning me-1.5"></i>SPARTA-PW &bull; Layanan Mandiri Civitas Akademika
+                        SPARTA-PW &bull; Layanan Mandiri Civitas Akademika
                     </div>
                     <h1 class="fw-extrabold display-6 mb-2" style="letter-spacing: -0.03em;">
                         Sistem Peminjaman Aset & Ruangan Terpadu
                     </h1>
                     <p class="lead text-light text-opacity-75 mb-0" style="font-size: 1.05rem;">
-                        Layanan mandiri resmi bagi <strong>Dosen, Mahasiswa, dan Ormawa</strong> STIKES Panti Waluya Malang untuk meminjam alat laboratorium maupun memesan ruangan praktikum/kegiatan.
+                        Layanan mandiri resmi bagi <strong>Dosen, Mahasiswa, dan Ormawa</strong> STIKES Panti Waluya Malang untuk peminjaman aset sarana prasarana serta peminjaman ruangan kegiatan kampus.
                     </p>
                 </div>
                 <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
@@ -415,13 +415,13 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active fw-bold py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" id="pills-aset-tab" data-bs-toggle="pill" data-bs-target="#pills-aset" type="button" role="tab">
                         <i class="fa-solid fa-boxes-stacked fs-5"></i>
-                        <span>Peminjaman Aset & Alat Praktikum</span>
+                        <span>Peminjaman Aset Sarpras</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link nav-link-ruangan fw-bold py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" id="pills-ruangan-tab" data-bs-toggle="pill" data-bs-target="#pills-ruangan" type="button" role="tab">
                         <i class="fa-solid fa-door-open fs-5"></i>
-                        <span>Peminjaman & Booking Ruangan</span>
+                        <span>Peminjaman Ruangan Kegiatan</span>
                     </button>
                 </li>
             </ul>
@@ -433,7 +433,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
                         <div class="d-flex align-items-center gap-2">
                             <div class="step-pill">
-                                <i class="fa-solid fa-file-pen"></i> Form Aset
+                                Form Aset
                             </div>
                             <h4 class="fw-bold text-dark mb-0">Formulir Pengajuan Peminjaman Aset</h4>
                         </div>
@@ -453,10 +453,10 @@
                         <div class="mb-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h6 class="fw-bold text-primary small text-uppercase mb-0">
-                                    <i class="fa-solid fa-cart-flatbed me-1"></i> 1. Daftar Aset yang Dipinjam (Keranjang Anda)
+                                    1. Daftar Aset yang Dipinjam
                                 </h6>
                                 <a href="#sectionKatalogAset" class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold" style="font-size: 0.8rem;">
-                                    <i class="fa-solid fa-plus-circle me-1"></i> Tambah Aset Lain dari Katalog
+                                    + Tambah Aset Lain dari Katalog
                                 </a>
                             </div>
 
@@ -489,7 +489,7 @@
                         <div class="row g-3 mb-4">
                             <div class="col-12">
                                 <h6 class="fw-bold text-primary small text-uppercase mb-2">
-                                    <i class="fa-solid fa-user-check me-1"></i> 2. Identitas Pemohon
+                                    2. Identitas Pemohon
                                 </h6>
                             </div>
 
@@ -519,10 +519,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small text-secondary">Nomor WhatsApp Aktif <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light text-success"><i class="fa-brands fa-whatsapp fa-lg"></i></span>
-                                    <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi persetujuan)" value="{{ old('kontak_peminjam') }}" required>
-                                </div>
+                                <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi persetujuan)" value="{{ old('kontak_peminjam') }}" required>
                             </div>
                         </div>
 
@@ -532,7 +529,7 @@
                         <div class="row g-3 mb-4">
                             <div class="col-12">
                                 <h6 class="fw-bold text-primary small text-uppercase mb-2">
-                                    <i class="fa-solid fa-calendar-days me-1"></i> 3. Jadwal & Keperluan Peminjaman
+                                    3. Jadwal & Keperluan Peminjaman
                                 </h6>
                             </div>
 
@@ -564,7 +561,6 @@
 
                         <div class="text-center text-md-end">
                             <button type="submit" class="btn-submit-pinjam" id="btnSubmitPengajuan">
-                                <i class="fa-solid fa-paper-plane me-2"></i>
                                 <span>Kirim Permohonan Peminjaman Aset</span>
                             </button>
                         </div>
@@ -576,9 +572,9 @@
                     <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
                         <div class="d-flex align-items-center gap-2">
                             <div class="step-pill-emerald">
-                                <i class="fa-solid fa-door-open"></i> Form Ruangan
+                                Form Ruangan
                             </div>
-                            <h4 class="fw-bold text-dark mb-0">Formulir Booking / Peminjaman Ruangan</h4>
+                            <h4 class="fw-bold text-dark mb-0">Formulir Peminjaman Ruangan Kegiatan</h4>
                         </div>
                         <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 rounded-pill font-monospace small">
                             {{ $ruangans->count() }} Ruangan Siap Dipinjam
@@ -592,7 +588,7 @@
                         <div class="row g-3 mb-4">
                             <div class="col-12">
                                 <h6 class="fw-bold text-success small text-uppercase mb-2">
-                                    <i class="fa-solid fa-building-circle-check me-1"></i> 1. Pilihan Ruangan & Waktu Pemakaian
+                                    1. Pilihan Ruangan & Waktu Pemakaian
                                 </h6>
                             </div>
 
@@ -627,7 +623,7 @@
                             <div class="col-12" id="boxJadwalTerisi" style="display: none;">
                                 <div class="p-3 bg-light rounded-3 border">
                                     <div class="fw-bold small text-secondary mb-1">
-                                        <i class="fa-solid fa-calendar-check text-success me-1"></i>Jadwal Pemakaian Ruangan Ini pada Tanggal Tersebut:
+                                        Jadwal Pemakaian Ruangan Ini pada Tanggal Tersebut:
                                     </div>
                                     <div id="listJadwalRuangan" class="small text-muted">
                                         <!-- Diisi via AJAX -->
@@ -642,7 +638,7 @@
                         <div class="row g-3 mb-4">
                             <div class="col-12">
                                 <h6 class="fw-bold text-success small text-uppercase mb-2">
-                                    <i class="fa-solid fa-user-check me-1"></i> 2. Identitas Pemohon / Penanggung Jawab
+                                    2. Identitas Pemohon / Penanggung Jawab
                                 </h6>
                             </div>
 
@@ -672,10 +668,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small text-secondary">Nomor WhatsApp Aktif <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light text-success"><i class="fa-brands fa-whatsapp fa-lg"></i></span>
-                                    <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi kunci & approval)" value="{{ old('kontak_peminjam') }}" required>
-                                </div>
+                                <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi kunci & approval)" value="{{ old('kontak_peminjam') }}" required>
                             </div>
 
                             <div class="col-12">
@@ -696,7 +689,6 @@
 
                         <div class="text-center text-md-end">
                             <button type="submit" class="btn-submit-ruangan">
-                                <i class="fa-solid fa-paper-plane me-2"></i>
                                 <span>Kirim Permohonan Booking Ruangan</span>
                             </button>
                         </div>
@@ -712,7 +704,7 @@
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
             <div>
                 <h4 class="fw-bold text-dark mb-1">
-                    <i class="fa-solid fa-boxes-stacked text-primary me-2"></i>Katalog Aset yang Diizinkan Dipinjam
+                    Katalog Aset Sarpras yang Dapat Dipinjam
                 </h4>
                 <p class="text-muted small mb-0">Klik tombol <strong>"+ Keranjang"</strong> pada aset yang dibutuhkan untuk memasukkannya ke permohonan.</p>
             </div>
@@ -731,7 +723,7 @@
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <span class="badge-code">{{ $item->kode_barang }}</span>
                             <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small">
-                                <i class="fa-solid fa-circle-check me-1"></i>Sisa {{ $item->jumlah }} Unit
+                                Sisa {{ $item->jumlah }} Unit
                             </span>
                         </div>
                         <h6 class="fw-bold text-dark mb-1">{{ $item->nama_barang }}</h6>
@@ -752,7 +744,7 @@
                             <button type="button" class="qty-stepper-btn" onclick="stepItemQty('{{ $item->id }}', 1)">+</button>
                         </div>
                         <button type="button" class="btn btn-sm btn-primary fw-bold rounded-pill px-3 shadow-sm" onclick="addToCart('{{ $item->id }}', '{{ addslashes($item->nama_barang) }}', '{{ $item->kode_barang }}', '{{ addslashes($item->ruangan->nama_ruangan ?? '-') }}', {{ $item->jumlah }})">
-                            <i class="fa-solid fa-cart-plus me-1"></i> + Keranjang
+                            + Keranjang
                         </button>
                     </div>
                 </div>

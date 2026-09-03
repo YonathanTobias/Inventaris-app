@@ -124,15 +124,15 @@
                         <i class="fa-solid fa-receipt"></i>
                     </div>
                     <div>
-                        <span class="badge bg-white bg-opacity-20 text-light border border-white border-opacity-25 px-2.5 py-1 rounded-pill small mb-1">
-                            Bukti Pengajuan Peminjaman Aset
+                        <span class="badge bg-white text-dark px-3 py-1 rounded-pill fw-bold mb-1 shadow-sm" style="font-size: 0.75rem; letter-spacing: 0.03em;">
+                            BUKTI PEMINJAMAN ASET SARPRAS
                         </span>
                         <h4 class="fw-bold mb-0 text-white font-monospace">{{ $peminjaman->kode_peminjaman }}</h4>
                     </div>
                 </div>
 
                 <div class="text-md-end">
-                    <span class="small text-light text-opacity-75 d-block">Status Permohonan:</span>
+                    <span class="small text-white fw-semibold d-block mb-1">Status Permohonan:</span>
                     @if($peminjaman->status === 'Menunggu')
                         <span class="badge bg-warning text-dark fs-6 px-3 py-1.5 rounded-pill shadow-sm">
                             <i class="fa-solid fa-clock me-1"></i> Menunggu Persetujuan
@@ -164,7 +164,7 @@
             <!-- STATUS LIFECYCLE TRACKER -->
             <div class="p-4 bg-light border-bottom">
                 <h6 class="fw-bold text-dark small text-uppercase mb-3">
-                    <i class="fa-solid fa-timeline text-primary me-1"></i> Alur Tahapan Pengajuan:
+                    Alur Tahapan Pengajuan:
                 </h6>
                 <div class="row g-2">
                     <div class="col-md-3">
@@ -196,26 +196,28 @@
                             @if(in_array($peminjaman->status, ['Diambil', 'Kembali']))
                                 <i class="fa-solid fa-circle-check text-success fs-5"></i>
                             @elseif($peminjaman->status === 'Disetujui')
-                                <i class="fa-solid fa-hand-holding-box text-primary fs-5"></i>
+                                <i class="fa-solid fa-box-open text-primary fs-5"></i>
                             @else
                                 <i class="fa-regular fa-circle text-muted fs-5"></i>
                             @endif
                             <div>
                                 <strong class="d-block small text-dark">3. Pengambilan</strong>
-                                <small class="text-muted" style="font-size: 0.72rem;">Ambil di Sarpras</small>
+                                <small class="text-muted" style="font-size: 0.72rem;">Di Ruang Sarpras</small>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="timeline-step {{ $peminjaman->status === 'Kembali' ? 'done' : '' }}">
+                        <div class="timeline-step {{ $peminjaman->status === 'Kembali' ? 'done' : ($peminjaman->status === 'Diambil' ? 'active' : '') }}">
                             @if($peminjaman->status === 'Kembali')
                                 <i class="fa-solid fa-circle-check text-success fs-5"></i>
+                            @elseif($peminjaman->status === 'Diambil')
+                                <i class="fa-solid fa-clock-rotate-left text-warning fs-5"></i>
                             @else
                                 <i class="fa-regular fa-circle text-muted fs-5"></i>
                             @endif
                             <div>
-                                <strong class="d-block small text-dark">4. Selesai</strong>
-                                <small class="text-muted" style="font-size: 0.72rem;">Barang Kembali</small>
+                                <strong class="d-block small text-dark">4. Pengembalian</strong>
+                                <small class="text-muted" style="font-size: 0.72rem;">Cek Fisik & Selesai</small>
                             </div>
                         </div>
                     </div>
@@ -227,21 +229,21 @@
                         <div class="alert alert-warning mb-0 small rounded-3 border-warning d-flex align-items-center gap-2">
                             <i class="fa-solid fa-circle-info fs-5"></i>
                             <div>
-                                <strong>Menunggu Persetujuan:</strong> Permohonan Anda saat ini sedang dalam proses review oleh Kepala Biro Sarana & Prasarana. Simpan Kode Peminjaman Anda (<strong>{{ $peminjaman->kode_peminjaman }}</strong>) untuk mengecek status sewaktu-waktu.
+                                <strong>Menunggu Persetujuan:</strong> Pengajuan Anda saat ini sedang dalam antrean review oleh Kepala Biro Sarana & Prasarana. Simpan Kode Peminjaman Anda (<strong>{{ $peminjaman->kode_peminjaman }}</strong>) untuk mengecek status permohonan.
                             </div>
                         </div>
                     @elseif($peminjaman->status === 'Disetujui')
                         <div class="alert alert-success mb-0 small rounded-3 border-success d-flex align-items-center gap-2">
                             <i class="fa-solid fa-circle-check fs-5"></i>
                             <div>
-                                <strong>Disetujui!</strong> Kepala Sarpras telah menyetujui peminjaman ini. Silakan datang ke Ruang Sarpras/Laboratorium untuk mengambil barang fisik dan menandatangani serah terima.
+                                <strong>Pengajuan Disetujui!</strong> Silakan datang ke Ruang Sarpras untuk mengambil barang sesuai tanggal rencana pengambilan.
                             </div>
                         </div>
                     @elseif($peminjaman->status === 'Diambil')
                         <div class="alert alert-info mb-0 small rounded-3 border-info d-flex align-items-center gap-2">
                             <i class="fa-solid fa-box-open fs-5"></i>
                             <div>
-                                <strong>Barang Sudah Diambil:</strong> Barang telah diserahkan pada {{ $peminjaman->tanggal_diambil ? $peminjaman->tanggal_diambil->isoFormat('D MMM Y, HH:mm') : '-' }}. Harap menjaga keutuhan aset dan mengembalikannya sebelum <strong>{{ \Carbon\Carbon::parse($peminjaman->tenggat_kembali)->isoFormat('D MMMM Y') }}</strong>.
+                                <strong>Barang Sudah Diambil:</strong> Barang telah diserahkan pada {{ $peminjaman->tanggal_diambil ? $peminjaman->tanggal_diambil->locale('id')->translatedFormat('l, d F Y, H:i') : '-' }}. Harap menjaga keutuhan aset dan mengembalikannya sebelum <strong>{{ \Carbon\Carbon::parse($peminjaman->tenggat_kembali)->locale('id')->translatedFormat('l, d F Y') }}</strong>.
                             </div>
                         </div>
                     @elseif($peminjaman->status === 'Ditolak')
@@ -251,7 +253,7 @@
                         </div>
                     @elseif($peminjaman->status === 'Kembali')
                         <div class="alert alert-success mb-0 small rounded-3 border-success">
-                            <i class="fa-solid fa-check-double me-1"></i> Transaksi peminjaman telah selesai. Barang telah dikembalikan dalam kondisi <strong>{{ $peminjaman->kondisi_kembali }}</strong> pada {{ \Carbon\Carbon::parse($peminjaman->tanggal_kembali)->isoFormat('D MMMM Y') }}. Terima kasih!
+                            <i class="fa-solid fa-check-double me-1"></i> Transaksi peminjaman telah selesai. Barang telah dikembalikan dalam kondisi <strong>{{ $peminjaman->kondisi_kembali }}</strong> pada {{ \Carbon\Carbon::parse($peminjaman->tanggal_kembali)->locale('id')->translatedFormat('l, d F Y') }}. Terima kasih!
                         </div>
                     @endif
                 </div>
@@ -281,7 +283,7 @@
                             </tr>
                             <tr>
                                 <td class="text-muted ps-0">No. WhatsApp</td>
-                                <td>: <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $peminjaman->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none fw-semibold"><i class="fa-brands fa-whatsapp me-1"></i>{{ $peminjaman->kontak_peminjam }}</a></td>
+                                <td>: <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $peminjaman->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none fw-semibold">{{ $peminjaman->kontak_peminjam }}</a></td>
                             </tr>
                         </table>
                     </div>
@@ -291,11 +293,11 @@
                         <table class="table table-sm table-borderless small mb-0">
                             <tr>
                                 <td class="text-muted ps-0" style="width: 140px;">Tanggal Pinjam</td>
-                                <td class="fw-bold text-dark">: {{ \Carbon\Carbon::parse($peminjaman->tanggal_pinjam)->isoFormat('D MMMM Y') }}</td>
+                                <td class="fw-bold text-dark">: {{ \Carbon\Carbon::parse($peminjaman->tanggal_pinjam)->locale('id')->translatedFormat('l, d F Y') }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted ps-0">Tenggat Kembali</td>
-                                <td class="fw-bold text-danger">: {{ \Carbon\Carbon::parse($peminjaman->tenggat_kembali)->isoFormat('D MMMM Y') }}</td>
+                                <td class="fw-bold text-danger">: {{ \Carbon\Carbon::parse($peminjaman->tenggat_kembali)->locale('id')->translatedFormat('l, d F Y') }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted ps-0">Total Keseluruhan</td>
@@ -304,7 +306,7 @@
                             @if($peminjaman->tanggal_diambil)
                             <tr>
                                 <td class="text-muted ps-0">Waktu Diambil</td>
-                                <td class="text-info fw-semibold">: {{ $peminjaman->tanggal_diambil->isoFormat('D MMMM Y, HH:mm') }}</td>
+                                <td class="text-info fw-semibold">: {{ $peminjaman->tanggal_diambil->locale('id')->translatedFormat('l, d F Y, H:i') }}</td>
                             </tr>
                             @endif
                         </table>
@@ -313,7 +315,7 @@
                     <!-- TABEL MULTI-ITEM BARANG YANG DIPINJAM -->
                     <div class="col-12">
                         <h6 class="fw-bold text-primary small text-uppercase mb-2">
-                            <i class="fa-solid fa-boxes-stacked me-1"></i> Rincian Aset yang Dipinjam (Keranjang):
+                            Rincian Aset yang Dipinjam:
                         </h6>
                         <div class="table-responsive rounded-3 border">
                             <table class="table table-hover align-middle mb-0 small">
