@@ -112,7 +112,7 @@
                         <span>Filter Ruangan & Cetak KIR</span>
                     </h6>
                     <button class="btn btn-sm btn-outline-primary fw-semibold rounded-pill px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePengaturanTTD">
-                        <i class="fa-solid fa-pen-nib me-1"></i> Atur Penandatangan Laporan
+                        <i class="fa-solid fa-pen-nib me-1"></i> Atur Penandatangan Laporan (Database)
                     </button>
                 </div>
 
@@ -163,33 +163,43 @@
                     </div>
                 </form>
 
-                <!-- FORM PENGATURAN TTD (AUTO-SAVE) -->
+                <!-- FORM PENGATURAN TTD (PERSISTEN DATABASE) -->
                 <div class="collapse show mt-3 pt-3 border-top" id="collapsePengaturanTTD">
-                    <div class="p-3 bg-light rounded-3 border">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="small fw-bold text-secondary text-uppercase" style="letter-spacing: 0.03em;">
-                                <i class="fa-solid fa-file-signature text-primary me-1"></i>Pejabat Penandatangan Dokumen Cetak:
-                            </span>
-                            <small class="text-muted" style="font-size: 0.72rem;">Tersimpan otomatis di browser</small>
+                    <form id="formSimpanTTD" action="{{ route('laporan.ttd.update') }}" method="POST" onsubmit="saveSignaturesToDB(event)">
+                        @csrf
+                        <div class="p-3 bg-light rounded-3 border">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small fw-bold text-secondary text-uppercase" style="letter-spacing: 0.03em;">
+                                    <i class="fa-solid fa-database text-primary me-1"></i>Pejabat Penandatangan Dokumen Cetak (Tersimpan di Database):
+                                </span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span id="ttdStatusSave" class="badge bg-success-subtle text-success border border-success d-none">
+                                        <i class="fa-solid fa-check me-1"></i>Tersimpan di Database
+                                    </span>
+                                    <button type="submit" id="btnSimpanTTD" class="btn btn-xs btn-primary fw-bold px-2.5 py-1 rounded-2 shadow-sm">
+                                        <i class="fa-solid fa-floppy-disk me-1"></i> Simpan ke Database
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-secondary mb-1">Ketua STIKes Panti Waluya</label>
+                                    <input type="text" name="nama_ketua" id="inputNamaKetua" class="form-control form-control-sm mb-1" value="{{ $pejabat['nama_ketua'] }}" placeholder="Nama Lengkap & Gelar Ketua" oninput="syncKIRSignaturesLive()">
+                                    <input type="text" name="nip_ketua" id="inputNipKetua" class="form-control form-control-sm font-monospace" value="{{ $pejabat['nip_ketua'] }}" placeholder="NIDN / NIP Ketua" oninput="syncKIRSignaturesLive()">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-secondary mb-1">Kepala Bagian Sarpras</label>
+                                    <input type="text" name="nama_kabag_sarpras" id="inputNamaKabag" class="form-control form-control-sm mb-1" value="{{ $pejabat['nama_kabag_sarpras'] }}" placeholder="Nama Lengkap & Gelar Kabag Sarpras" oninput="syncKIRSignaturesLive()">
+                                    <input type="text" name="nip_kabag_sarpras" id="inputNipKabag" class="form-control form-control-sm font-monospace" value="{{ $pejabat['nip_kabag_sarpras'] }}" placeholder="NIK / NIP Kabag Sarpras" oninput="syncKIRSignaturesLive()">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-secondary mb-1">Tempat & Tanggal Dokumen</label>
+                                    <input type="text" name="kota_dokumen" id="inputKotaDokumen" class="form-control form-control-sm mb-1" value="{{ $pejabat['kota_dokumen'] }}" placeholder="Kota Dokumen (e.g. Malang)" oninput="syncKIRSignaturesLive()">
+                                    <small class="text-muted d-block" style="font-size: 0.72rem;">Hasil cetak: <em id="previewTglDokumen">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</em></small>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row g-2">
-                            <div class="col-md-4">
-                                <label class="form-label small fw-bold text-secondary mb-1">Ketua STIKes Panti Waluya</label>
-                                <input type="text" id="inputNamaKetua" class="form-control form-control-sm mb-1" placeholder="Nama Lengkap & Gelar Ketua" oninput="syncKIRSignatures()">
-                                <input type="text" id="inputNipKetua" class="form-control form-control-sm font-monospace" placeholder="NIDN / NIP Ketua" oninput="syncKIRSignatures()">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-bold text-secondary mb-1">Kepala Bagian Sarpras</label>
-                                <input type="text" id="inputNamaKabag" class="form-control form-control-sm mb-1" placeholder="Nama Lengkap & Gelar Kabag Sarpras" oninput="syncKIRSignatures()">
-                                <input type="text" id="inputNipKabag" class="form-control form-control-sm font-monospace" placeholder="NIK / NIP Kabag Sarpras" oninput="syncKIRSignatures()">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-bold text-secondary mb-1">Tempat & Tanggal Dokumen</label>
-                                <input type="text" id="inputTglKIR" class="form-control form-control-sm mb-1" value="Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}" oninput="syncKIRSignatures()">
-                                <small class="text-muted d-block" style="font-size: 0.72rem;">Format: <em>Kota, Tanggal Bulan Tahun</em></small>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -615,15 +625,15 @@
                 <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
                 <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
                 <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
-                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">NIDN. 0725048201</p>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 320px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
                 <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
                 <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">Petrus Tobias, S.Kom.</p>
-                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">NIK. 2021.08.045</p>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
         </div>
     </div>
@@ -717,15 +727,15 @@
                 <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
                 <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
                 <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
-                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">NIDN. 0725048201</p>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 320px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
                 <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
                 <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">Petrus Tobias, S.Kom.</p>
-                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">NIK. 2021.08.045</p>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
         </div>
     </div>
@@ -817,15 +827,15 @@
                 <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
                 <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
                 <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">apt. Wida Padminingsih, S.Farm., M.Farm.</p>
-                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">NIDN. 0725048201</p>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 320px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">Malang, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
                 <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
                 <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">Petrus Tobias, S.Kom.</p>
-                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">NIK. 2021.08.045</p>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
         </div>
     </div>
@@ -924,55 +934,61 @@
         document.body.classList.remove('printing-kir', 'printing-peminjaman-aset', 'printing-peminjaman-ruangan');
     });
 
-    // Auto-save dan sinkronisasi penandatangan
-    const DEFAULT_KETUA_NAMA = 'apt. Wida Padminingsih, S.Farm., M.Farm.';
-    const DEFAULT_KETUA_NIP  = 'NIDN. 0725048201';
-    const DEFAULT_KABAG_NAMA = 'Petrus Tobias, S.Kom.';
-    const DEFAULT_KABAG_NIP  = 'NIK. 2021.08.045';
+    // Sinkronisasi Live Preview Tanda Tangan
+    function syncKIRSignaturesLive() {
+        let ketuaNama = document.getElementById('inputNamaKetua').value;
+        let ketuaNip  = document.getElementById('inputNipKetua').value;
+        let kabagNama = document.getElementById('inputNamaKabag').value;
+        let kabagNip  = document.getElementById('inputNipKabag').value;
+        let kota      = document.getElementById('inputKotaDokumen').value || 'Malang';
+        let formattedTgl = kota + ', {{ \Carbon\Carbon::now()->locale("id")->translatedFormat("d F Y") }}';
 
-    function loadKIRSignatures() {
-        let savedKetuaNama = localStorage.getItem('stikes_kir_ketua_nama') || DEFAULT_KETUA_NAMA;
-        let savedKetuaNip  = localStorage.getItem('stikes_kir_ketua_nip') || DEFAULT_KETUA_NIP;
-        let savedKabagNama = localStorage.getItem('stikes_kir_kabag_nama') || DEFAULT_KABAG_NAMA;
-        let savedKabagNip  = localStorage.getItem('stikes_kir_kabag_nip') || DEFAULT_KABAG_NIP;
-        let savedTgl       = localStorage.getItem('stikes_kir_tgl_dokumen') || document.getElementById('inputTglKIR').value;
+        document.getElementById('previewTglDokumen').innerText = formattedTgl;
 
-        document.getElementById('inputNamaKetua').value = savedKetuaNama;
-        document.getElementById('inputNipKetua').value  = savedKetuaNip;
-        document.getElementById('inputNamaKabag').value = savedKabagNama;
-        document.getElementById('inputNipKabag').value  = savedKabagNip;
-        document.getElementById('inputTglKIR').value    = savedTgl;
-
-        applySignaturesToPrint(savedKetuaNama, savedKetuaNip, savedKabagNama, savedKabagNip, savedTgl);
-    }
-
-    function syncKIRSignatures() {
-        let ketuaNama = document.getElementById('inputNamaKetua').value || DEFAULT_KETUA_NAMA;
-        let ketuaNip  = document.getElementById('inputNipKetua').value || DEFAULT_KETUA_NIP;
-        let kabagNama = document.getElementById('inputNamaKabag').value || DEFAULT_KABAG_NAMA;
-        let kabagNip  = document.getElementById('inputNipKabag').value || DEFAULT_KABAG_NIP;
-        let tgl       = document.getElementById('inputTglKIR').value;
-
-        localStorage.setItem('stikes_kir_ketua_nama', ketuaNama);
-        localStorage.setItem('stikes_kir_ketua_nip', ketuaNip);
-        localStorage.setItem('stikes_kir_kabag_nama', kabagNama);
-        localStorage.setItem('stikes_kir_kabag_nip', kabagNip);
-        localStorage.setItem('stikes_kir_tgl_dokumen', tgl);
-
-        applySignaturesToPrint(ketuaNama, ketuaNip, kabagNama, kabagNip, tgl);
-    }
-
-    function applySignaturesToPrint(ketuaNama, ketuaNip, kabagNama, kabagNip, tgl) {
         document.querySelectorAll('.print-nama-ketua').forEach(el => el.innerText = ketuaNama);
         document.querySelectorAll('.print-nip-ketua').forEach(el => el.innerText = ketuaNip);
         document.querySelectorAll('.print-nama-kabag').forEach(el => el.innerText = kabagNama);
         document.querySelectorAll('.print-nip-kabag').forEach(el => el.innerText = kabagNip);
-        document.querySelectorAll('.print-tgl-dokumen').forEach(el => el.innerText = tgl);
+        document.querySelectorAll('.print-tgl-dokumen').forEach(el => el.innerText = formattedTgl);
+    }
+
+    // Simpan ke Database via AJAX
+    function saveSignaturesToDB(e) {
+        e.preventDefault();
+        let form = document.getElementById('formSimpanTTD');
+        let formData = new FormData(form);
+        let btn = document.getElementById('btnSimpanTTD');
+        let statusBadge = document.getElementById('ttdStatusSave');
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Menyimpan...';
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i> Simpan ke Database';
+            if (data.success) {
+                statusBadge.classList.remove('d-none');
+                setTimeout(() => {
+                    statusBadge.classList.add('d-none');
+                }, 4000);
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i> Simpan ke Database';
+            alert('Gagal menyimpan penandatangan ke database: ' + err);
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        loadKIRSignatures();
-
         const urlParams = new URLSearchParams(window.location.search);
         const activeTab = urlParams.get('tab');
         if (activeTab === 'peminjaman-aset') {

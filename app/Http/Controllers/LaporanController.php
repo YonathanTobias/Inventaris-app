@@ -7,6 +7,7 @@ use App\Models\Ruangan;
 use App\Models\Mutasi;
 use App\Models\Peminjaman;
 use App\Models\PeminjamanRuangan;
+use App\Models\Pengaturan;
 use App\Exports\AsetExport;
 use App\Exports\PeminjamanAsetExport;
 use App\Exports\PeminjamanRuanganExport;
@@ -69,14 +70,52 @@ class LaporanController extends Controller
             'total_pinjam_ruangan'=> $peminjamanRuangans->count(),
         ];
 
+        $pejabat = [
+            'nama_ketua'         => Pengaturan::get('nama_ketua', 'apt. Wida Padminingsih, S.Farm., M.Farm.'),
+            'nip_ketua'          => Pengaturan::get('nip_ketua', 'NIDN. 0725048201'),
+            'nama_kabag_sarpras' => Pengaturan::get('nama_kabag_sarpras', 'Petrus Tobias, S.Kom.'),
+            'nip_kabag_sarpras'  => Pengaturan::get('nip_kabag_sarpras', 'NIK. 2021.08.045'),
+            'kota_dokumen'       => Pengaturan::get('kota_dokumen', 'Malang'),
+        ];
+
         return view('laporan.index', compact(
             'barangs', 
             'ruangans', 
             'mutasis', 
             'stats',
             'peminjamanAsets',
-            'peminjamanRuangans'
+            'peminjamanRuangans',
+            'pejabat'
         ));
+    }
+
+    // Update Pejabat Penandatangan Laporan (Disimpan di Database)
+    public function updateTtd(Request $request)
+    {
+        $request->validate([
+            'nama_ketua'         => 'required|string|max:255',
+            'nip_ketua'          => 'nullable|string|max:100',
+            'nama_kabag_sarpras' => 'required|string|max:255',
+            'nip_kabag_sarpras'  => 'nullable|string|max:100',
+            'kota_dokumen'       => 'nullable|string|max:100',
+        ]);
+
+        Pengaturan::set('nama_ketua', $request->nama_ketua);
+        Pengaturan::set('nip_ketua', $request->nip_ketua ?? '');
+        Pengaturan::set('nama_kabag_sarpras', $request->nama_kabag_sarpras);
+        Pengaturan::set('nip_kabag_sarpras', $request->nip_kabag_sarpras ?? '');
+        if ($request->filled('kota_dokumen')) {
+            Pengaturan::set('kota_dokumen', $request->kota_dokumen);
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true, 
+                'message' => 'Pejabat penandatangan berhasil disimpan secara permanen di database!'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Pejabat penandatangan berhasil disimpan secara permanen di database!');
     }
 
     // Export Excel Data Aset / KIR

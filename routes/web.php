@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::get('laporan/export', [LaporanController::class, 'exportExcel'])->name('laporan.export');
     Route::get('laporan/peminjaman-aset/export', [LaporanController::class, 'exportPeminjamanAset'])->name('laporan.peminjaman-aset.export');
     Route::get('laporan/peminjaman-ruangan/export', [LaporanController::class, 'exportPeminjamanRuangan'])->name('laporan.peminjaman-ruangan.export');
+    Route::post('laporan/pengaturan-ttd', [LaporanController::class, 'updateTtd'])->name('laporan.ttd.update');
 
     // Manajemen Pengguna (Khusus Admin IT / Super User)
     Route::middleware('role:it')->group(function () {
