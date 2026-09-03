@@ -456,8 +456,32 @@
                                     1. Daftar Aset yang Dipinjam
                                 </h6>
                                 <a href="#sectionKatalogAset" class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold" style="font-size: 0.8rem;">
-                                    + Tambah Aset Lain dari Katalog
+                                    Lihat Semua di Katalog &darr;
                                 </a>
+                            </div>
+
+                            <!-- LIVE SEARCH ASET & QUICK ADD LANGSUNG DARI FORM -->
+                            <div class="mb-3 p-3 bg-light rounded-3 border">
+                                <label class="form-label small fw-bold text-secondary mb-1">
+                                    <i class="fa-solid fa-magnifying-glass text-primary me-1"></i> Cari & Tambah Barang Aset:
+                                </label>
+                                <div class="position-relative">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                                        <input type="text" id="liveSearchInput" class="form-control" placeholder="Ketik nama aset atau kode barang (contoh: Proyektor, Mic, Kabel)..." autocomplete="off" oninput="handleLiveItemSearch(this.value)" onfocus="handleLiveItemSearch(this.value)">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="clearLiveSearch()" title="Bersihkan">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- DROPDOWN HASIL LIVE SEARCH -->
+                                    <div id="liveSearchResults" class="position-absolute w-100 bg-white shadow-lg rounded-3 border mt-1 p-2 d-none" style="z-index: 1050; max-height: 290px; overflow-y: auto;">
+                                        <!-- Diisi otomatis via JavaScript -->
+                                    </div>
+                                </div>
+                                <small class="text-muted d-block mt-1" style="font-size: 0.74rem;">
+                                    Ketik nama atau kode barang untuk memilih langsung tanpa perlu scroll ke bawah.
+                                </small>
                             </div>
 
                             <div class="table-responsive rounded-3 border">
@@ -478,7 +502,7 @@
                             <div id="emptyCartAlert" class="alert alert-warning py-3 px-3.5 small rounded-3 mt-2 mb-0 d-flex align-items-center gap-2">
                                 <i class="fa-solid fa-circle-exclamation fs-4"></i>
                                 <div>
-                                    <strong>Keranjang Anda masih kosong!</strong> Silakan pilih dan masukkan minimal 1 aset dari <strong>Katalog Aset di bawah</strong> untuk melanjutkan pengajuan.
+                                    <strong>Keranjang Anda masih kosong!</strong> Gunakan kolom cari barang di atas atau pilih dari <strong>Katalog Aset di bawah</strong> untuk melanjutkan pengajuan.
                                 </div>
                             </div>
                         </div>
@@ -701,7 +725,7 @@
 
     <!-- KATALOG BARANG SIAP PINJAM -->
     <div class="container mb-5 pb-5" id="sectionKatalogAset">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
             <div>
                 <h4 class="fw-bold text-dark mb-1">
                     Katalog Aset Sarpras yang Dapat Dipinjam
@@ -709,15 +733,36 @@
                 <p class="text-muted small mb-0">Klik tombol <strong>"+ Keranjang"</strong> pada aset yang dibutuhkan untuk memasukkannya ke permohonan.</p>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-light text-secondary border px-3 py-2 rounded-pill font-monospace">
+                <span id="catalogCountBadge" class="badge bg-light text-secondary border px-3 py-2 rounded-pill font-monospace">
                     {{ $barangs->count() }} Jenis Aset Siap Pinjam
                 </span>
             </div>
         </div>
 
-        <div class="row g-3">
+        <!-- SEARCH INPUT UNTUK FILTER KATALOG -->
+        <div class="card p-3 mb-4 bg-light border-0 shadow-sm">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                        <input type="text" id="catalogSearchInput" class="form-control" placeholder="Cari di katalog (ketik nama aset, kode barang, atau nama ruangan)..." oninput="filterCatalogCards(this.value)">
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 w-md-auto" onclick="document.getElementById('catalogSearchInput').value=''; filterCatalogCards('');">
+                        <i class="fa-solid fa-rotate-left me-1"></i> Reset Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3" id="catalogCardsRow">
             @forelse($barangs as $item)
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 catalog-item-card" 
+                 data-name="{{ strtolower($item->nama_barang) }}" 
+                 data-code="{{ strtolower($item->kode_barang) }}" 
+                 data-room="{{ strtolower($item->ruangan->nama_ruangan ?? '') }}"
+                 data-cat="{{ strtolower($item->kategori->nama_kategori ?? '') }}">
                 <div class="item-card p-3 h-100 d-flex flex-column justify-content-between">
                     <div>
                         <div class="d-flex justify-content-between align-items-start mb-2">
@@ -754,6 +799,11 @@
                 <p class="text-muted">Belum ada aset yang diatur untuk dapat dipinjam.</p>
             </div>
             @endforelse
+            <div id="catalogNoMatchMessage" class="col-12 text-center py-5 d-none">
+                <p class="text-muted mb-1"><i class="fa-solid fa-magnifying-glass fa-2x opacity-50 mb-2"></i></p>
+                <h6 class="fw-bold text-secondary">Aset Tidak Ditemukan</h6>
+                <p class="small text-muted mb-0">Tidak ada item yang sesuai dengan kata kunci pencarian Anda.</p>
+            </div>
         </div>
     </div>
 
@@ -769,6 +819,135 @@
 
     <!-- SCRIPT KERANJANG ASET & JADWAL RUANGAN -->
     <script>
+        @php
+            $itemSearchList = $barangs->map(function($b) {
+                return [
+                    'id' => (string) $b->id,
+                    'nama' => $b->nama_barang,
+                    'kode' => $b->kode_barang,
+                    'ruangan' => $b->ruangan->nama_ruangan ?? '-',
+                    'stok' => (int) $b->jumlah,
+                    'kategori' => $b->kategori->nama_kategori ?? '-'
+                ];
+            });
+        @endphp
+        // Data Aset Tersedia untuk Pencarian Cepat
+        const allAvailableItems = {!! json_encode($itemSearchList) !!};
+
+        function handleLiveItemSearch(keyword) {
+            let kw = (keyword || '').trim().toLowerCase();
+            let resultsBox = document.getElementById('liveSearchResults');
+            if (!resultsBox) return;
+
+            if (kw.length === 0) {
+                renderLiveSearchResults(allAvailableItems.slice(0, 6), '');
+                resultsBox.classList.remove('d-none');
+                return;
+            }
+
+            let filtered = allAvailableItems.filter(item => {
+                return item.nama.toLowerCase().includes(kw) || 
+                       item.kode.toLowerCase().includes(kw) || 
+                       item.ruangan.toLowerCase().includes(kw) ||
+                       item.kategori.toLowerCase().includes(kw);
+            });
+
+            renderLiveSearchResults(filtered, kw);
+            resultsBox.classList.remove('d-none');
+        }
+
+        function renderLiveSearchResults(items, kw) {
+            let resultsBox = document.getElementById('liveSearchResults');
+            if (!resultsBox) return;
+
+            if (items.length === 0) {
+                resultsBox.innerHTML = `
+                    <div class="p-3 text-center text-muted small">
+                        <i class="fa-solid fa-circle-question me-1"></i> Tidak ditemukan aset dengan kata kunci "<strong>${kw}</strong>".
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="list-group list-group-flush small">';
+            items.forEach(item => {
+                let isAlreadyInCart = loanCart.some(c => c.id == item.id);
+                let safeNama = item.nama.replace(/'/g, "\\'");
+                let safeRuangan = item.ruangan.replace(/'/g, "\\'");
+                html += `
+                    <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 px-2.5 rounded-2 mb-1">
+                        <div>
+                            <strong class="text-dark d-block">${item.nama}</strong>
+                            <div class="d-flex align-items-center gap-1.5 mt-0.5">
+                                <span class="badge-code py-0" style="font-size: 0.68rem;">${item.kode}</span>
+                                <small class="text-muted" style="font-size: 0.72rem;">${item.ruangan}</small>
+                                <span class="badge bg-success-subtle text-success py-0" style="font-size: 0.68rem;">Sisa ${item.stok} unit</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-sm ${isAlreadyInCart ? 'btn-outline-primary' : 'btn-primary'} fw-bold rounded-pill px-2.5 py-1" onclick="quickAddFromSearch('${item.id}', '${safeNama}', '${item.kode}', '${safeRuangan}', ${item.stok})">
+                                ${isAlreadyInCart ? '+ Tambah' : '+ Pilih'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            resultsBox.innerHTML = html;
+        }
+
+        function quickAddFromSearch(id, nama, kode, ruangan, maxStok) {
+            addToCart(id, nama, kode, ruangan, maxStok);
+            clearLiveSearch();
+        }
+
+        function clearLiveSearch() {
+            let input = document.getElementById('liveSearchInput');
+            if (input) input.value = '';
+            let resultsBox = document.getElementById('liveSearchResults');
+            if (resultsBox) resultsBox.classList.add('d-none');
+        }
+
+        // Filter Live Kartu Katalog di Bawah
+        function filterCatalogCards(keyword) {
+            let kw = (keyword || '').trim().toLowerCase();
+            let cards = document.querySelectorAll('.catalog-item-card');
+            let matchedCount = 0;
+
+            cards.forEach(card => {
+                let name = card.getAttribute('data-name') || '';
+                let code = card.getAttribute('data-code') || '';
+                let room = card.getAttribute('data-room') || '';
+                let cat = card.getAttribute('data-cat') || '';
+
+                if (!kw || name.includes(kw) || code.includes(kw) || room.includes(kw) || cat.includes(kw)) {
+                    card.style.display = 'block';
+                    matchedCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            let noMatch = document.getElementById('catalogNoMatchMessage');
+            if (noMatch) {
+                noMatch.classList.toggle('d-none', matchedCount > 0);
+            }
+
+            let countBadge = document.getElementById('catalogCountBadge');
+            if (countBadge) {
+                countBadge.innerText = `${matchedCount} Jenis Aset Ditemukan`;
+            }
+        }
+
+        // Tutup dropdown search saat user klik di luar area
+        document.addEventListener('click', function(e) {
+            let searchBox = document.getElementById('liveSearchResults');
+            let searchInput = document.getElementById('liveSearchInput');
+            if (searchBox && !searchBox.contains(e.target) && e.target !== searchInput) {
+                searchBox.classList.add('d-none');
+            }
+        });
+
         // State keranjang tersimpan di LocalStorage
         let loanCart = [];
 
