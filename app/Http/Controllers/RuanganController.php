@@ -13,6 +13,7 @@ class RuanganController extends Controller
         $stats = [
             'total_ruangan'     => $ruangans->count(),
             'ruangan_terisi'    => $ruangans->where('barangs_count', '>', 0)->count(),
+            'ruangan_dipinjam'  => $ruangans->where('bisa_dipinjam', true)->count(),
             'total_aset'        => \App\Models\Barang::sum('jumlah'),
             'ruangan_terbanyak' => $ruangans->sortByDesc('barangs_count')->first(),
         ];
@@ -27,9 +28,12 @@ class RuanganController extends Controller
         }
 
         $validated = $request->validate([
-            'kode_ruangan' => 'required|string|max:50|unique:ruangans,kode_ruangan',
-            'nama_ruangan' => 'required|string|max:255',
+            'kode_ruangan'   => 'required|string|max:50|unique:ruangans,kode_ruangan',
+            'nama_ruangan'   => 'required|string|max:255',
+            'bisa_dipinjam'  => 'nullable',
         ]);
+
+        $validated['bisa_dipinjam'] = $request->boolean('bisa_dipinjam', true);
 
         Ruangan::create($validated);
 
@@ -88,9 +92,12 @@ class RuanganController extends Controller
     {
         $ruangan = Ruangan::findOrFail($id);
         $validated = $request->validate([
-            'kode_ruangan' => 'required|string|max:50|unique:ruangans,kode_ruangan,' . $id,
-            'nama_ruangan' => 'required|string|max:255',
+            'kode_ruangan'  => 'required|string|max:50|unique:ruangans,kode_ruangan,' . $id,
+            'nama_ruangan'  => 'required|string|max:255',
+            'bisa_dipinjam' => 'nullable',
         ]);
+
+        $validated['bisa_dipinjam'] = $request->boolean('bisa_dipinjam', false);
 
         $ruangan->update($validated);
 
@@ -99,15 +106,13 @@ class RuanganController extends Controller
 
     public function destroy($id)
     {
-        $ruangan = Ruangan::findOrFail($id);
-        
-        // Proteksi integritas data: Cek apakah masih ada aset di ruangan ini
-        if ($ruangan->barangs()->count() > 0) {
-            return redirect()->back()->with('error', 'Ruangan tidak dapat dihapus karena masih berisi data aset. Silakan pindahkan aset ke ruangan lain terlebih dahulu.');
+        $ruangan = Ruangan::withCount(['barangs', 'peminjamanRuangans'])->findOrFail($id);
+
+        if ($ruangan->barangs_count > 0) {
+            return redirect()->back()->with('error', "Ruangan [{$ruangan->nama_ruangan}] tidak dapat dihapus karena masih memiliki {$ruangan->barangs_count} item aset!");
         }
 
         $ruangan->delete();
-
-        return redirect()->back()->with('success', 'Data ruangan berhasil dihapus!');
+        return redirect()->back()->with('success', 'Ruangan berhasil dihapus!');
     }
 }

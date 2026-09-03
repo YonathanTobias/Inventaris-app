@@ -98,7 +98,7 @@
                             <input type="text" id="inputNamaRuangan" name="nama_ruangan" class="form-control" placeholder="Misal: Lab Kebidanan & Komunitas" required oninput="autoGenerateKodeRuangan(this.value)">
                         </div>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <label class="form-label mb-0">Kode Ruangan</label>
                             <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeRuangan()">
@@ -116,6 +116,19 @@
                             <i class="fa-solid fa-circle-check text-success me-1"></i>Kode otomatis terisi mengikuti nama ruangan & bisa diedit jika perlu.
                         </small>
                     </div>
+
+                    <div class="mb-4 p-3 bg-light rounded-3 border">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" name="bisa_dipinjam" value="1" id="switchBisaDipinjamTambah" checked>
+                            <label class="form-check-label fw-bold small text-dark" for="switchBisaDipinjamTambah">
+                                Izinkan Ruangan Ini Dipinjam Publik
+                            </label>
+                            <small class="text-muted d-block mt-0.5" style="font-size: 0.72rem;">
+                                Dosen dan Mahasiswa dapat mengajukan peminjaman ruangan ini di portal publik.
+                            </small>
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn btn-modern-primary w-100 justify-content-center">
                         <i class="fa-solid fa-floppy-disk"></i>
                         <span>Simpan Ruangan</span>
@@ -154,6 +167,17 @@
                                 </td>
                                 <td>
                                     <div class="fw-bold text-dark">{{ $r->nama_ruangan }}</div>
+                                    <div class="mt-1">
+                                        @if($r->bisa_dipinjam)
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Ruangan ini diizinkan untuk dipinjam publik">
+                                                <i class="fa-solid fa-check me-0.5"></i>Bisa Dipinjam
+                                            </span>
+                                        @else
+                                            <span class="badge bg-secondary-subtle text-muted border border-secondary-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Ruangan khusus internal">
+                                                <i class="fa-solid fa-lock me-0.5"></i>Khusus Internal
+                                            </span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <span class="badge bg-info-subtle text-info-emphasis border px-2.5 py-1 fw-bold rounded-pill" style="font-size: 0.8rem;">
@@ -198,6 +222,17 @@
                                                         <div class="mb-3">
                                                             <label class="form-label">Nama Ruangan <span class="text-danger">*</span></label>
                                                             <input type="text" name="nama_ruangan" class="form-control" value="{{ $r->nama_ruangan }}" required>
+                                                        </div>
+                                                        <div class="mb-3 p-3 bg-light rounded-3 border">
+                                                            <div class="form-check form-switch mb-0">
+                                                                <input class="form-check-input" type="checkbox" name="bisa_dipinjam" value="1" id="switchEditBisaDipinjam{{ $r->id }}" {{ $r->bisa_dipinjam ? 'checked' : '' }}>
+                                                                <label class="form-check-label fw-bold small text-dark" for="switchEditBisaDipinjam{{ $r->id }}">
+                                                                    Izinkan Ruangan Ini Dipinjam Publik
+                                                                </label>
+                                                                <small class="text-muted d-block mt-0.5" style="font-size: 0.72rem;">
+                                                                    Aktifkan agar ruangan muncul di pilihan booking publik.
+                                                                </small>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">

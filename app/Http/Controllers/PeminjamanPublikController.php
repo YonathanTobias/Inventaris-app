@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\Peminjaman;
 use App\Models\PeminjamanDetail;
+use App\Models\PeminjamanRuangan;
+use App\Models\Ruangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PeminjamanPublikController extends Controller
 {
-    // Halaman Beranda Utama: Form Peminjaman Mandiri, Keranjang Belanja, & Katalog Barang Siap Pinjam
+    // Halaman Beranda Utama: Form Peminjaman Mandiri, Booking Ruangan, Keranjang Belanja, & Katalog
     public function index()
     {
         $barangs = Barang::with(['ruangan', 'kategori'])
@@ -18,7 +20,11 @@ class PeminjamanPublikController extends Controller
             ->orderBy('nama_barang')
             ->get();
 
-        return view('publik.index', compact('barangs'));
+        $ruangans = Ruangan::where('bisa_dipinjam', true)
+            ->orderBy('nama_ruangan')
+            ->get();
+
+        return view('publik.index', compact('barangs', 'ruangans'));
     }
 
     // Pemrosesan Pengajuan Peminjaman Mandiri (Mendukung Multi-Item Keranjang)
@@ -143,7 +149,7 @@ class PeminjamanPublikController extends Controller
         }
     }
 
-    // Tampilan Tiket / Bukti Pengajuan Digital
+    // Tampilan Tiket / Bukti Pengajuan Digital Aset
     public function sukses($kode)
     {
         $peminjaman = Peminjaman::with(['barang.ruangan', 'details.barang.ruangan', 'penyetujui', 'penyerah'])
@@ -153,21 +159,31 @@ class PeminjamanPublikController extends Controller
         return view('publik.sukses', compact('peminjaman'));
     }
 
-    // Fitur Cek / Lacak Status Peminjaman Mandiri
+    // Fitur Cek / Lacak Status Peminjaman Mandiri (Aset & Ruangan)
     public function lacak(Request $request)
     {
         $results = null;
+        $resultsRuangan = null;
         $keyword = $request->input('keyword');
 
         if ($request->filled('keyword')) {
             $keyword = trim($keyword);
+            
+            // Cari data peminjaman aset
             $results = Peminjaman::with(['barang.ruangan', 'details.barang.ruangan', 'penyetujui'])
                 ->where('nomor_identitas', $keyword)
                 ->orWhere('kode_peminjaman', $keyword)
                 ->latest()
                 ->get();
+
+            // Cari data booking ruangan
+            $resultsRuangan = PeminjamanRuangan::with(['ruangan', 'penyetujui'])
+                ->where('nomor_identitas', $keyword)
+                ->orWhere('kode_booking', $keyword)
+                ->latest()
+                ->get();
         }
 
-        return view('publik.lacak', compact('results', 'keyword'));
+        return view('publik.lacak', compact('results', 'resultsRuangan', 'keyword'));
     }
 }

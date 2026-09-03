@@ -4,15 +4,24 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\PeminjamanPublikController;
+use App\Http\Controllers\PeminjamanRuanganController;
+use App\Http\Controllers\PeminjamanRuanganPublikController;
 use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Halaman Utama Publik: Portal Peminjaman Aset Mandiri (Dosen & Mahasiswa)
-Route::get('/', [\App\Http\Controllers\PeminjamanPublikController::class, 'index'])->name('home');
-Route::post('/pinjam', [\App\Http\Controllers\PeminjamanPublikController::class, 'store'])->name('publik.store');
-Route::get('/pinjam/lacak', [\App\Http\Controllers\PeminjamanPublikController::class, 'lacak'])->name('publik.lacak');
-Route::get('/pinjam/sukses/{kode}', [\App\Http\Controllers\PeminjamanPublikController::class, 'sukses'])->name('publik.sukses');
+// Halaman Utama Publik: Portal Peminjaman Aset & Ruangan Mandiri (Dosen & Mahasiswa)
+Route::get('/', [PeminjamanPublikController::class, 'index'])->name('home');
+Route::post('/pinjam', [PeminjamanPublikController::class, 'store'])->name('publik.store');
+Route::get('/pinjam/lacak', [PeminjamanPublikController::class, 'lacak'])->name('publik.lacak');
+Route::get('/pinjam/sukses/{kode}', [PeminjamanPublikController::class, 'sukses'])->name('publik.sukses');
+
+// Publik: Booking Ruangan
+Route::post('/booking-ruangan', [PeminjamanRuanganPublikController::class, 'store'])->name('publik.ruangan.store');
+Route::get('/booking-ruangan/sukses/{kode}', [PeminjamanRuanganPublikController::class, 'sukses'])->name('publik.ruangan.sukses');
+Route::get('/api/jadwal-ruangan', [PeminjamanRuanganPublikController::class, 'jadwal'])->name('publik.ruangan.jadwal');
 
 // Halaman Publik: Verifikasi Scan QR Code Aset (Bisa diakses tanpa login)
 Route::get('/cek/{kode_barang}', [BarangController::class, 'cekAsetPublik'])->name('aset.cek');
@@ -41,11 +50,18 @@ Route::middleware('auth')->group(function () {
     Route::post('barang/{id}/kurangi', [BarangController::class, 'kurangiStok'])->name('barang.kurangi');
 
     // Manajemen Peminjaman Aset (Approval Sarpras, Serah Terima, & Pengembalian)
-    Route::resource('peminjaman', \App\Http\Controllers\PeminjamanController::class)->only(['index', 'store', 'destroy']);
-    Route::post('peminjaman/{id}/approve', [\App\Http\Controllers\PeminjamanController::class, 'approve'])->name('peminjaman.approve');
-    Route::post('peminjaman/{id}/reject', [\App\Http\Controllers\PeminjamanController::class, 'reject'])->name('peminjaman.reject');
-    Route::post('peminjaman/{id}/serahkan', [\App\Http\Controllers\PeminjamanController::class, 'serahkan'])->name('peminjaman.serahkan');
-    Route::post('peminjaman/{id}/kembalikan', [\App\Http\Controllers\PeminjamanController::class, 'kembalikan'])->name('peminjaman.kembalikan');
+    Route::resource('peminjaman', PeminjamanController::class)->only(['index', 'store', 'destroy']);
+    Route::post('peminjaman/{id}/approve', [PeminjamanController::class, 'approve'])->name('peminjaman.approve');
+    Route::post('peminjaman/{id}/reject', [PeminjamanController::class, 'reject'])->name('peminjaman.reject');
+    Route::post('peminjaman/{id}/serahkan', [PeminjamanController::class, 'serahkan'])->name('peminjaman.serahkan');
+    Route::post('peminjaman/{id}/kembalikan', [PeminjamanController::class, 'kembalikan'])->name('peminjaman.kembalikan');
+
+    // Manajemen Peminjaman Ruangan (Approval Sarpras, Serah Kunci, & Selesai)
+    Route::resource('peminjaman-ruangan', PeminjamanRuanganController::class)->only(['index', 'destroy']);
+    Route::post('peminjaman-ruangan/{id}/approve', [PeminjamanRuanganController::class, 'approve'])->name('peminjaman-ruangan.approve');
+    Route::post('peminjaman-ruangan/{id}/reject', [PeminjamanRuanganController::class, 'reject'])->name('peminjaman-ruangan.reject');
+    Route::post('peminjaman-ruangan/{id}/serahkan', [PeminjamanRuanganController::class, 'serahkan'])->name('peminjaman-ruangan.serahkan');
+    Route::post('peminjaman-ruangan/{id}/selesai', [PeminjamanRuanganController::class, 'selesai'])->name('peminjaman-ruangan.selesai');
 
     // Laporan & Export Excel
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');

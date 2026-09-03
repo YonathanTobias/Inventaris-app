@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Peminjaman Aset & Alat Praktikum - STIKES Panti Waluya Malang</title>
+    <title>Portal Layanan Peminjaman Aset & Ruangan - STIKES Panti Waluya Malang</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
@@ -23,6 +23,7 @@
             --primary: #4f46e5;
             --primary-dark: #3730a3;
             --primary-light: #eef2ff;
+            --emerald: #059669;
             --accent: #06b6d4;
             --dark: #0f172a;
             --light-bg: #f8fafc;
@@ -87,6 +88,18 @@
             font-weight: 700;
         }
 
+        .step-pill-emerald {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #ecfdf5;
+            color: var(--emerald);
+            padding: 0.4rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
         .item-card {
             border: 1px solid var(--border-color);
             border-radius: 16px;
@@ -100,6 +113,12 @@
             box-shadow: 0 12px 24px rgba(79, 70, 229, 0.1);
         }
 
+        .room-card:hover {
+            border-color: var(--emerald) !important;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(5, 150, 105, 0.1) !important;
+        }
+
         .badge-code {
             background-color: #f1f5f9;
             color: #1e293b;
@@ -109,6 +128,7 @@
             border-radius: 6px;
             font-weight: 600;
             border: 1px solid #cbd5e1;
+            display: inline-block;
         }
 
         .btn-submit-pinjam {
@@ -125,6 +145,23 @@
         .btn-submit-pinjam:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45);
+            color: #ffffff;
+        }
+
+        .btn-submit-ruangan {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            border: none;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.9rem 2.2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit-ruangan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.45);
             color: #ffffff;
         }
 
@@ -199,6 +236,27 @@
             border-color: var(--primary);
             color: var(--primary);
         }
+
+        /* Custom Tabs Styling */
+        .nav-pills-portal .nav-link {
+            color: #64748b;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .nav-pills-portal .nav-link.active {
+            background: #ffffff;
+            color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+        }
+
+        .nav-pills-portal .nav-link-ruangan.active {
+            color: var(--emerald) !important;
+            border-color: var(--emerald) !important;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.12) !important;
+        }
     </style>
 </head>
 <body>
@@ -210,14 +268,14 @@
                 <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 44px; width: auto; object-fit: contain;">
                 <div>
                     <h6 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.02em;">STIKES PANTI WALUYA MALANG</h6>
-                    <small class="text-muted" style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;">PORTAL LAYANAN PEMINJAMAN ASET LAB</small>
+                    <small class="text-muted" style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;">PORTAL LAYANAN PEMINJAMAN ASET & RUANGAN</small>
                 </div>
             </a>
 
             <div class="d-flex align-items-center gap-2">
                 <!-- Tombol Buka Keranjang di Navbar -->
                 <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-pill px-3 py-1.5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
-                    <i class="fa-solid fa-cart-shopping me-1"></i> Keranjang
+                    <i class="fa-solid fa-cart-shopping me-1"></i> Keranjang Aset
                     <span class="badge bg-primary text-white ms-1 rounded-pill" id="navCartCount">0</span>
                 </button>
 
@@ -248,7 +306,7 @@
         <span class="cart-badge" id="floatingCartCount">0</span>
     </button>
 
-    <!-- OFFCANVAS KERANJANG BELANJA PEMINJAMAN -->
+    <!-- OFFCANVAS KERANJANG BELANJA PEMINJAMAN ASET -->
     <div class="offcanvas offcanvas-end offcanvas-cart shadow-lg border-0" tabindex="-1" id="offcanvasCart">
         <div class="offcanvas-header border-bottom py-3">
             <div class="d-flex align-items-center gap-2">
@@ -272,7 +330,7 @@
                     <span class="fw-bold text-secondary">Total Unit yang Dipinjam:</span>
                     <span class="fw-bold fs-5 text-primary" id="cartTotalQty">0 Unit</span>
                 </div>
-                <button type="button" class="btn btn-primary w-100 fw-bold py-2.5 rounded-3 shadow-sm" data-bs-dismiss="offcanvas" onclick="scrollToForm()">
+                <button type="button" class="btn btn-primary w-100 fw-bold py-2.5 rounded-3 shadow-sm" data-bs-dismiss="offcanvas" onclick="scrollToFormAset()">
                     <i class="fa-solid fa-file-signature me-1"></i> Lanjut Isi Data Peminjam
                 </button>
             </div>
@@ -288,17 +346,17 @@
                         <i class="fa-solid fa-shield-halved text-warning me-1.5"></i>Layanan Mandiri Resmi Civitas Akademika
                     </div>
                     <h1 class="fw-extrabold display-6 mb-2" style="letter-spacing: -0.03em;">
-                        Peminjaman Aset & Alat Praktikum Laboratorium
+                        Peminjaman Aset & Booking Ruangan
                     </h1>
                     <p class="lead text-light text-opacity-75 mb-0" style="font-size: 1.05rem;">
-                        Pilih beberapa alat sekaligus ke dalam <strong>Keranjang Peminjaman</strong>, lengkapi data peminjam, dan ajukan permohonan Anda. Pengajuan langsung ditinjau oleh Kepala Biro Sarana & Prasarana.
+                        Layanan mandiri resmi bagi <strong>Dosen, Mahasiswa, dan Ormawa</strong> STIKES Panti Waluya Malang untuk meminjam alat laboratorium maupun memesan ruangan praktikum/kegiatan.
                     </p>
                 </div>
                 <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
                     <div class="d-inline-flex flex-column gap-2 bg-white bg-opacity-10 p-3 rounded-4 border border-white border-opacity-15 text-start">
                         <div class="d-flex align-items-center gap-2 small">
                             <span class="badge bg-warning text-dark fw-bold rounded-circle" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;">1</span>
-                            <span>Pilih Aset ke Keranjang</span>
+                            <span>Pilih Aset / Ruangan</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 small">
                             <span class="badge bg-info text-dark fw-bold rounded-circle" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;">2</span>
@@ -306,7 +364,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-2 small">
                             <span class="badge bg-primary text-white fw-bold rounded-circle" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;">3</span>
-                            <span>Ambil Barang di Sarpras/Lab</span>
+                            <span>Serah Terima Fisik / Kunci</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 small">
                             <span class="badge bg-success text-white fw-bold rounded-circle" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;">4</span>
@@ -318,12 +376,19 @@
         </div>
     </section>
 
-    <!-- FORM CONTAINER -->
-    <div class="container mb-5" id="sectionFormPeminjaman">
+    <!-- FORM CONTAINER DENGAN TAB NAVIGASI -->
+    <div class="container mb-5" id="sectionFormPortal">
         <div class="form-card p-4 p-md-5">
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show rounded-3 py-2.5 small mb-4" role="alert">
                     <i class="fa-solid fa-triangle-exclamation me-2"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show rounded-3 py-2.5 small mb-4" role="alert">
+                    <i class="fa-solid fa-circle-check me-2"></i> {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
@@ -334,150 +399,305 @@
                 </div>
             @endif
 
-            <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="step-pill">
-                        <i class="fa-solid fa-file-pen"></i> Formulir Pengajuan
-                    </div>
-                    <h4 class="fw-bold text-dark mb-0">Isi Data Permohonan Peminjaman</h4>
-                </div>
-
-                <button type="button" class="btn btn-sm btn-outline-primary fw-semibold rounded-pill px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
-                    <i class="fa-solid fa-cart-shopping me-1"></i> Buka Keranjang (<span id="formCartCountBadge">0</span>)
-                </button>
-            </div>
-
-            <form action="{{ route('publik.store') }}" method="POST" id="formPeminjamanMandiri">
-                @csrf
-
-                <!-- Hidden Input untuk Menyimpan Data Keranjang -->
-                <input type="hidden" name="cart_data" id="hiddenCartData" value="">
-
-                <!-- TABEL PREVIEW BARANG DI KERANJANG -->
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="fw-bold text-primary small text-uppercase mb-0">
-                            <i class="fa-solid fa-cart-flatbed me-1"></i> 1. Daftar Aset yang Dipinjam (Keranjang Anda)
-                        </h6>
-                        <a href="#sectionKatalog" class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold" style="font-size: 0.8rem;">
-                            <i class="fa-solid fa-plus-circle me-1"></i> Tambah Aset Lain dari Katalog
-                        </a>
-                    </div>
-
-                    <div class="table-responsive rounded-3 border">
-                        <table class="table table-hover align-middle mb-0" id="tablePreviewCart">
-                            <thead class="bg-light small text-muted">
-                                <tr>
-                                    <th class="ps-3" style="width: 40px;">No</th>
-                                    <th>Nama Aset & Ruangan</th>
-                                    <th class="text-center" style="width: 130px;">Jumlah Unit</th>
-                                    <th class="text-center pe-3" style="width: 80px;">Hapus</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyPreviewCart">
-                                <!-- Diisi via JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="emptyCartAlert" class="alert alert-warning py-3 px-3.5 small rounded-3 mt-2 mb-0 d-flex align-items-center gap-2">
-                        <i class="fa-solid fa-circle-exclamation fs-4"></i>
-                        <div>
-                            <strong>Keranjang Anda masih kosong!</strong> Silakan pilih dan masukkan minimal 1 aset dari <strong>Katalog Aset di bawah</strong> untuk melanjutkan pengajuan.
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="my-4 border-light-subtle">
-
-                <!-- BAGIAN 2: IDENTITAS PEMINJAM -->
-                <div class="row g-3 mb-4">
-                    <div class="col-12">
-                        <h6 class="fw-bold text-primary small text-uppercase mb-2">
-                            <i class="fa-solid fa-user-check me-1"></i> 2. Identitas Pemohon
-                        </h6>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small text-secondary">Status Pemohon <span class="text-danger">*</span></label>
-                        <select name="kategori_peminjam" class="form-select" required>
-                            <option value="Mahasiswa" {{ old('kategori_peminjam') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
-                            <option value="Dosen" {{ old('kategori_peminjam') == 'Dosen' ? 'selected' : '' }}>Dosen / Pengajar</option>
-                            <option value="Staf / Tendik" {{ old('kategori_peminjam') == 'Staf / Tendik' ? 'selected' : '' }}>Staf / Tenaga Kependidikan</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small text-secondary">Nama Lengkap <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_peminjam" class="form-control" placeholder="Nama lengkap beserta gelar jika ada" value="{{ old('nama_peminjam') }}" required>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small text-secondary">Nomor Identitas (NIM / NIP / NIDN) <span class="text-danger">*</span></label>
-                        <input type="text" name="nomor_identitas" class="form-control font-monospace" placeholder="Misal: 202301045 / NIP. 198..." value="{{ old('nomor_identitas') }}" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold small text-secondary">Program Studi / Unit Kerja <span class="text-danger">*</span></label>
-                        <input type="text" name="prodi_unit" class="form-control" placeholder="Contoh: S1 Keperawatan / D3 Kebidanan / Biro Akademik" value="{{ old('prodi_unit') }}" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold small text-secondary">Nomor WhatsApp Aktif <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light text-success"><i class="fa-brands fa-whatsapp fa-lg"></i></span>
-                            <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi status approval)" value="{{ old('kontak_peminjam') }}" required>
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="my-4 border-light-subtle">
-
-                <!-- BAGIAN 3: JADWAL & KEPERLUAN -->
-                <div class="row g-3 mb-4">
-                    <div class="col-12">
-                        <h6 class="fw-bold text-primary small text-uppercase mb-2">
-                            <i class="fa-solid fa-calendar-days me-1"></i> 3. Jadwal & Keperluan Peminjaman
-                        </h6>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold small text-secondary">Tanggal Rencana Peminjaman / Diambil <span class="text-danger">*</span></label>
-                        <input type="date" name="tanggal_pinjam" class="form-control" value="{{ old('tanggal_pinjam', date('Y-m-d')) }}" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold small text-secondary">Rencana Tanggal Pengembalian <span class="text-danger">*</span></label>
-                        <input type="date" name="tenggat_kembali" class="form-control" value="{{ old('tenggat_kembali', date('Y-m-d', strtotime('+3 days'))) }}" required>
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label fw-bold small text-secondary">Keperluan / Alasan Peminjaman <span class="text-danger">*</span></label>
-                        <textarea name="keperluan" class="form-control" rows="3" placeholder="Contoh: Praktikum Simulasi GADAR di Lapangan / Ujian OSCE Keperawatan Medikal Bedah / Acara Seminar BEM..." required>{{ old('keperluan') }}</textarea>
-                    </div>
-                </div>
-
-                <!-- PERNYATAAN & SUBMIT -->
-                <div class="p-3.5 bg-light rounded-3 border mb-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="checkPernyataan" required>
-                        <label class="form-check-label small text-secondary" for="checkPernyataan">
-                            Saya menyatakan bahwa data yang diisi adalah benar, dan saya bersedia mematuhi tata tertib peminjaman, menjaga keutuhan seluruh aset STIKES Panti Waluya Malang, serta mengembalikannya tepat waktu.
-                        </label>
-                    </div>
-                </div>
-
-                <div class="text-center text-md-end">
-                    <button type="submit" class="btn-submit-pinjam" id="btnSubmitPengajuan">
-                        <i class="fa-solid fa-paper-plane me-2"></i>
-                        <span>Kirim Permohonan Peminjaman</span>
+            <!-- PILIHAN TAB LAYANAN -->
+            <ul class="nav nav-pills nav-fill nav-pills-portal gap-2 mb-4 p-1.5 bg-light rounded-4 border" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" id="pills-aset-tab" data-bs-toggle="pill" data-bs-target="#pills-aset" type="button" role="tab">
+                        <i class="fa-solid fa-boxes-stacked fs-5"></i>
+                        <span>Peminjaman Aset & Alat Praktikum</span>
                     </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link nav-link-ruangan fw-bold py-3 rounded-3 d-flex align-items-center justify-content-center gap-2" id="pills-ruangan-tab" data-bs-toggle="pill" data-bs-target="#pills-ruangan" type="button" role="tab">
+                        <i class="fa-solid fa-door-open fs-5"></i>
+                        <span>Peminjaman & Booking Ruangan</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="pills-tabContent">
+                
+                <!-- ================= TAB 1: PEMINJAMAN ASET ================= -->
+                <div class="tab-pane fade show active" id="pills-aset" role="tabpanel">
+                    <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="step-pill">
+                                <i class="fa-solid fa-file-pen"></i> Form Aset
+                            </div>
+                            <h4 class="fw-bold text-dark mb-0">Formulir Pengajuan Peminjaman Aset</h4>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-primary fw-semibold rounded-pill px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
+                            <i class="fa-solid fa-cart-shopping me-1"></i> Keranjang (<span id="formCartCountBadge">0</span>)
+                        </button>
+                    </div>
+
+                    <form action="{{ route('publik.store') }}" method="POST" id="formPeminjamanMandiri">
+                        @csrf
+
+                        <!-- Hidden Input untuk Menyimpan Data Keranjang -->
+                        <input type="hidden" name="cart_data" id="hiddenCartData" value="">
+
+                        <!-- TABEL PREVIEW BARANG DI KERANJANG -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="fw-bold text-primary small text-uppercase mb-0">
+                                    <i class="fa-solid fa-cart-flatbed me-1"></i> 1. Daftar Aset yang Dipinjam (Keranjang Anda)
+                                </h6>
+                                <a href="#sectionKatalogAset" class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold" style="font-size: 0.8rem;">
+                                    <i class="fa-solid fa-plus-circle me-1"></i> Tambah Aset Lain dari Katalog
+                                </a>
+                            </div>
+
+                            <div class="table-responsive rounded-3 border">
+                                <table class="table table-hover align-middle mb-0" id="tablePreviewCart">
+                                    <thead class="bg-light small text-muted">
+                                        <tr>
+                                            <th class="ps-3" style="width: 40px;">No</th>
+                                            <th>Nama Aset & Ruangan</th>
+                                            <th class="text-center" style="width: 130px;">Jumlah Unit</th>
+                                            <th class="text-center pe-3" style="width: 80px;">Hapus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyPreviewCart">
+                                        <!-- Diisi via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="emptyCartAlert" class="alert alert-warning py-3 px-3.5 small rounded-3 mt-2 mb-0 d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-circle-exclamation fs-4"></i>
+                                <div>
+                                    <strong>Keranjang Anda masih kosong!</strong> Silakan pilih dan masukkan minimal 1 aset dari <strong>Katalog Aset di bawah</strong> untuk melanjutkan pengajuan.
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 border-light-subtle">
+
+                        <!-- IDENTITAS PEMINJAM ASET -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="fw-bold text-primary small text-uppercase mb-2">
+                                    <i class="fa-solid fa-user-check me-1"></i> 2. Identitas Pemohon
+                                </h6>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-secondary">Status Pemohon <span class="text-danger">*</span></label>
+                                <select name="kategori_peminjam" class="form-select" required>
+                                    <option value="Mahasiswa" {{ old('kategori_peminjam') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                                    <option value="Dosen" {{ old('kategori_peminjam') == 'Dosen' ? 'selected' : '' }}>Dosen / Pengajar</option>
+                                    <option value="Staf / Tendik" {{ old('kategori_peminjam') == 'Staf / Tendik' ? 'selected' : '' }}>Staf / Tenaga Kependidikan</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-secondary">Nama Lengkap <span class="text-danger">*</span></label>
+                                <input type="text" name="nama_peminjam" class="form-control" placeholder="Nama lengkap beserta gelar" value="{{ old('nama_peminjam') }}" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-secondary">Nomor Identitas (NIM / NIP / NIDN) <span class="text-danger">*</span></label>
+                                <input type="text" name="nomor_identitas" class="form-control font-monospace" placeholder="Misal: 202301045 / NIP. 198..." value="{{ old('nomor_identitas') }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Program Studi / Unit Kerja <span class="text-danger">*</span></label>
+                                <input type="text" name="prodi_unit" class="form-control" placeholder="Contoh: S1 Keperawatan / D3 Kebidanan / Biro Akademik" value="{{ old('prodi_unit') }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Nomor WhatsApp Aktif <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-success"><i class="fa-brands fa-whatsapp fa-lg"></i></span>
+                                    <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi persetujuan)" value="{{ old('kontak_peminjam') }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 border-light-subtle">
+
+                        <!-- JADWAL & KEPERLUAN ASET -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="fw-bold text-primary small text-uppercase mb-2">
+                                    <i class="fa-solid fa-calendar-days me-1"></i> 3. Jadwal & Keperluan Peminjaman
+                                </h6>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Tanggal Rencana Peminjaman / Diambil <span class="text-danger">*</span></label>
+                                <input type="date" name="tanggal_pinjam" class="form-control" value="{{ old('tanggal_pinjam', date('Y-m-d')) }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Rencana Tanggal Pengembalian <span class="text-danger">*</span></label>
+                                <input type="date" name="tenggat_kembali" class="form-control" value="{{ old('tenggat_kembali', date('Y-m-d', strtotime('+3 days'))) }}" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-secondary">Keperluan / Alasan Peminjaman <span class="text-danger">*</span></label>
+                                <textarea name="keperluan" class="form-control" rows="3" placeholder="Contoh: Praktikum Simulasi GADAR di Lapangan / Ujian OSCE Keperawatan Medikal Bedah / Acara Seminar BEM..." required>{{ old('keperluan') }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- PERNYATAAN & SUBMIT ASET -->
+                        <div class="p-3.5 bg-light rounded-3 border mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkPernyataanAset" required>
+                                <label class="form-check-label small text-secondary" for="checkPernyataanAset">
+                                    Saya menyatakan bahwa data yang diisi adalah benar, dan saya bersedia mematuhi tata tertib peminjaman, menjaga keutuhan seluruh aset STIKES Panti Waluya Malang, serta mengembalikannya tepat waktu.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="text-center text-md-end">
+                            <button type="submit" class="btn-submit-pinjam" id="btnSubmitPengajuan">
+                                <i class="fa-solid fa-paper-plane me-2"></i>
+                                <span>Kirim Permohonan Peminjaman Aset</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+
+                <!-- ================= TAB 2: PEMINJAMAN RUANGAN ================= -->
+                <div class="tab-pane fade" id="pills-ruangan" role="tabpanel">
+                    <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="step-pill-emerald">
+                                <i class="fa-solid fa-door-open"></i> Form Ruangan
+                            </div>
+                            <h4 class="fw-bold text-dark mb-0">Formulir Booking / Peminjaman Ruangan</h4>
+                        </div>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 rounded-pill font-monospace small">
+                            {{ $ruangans->count() }} Ruangan Siap Dipinjam
+                        </span>
+                    </div>
+
+                    <form action="{{ route('publik.ruangan.store') }}" method="POST" id="formBookingRuangan">
+                        @csrf
+
+                        <!-- PILIH RUANGAN & JADWAL -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="fw-bold text-success small text-uppercase mb-2">
+                                    <i class="fa-solid fa-building-circle-check me-1"></i> 1. Pilihan Ruangan & Waktu Pemakaian
+                                </h6>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Pilih Ruangan <span class="text-danger">*</span></label>
+                                <select name="ruangan_id" id="selectRuanganPublik" class="form-select" required onchange="cekJadwalRuangan(this.value)">
+                                    <option value="">-- Pilih Ruangan (Hanya Ruangan yang Diizinkan Dipinjam) --</option>
+                                    @foreach($ruangans as $r)
+                                        <option value="{{ $r->id }}" {{ old('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                            {{ $r->nama_ruangan }} [{{ $r->kode_ruangan }}]
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Tanggal Pemakaian <span class="text-danger">*</span></label>
+                                <input type="date" name="tanggal_pemakaian" id="inputTanggalRuangan" class="form-control" value="{{ old('tanggal_pemakaian', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}" required onchange="triggerCekJadwal()">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Jam Mulai Kegiatan <span class="text-danger">*</span></label>
+                                <input type="time" name="jam_mulai" class="form-control" value="{{ old('jam_mulai', '08:00') }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Jam Selesai Kegiatan <span class="text-danger">*</span></label>
+                                <input type="time" name="jam_selesai" class="form-control" value="{{ old('jam_selesai', '12:00') }}" required>
+                            </div>
+
+                            <!-- Box Info Jadwal Terisi -->
+                            <div class="col-12" id="boxJadwalTerisi" style="display: none;">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <div class="fw-bold small text-secondary mb-1">
+                                        <i class="fa-solid fa-calendar-check text-success me-1"></i>Jadwal Pemakaian Ruangan Ini pada Tanggal Tersebut:
+                                    </div>
+                                    <div id="listJadwalRuangan" class="small text-muted">
+                                        <!-- Diisi via AJAX -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 border-light-subtle">
+
+                        <!-- IDENTITAS PEMOHON RUANGAN -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="fw-bold text-success small text-uppercase mb-2">
+                                    <i class="fa-solid fa-user-check me-1"></i> 2. Identitas Pemohon / Penanggung Jawab
+                                </h6>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-secondary">Status Pemohon <span class="text-danger">*</span></label>
+                                <select name="kategori_peminjam" class="form-select" required>
+                                    <option value="Mahasiswa / Ormawa" {{ old('kategori_peminjam') == 'Mahasiswa / Ormawa' ? 'selected' : '' }}>Mahasiswa / Organisasi (BEM/HIMA)</option>
+                                    <option value="Dosen" {{ old('kategori_peminjam') == 'Dosen' ? 'selected' : '' }}>Dosen / Pengajar</option>
+                                    <option value="Staf / Tendik" {{ old('kategori_peminjam') == 'Staf / Tendik' ? 'selected' : '' }}>Staf / Tenaga Kependidikan</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-secondary">Nama Pemohon / Ketua Kegiatan <span class="text-danger">*</span></label>
+                                <input type="text" name="nama_peminjam" class="form-control" placeholder="Nama lengkap" value="{{ old('nama_peminjam') }}" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-secondary">Nomor Identitas (NIM / NIP) <span class="text-danger">*</span></label>
+                                <input type="text" name="nomor_identitas" class="form-control font-monospace" placeholder="Misal: 202301045" value="{{ old('nomor_identitas') }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Program Studi / Nama Organisasi <span class="text-danger">*</span></label>
+                                <input type="text" name="prodi_unit" class="form-control" placeholder="Contoh: BEM STIKES / HIMA Keperawatan / D3 Kebidanan" value="{{ old('prodi_unit') }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-secondary">Nomor WhatsApp Aktif <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-success"><i class="fa-brands fa-whatsapp fa-lg"></i></span>
+                                    <input type="text" name="kontak_peminjam" class="form-control" placeholder="Misal: 081234567890 (Untuk konfirmasi kunci & approval)" value="{{ old('kontak_peminjam') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-secondary">Keperluan / Acara Kegiatan <span class="text-danger">*</span></label>
+                                <textarea name="keperluan" class="form-control" rows="3" placeholder="Contoh: Rapat Kerja BEM / Pelatihan Skill Lab Keperawatan / Kuliah Pengganti Farmakologi..." required>{{ old('keperluan') }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- PERNYATAAN & SUBMIT RUANGAN -->
+                        <div class="p-3.5 bg-light rounded-3 border mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkPernyataanRuangan" required>
+                                <label class="form-check-label small text-secondary" for="checkPernyataanRuangan">
+                                    Saya bertanggung jawab penuh atas penggunaan ruangan, menjaga kebersihan, mematikan AC/lampu/perangkat proyektor setelah selesai, serta mengembalikan kunci ke Sarpras tepat waktu.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="text-center text-md-end">
+                            <button type="submit" class="btn-submit-ruangan">
+                                <i class="fa-solid fa-paper-plane me-2"></i>
+                                <span>Kirim Permohonan Booking Ruangan</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
         </div>
     </div>
 
     <!-- KATALOG BARANG SIAP PINJAM -->
-    <div class="container mb-5 pb-5" id="sectionKatalog">
+    <div class="container mb-5 pb-5" id="sectionKatalogAset">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
             <div>
                 <h4 class="fw-bold text-dark mb-1">
@@ -537,16 +757,16 @@
     <!-- FOOTER -->
     <footer class="mt-auto bg-white border-top py-3.5 text-center small text-muted">
         <div class="container">
-            <strong>STIKES Panti Waluya Malang</strong> &copy; {{ date('Y') }} &bull; Sistem Informasi Inventaris & Peminjaman Aset Laboratorium
+            <strong>STIKES Panti Waluya Malang</strong> &copy; {{ date('Y') }} &bull; Sistem Informasi Inventaris & Peminjaman Aset / Ruangan
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- SCRIPT SISTEM KERANJANG PEMINJAMAN (LOAN CART) -->
+    <!-- SCRIPT KERANJANG ASET & JADWAL RUANGAN -->
     <script>
-        // State keranjang tersimpan di LocalStorage agar tidak hilang saat refresh
+        // State keranjang tersimpan di LocalStorage
         let loanCart = [];
 
         try {
@@ -608,8 +828,6 @@
             }
 
             saveCart();
-
-            // Tampilkan notifikasi singkat
             showToastSuccess(nama + ' (' + qty + ' unit) ditambahkan ke keranjang!');
         }
 
@@ -699,7 +917,6 @@
             let btnSubmit = document.getElementById('btnSubmitPengajuan');
             let hiddenCartData = document.getElementById('hiddenCartData');
 
-            // Format data untuk POST
             hiddenCartData.value = JSON.stringify(loanCart.map(i => ({ barang_id: i.id, jumlah: i.qty })));
 
             if (loanCart.length === 0) {
@@ -743,15 +960,14 @@
             }
         }
 
-        function scrollToForm() {
-            let el = document.getElementById('sectionFormPeminjaman');
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth' });
-            }
+        function scrollToFormAset() {
+            let tabBtn = document.getElementById('pills-aset-tab');
+            if (tabBtn) tabBtn.click();
+            let el = document.getElementById('sectionFormPortal');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
         function showToastSuccess(msg) {
-            // Animasi feedback visual sederhana
             let floatingBtn = document.getElementById('btnFloatingCart');
             floatingBtn.classList.add('animate__animated', 'animate__bounce');
             setTimeout(() => {
@@ -759,22 +975,66 @@
             }, 1000);
         }
 
-        // Hapus cart saat submit sukses dilakukan (di form event)
+        // Hapus cart saat submit sukses dilakukan (di form aset)
         document.getElementById('formPeminjamanMandiri').addEventListener('submit', function(e) {
             if (loanCart.length === 0) {
                 e.preventDefault();
                 alert('Silakan pilih minimal 1 aset ke keranjang terlebih dahulu!');
                 return;
             }
-            // Kosongkan keranjang di localStorage untuk pengajuan berikutnya
             setTimeout(() => {
                 localStorage.removeItem('stikes_loan_cart');
             }, 500);
         });
 
-        // Inisialisasi saat pertama load
+        // AJAX Cek Jadwal Ruangan
+        function triggerCekJadwal() {
+            let sel = document.getElementById('selectRuanganPublik');
+            if (sel && sel.value) {
+                cekJadwalRuangan(sel.value);
+            }
+        }
+
+        function cekJadwalRuangan(ruanganId) {
+            let tgl = document.getElementById('inputTanggalRuangan').value;
+            let box = document.getElementById('boxJadwalTerisi');
+            let list = document.getElementById('listJadwalRuangan');
+
+            if (!ruanganId || !tgl) {
+                box.style.display = 'none';
+                return;
+            }
+
+            fetch(`{{ route('publik.ruangan.jadwal') }}?ruangan_id=${ruanganId}&tanggal=${tgl}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        let html = '<ul class="mb-0 ps-3">';
+                        data.forEach(item => {
+                            html += `<li><strong>${item.jam_mulai.substring(0,5)} - ${item.jam_selesai.substring(0,5)} WIB</strong>: ${item.nama_peminjam} (${item.keperluan}) - <span class="badge bg-secondary py-0">${item.status}</span></li>`;
+                        });
+                        html += '</ul>';
+                        list.innerHTML = html;
+                        box.style.display = 'block';
+                    } else {
+                        list.innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Belum ada jadwal pemakaian di tanggal ini (Ruangan Masih Kosong).</span>';
+                        box.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    box.style.display = 'none';
+                });
+        }
+
+        // Inisialisasi saat load
         document.addEventListener('DOMContentLoaded', function() {
             renderCart();
+
+            // Hash navigation tab support (misal: /#tab-ruangan)
+            if (window.location.hash === '#tab-ruangan') {
+                let tabRuangan = document.getElementById('pills-ruangan-tab');
+                if (tabRuangan) tabRuangan.click();
+            }
         });
     </script>
 </body>
