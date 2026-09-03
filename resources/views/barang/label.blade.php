@@ -295,10 +295,10 @@
             text-overflow: ellipsis;
         }
 
-        /* PRINT STYLING */
+        /* PRINT STYLING FOR HVS A4 STICKER SHEET */
         @page {
-            size: auto;
-            margin: 3mm;
+            size: A4 portrait;
+            margin: 5mm;
         }
 
         @media print {
