@@ -277,9 +277,9 @@
             </a>
 
             <div class="d-flex align-items-center gap-2">
-                <!-- Tombol Buka Keranjang di Navbar -->
+                <!-- Tombol Buka Daftar Pinjam di Navbar -->
                 <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-pill px-3 py-1.5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
-                    <i class="fa-solid fa-cart-shopping me-1"></i> Keranjang Aset
+                    <i class="fa-solid fa-clipboard-list me-1"></i> Daftar Pinjam
                     <span class="badge bg-primary text-white ms-1 rounded-pill" id="navCartCount">0</span>
                 </button>
 
@@ -305,20 +305,20 @@
 
     <!-- FLOATING CART BUTTON -->
     <button type="button" class="floating-cart-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" id="btnFloatingCart">
-        <i class="fa-solid fa-cart-shopping fs-5"></i>
-        <span>Keranjang Pinjam</span>
+        <i class="fa-solid fa-clipboard-list fs-5"></i>
+        <span>Daftar Pinjam</span>
         <span class="cart-badge" id="floatingCartCount">0</span>
     </button>
 
-    <!-- OFFCANVAS KERANJANG BELANJA PEMINJAMAN ASET -->
+    <!-- OFFCANVAS DAFTAR PINJAM PEMINJAMAN ASET -->
     <div class="offcanvas offcanvas-end offcanvas-cart shadow-lg border-0" tabindex="-1" id="offcanvasCart">
         <div class="offcanvas-header border-bottom py-3">
             <div class="d-flex align-items-center gap-2">
                 <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                    <i class="fa-solid fa-cart-shopping"></i>
+                    <i class="fa-solid fa-clipboard-list"></i>
                 </div>
                 <div>
-                    <h6 class="offcanvas-title fw-bold text-dark mb-0">Keranjang Peminjaman Aset</h6>
+                    <h6 class="offcanvas-title fw-bold text-dark mb-0">Daftar Pinjam Aset</h6>
                     <small class="text-muted" id="cartSummaryText">0 jenis aset dipilih</small>
                 </div>
             </div>
@@ -432,17 +432,17 @@
                         </div>
 
                         <button type="button" class="btn btn-sm btn-outline-primary fw-semibold rounded-pill px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
-                            <i class="fa-solid fa-cart-shopping me-1"></i> Keranjang (<span id="formCartCountBadge">0</span>)
+                            <i class="fa-solid fa-clipboard-list me-1"></i> Daftar Pinjam (<span id="formCartCountBadge">0</span>)
                         </button>
                     </div>
 
                     <form action="{{ route('publik.store') }}" method="POST" id="formPeminjamanMandiri">
                         @csrf
 
-                        <!-- Hidden Input untuk Menyimpan Data Keranjang -->
+                        <!-- Hidden Input untuk Menyimpan Data Keranjang/Daftar Pinjam -->
                         <input type="hidden" name="cart_data" id="hiddenCartData" value="">
 
-                        <!-- TABEL PREVIEW BARANG DI KERANJANG -->
+                        <!-- TABEL PREVIEW BARANG DI DAFTAR PINJAM -->
                         <div class="mb-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h6 class="fw-bold text-primary small text-uppercase mb-0">
@@ -495,7 +495,7 @@
                             <div id="emptyCartAlert" class="alert alert-warning py-3 px-3.5 small rounded-3 mt-2 mb-0 d-flex align-items-center gap-2">
                                 <i class="fa-solid fa-circle-exclamation fs-4"></i>
                                 <div>
-                                    <strong>Keranjang Anda masih kosong!</strong> Gunakan kolom cari barang di atas atau pilih dari <strong>Katalog Aset di bawah</strong> untuk melanjutkan pengajuan.
+                                    <strong>Daftar pinjam Anda masih kosong!</strong> Gunakan kolom cari barang di atas atau pilih dari <strong>Katalog Aset di bawah</strong> untuk melanjutkan pengajuan.
                                 </div>
                             </div>
                         </div>
@@ -750,7 +750,7 @@
                 <h4 class="fw-bold text-dark mb-1">
                     Katalog Aset Sarpras yang Dapat Dipinjam
                 </h4>
-                <p class="text-muted small mb-0">Klik tombol <strong>"+ Keranjang"</strong> pada aset yang dibutuhkan untuk memasukkannya ke permohonan.</p>
+                <p class="text-muted small mb-0">Klik tombol <strong>"+ Daftar Pinjam"</strong> pada aset yang dibutuhkan untuk memasukkannya ke permohonan.</p>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <span id="catalogCountBadge" class="badge bg-light text-secondary border px-3 py-2 rounded-pill font-monospace">
@@ -809,7 +809,7 @@
                             <button type="button" class="qty-stepper-btn" onclick="stepItemQty('{{ $item->id }}', 1)">+</button>
                         </div>
                         <button type="button" class="btn btn-sm btn-primary fw-bold rounded-pill px-3 shadow-sm" onclick="addToCart('{{ $item->id }}', '{{ addslashes($item->nama_barang) }}', '{{ $item->kode_barang }}', '{{ addslashes($item->ruangan->nama_ruangan ?? '-') }}', {{ $item->jumlah }})">
-                            + Keranjang
+                            + Daftar Pinjam
                         </button>
                     </div>
                 </div>
@@ -837,7 +837,7 @@
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- SCRIPT KERANJANG ASET & JADWAL RUANGAN -->
+    <!-- SCRIPT DAFTAR PINJAM ASET & JADWAL RUANGAN -->
     <script>
         @php
             $itemSearchList = $barangs->map(function($b) {
@@ -1111,7 +1111,7 @@
             if (existing) {
                 let newQty = existing.qty + qty;
                 if (newQty > maxStok) {
-                    alert('Total di keranjang (' + newQty + ') melebihi batas stok yang ada (' + maxStok + ' unit)!');
+                    alert('Total di daftar pinjam (' + newQty + ') melebihi batas stok yang ada (' + maxStok + ' unit)!');
                     existing.qty = maxStok;
                 } else {
                     existing.qty = newQty;
@@ -1128,7 +1128,7 @@
             }
 
             saveCart();
-            showToastSuccess(nama + ' (' + qty + ' unit) ditambahkan ke keranjang!');
+            showToastSuccess(nama + ' (' + qty + ' unit) ditambahkan ke daftar pinjam!');
         }
 
         function updateCartItemQty(id, delta) {
@@ -1176,9 +1176,9 @@
             if (loanCart.length === 0) {
                 offcanvasContainer.innerHTML = `
                     <div class="text-center py-5 text-muted">
-                        <i class="fa-solid fa-cart-shopping fa-3x opacity-25 mb-3"></i>
-                        <h6 class="fw-bold">Keranjang Masih Kosong</h6>
-                        <p class="small">Pilih aset praktikum dari katalog di halaman utama untuk ditambahkan ke keranjang.</p>
+                        <i class="fa-solid fa-clipboard-list fa-3x opacity-25 mb-3"></i>
+                        <h6 class="fw-bold">Daftar Pinjam Masih Kosong</h6>
+                        <p class="small">Pilih aset praktikum dari katalog di halaman utama untuk ditambahkan ke daftar pinjam.</p>
                     </div>
                 `;
             } else {
@@ -1192,7 +1192,7 @@
                                     <span class="badge-code" style="font-size: 0.72rem;">${item.kode}</span>
                                     <small class="text-muted d-block" style="font-size: 0.72rem;">${item.ruangan}</small>
                                 </div>
-                                <button type="button" class="btn btn-link text-danger p-0" onclick="removeFromCart('${item.id}')" title="Hapus dari keranjang">
+                                <button type="button" class="btn btn-link text-danger p-0" onclick="removeFromCart('${item.id}')" title="Hapus dari daftar pinjam">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </div>
@@ -1279,7 +1279,7 @@
         document.getElementById('formPeminjamanMandiri').addEventListener('submit', function(e) {
             if (loanCart.length === 0) {
                 e.preventDefault();
-                alert('Silakan pilih minimal 1 aset ke keranjang terlebih dahulu!');
+                alert('Silakan pilih minimal 1 aset ke daftar pinjam terlebih dahulu!');
                 return;
             }
             setTimeout(() => {

@@ -391,7 +391,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- MODAL RINCIAN PAKET ASET (KERANJANG) -->
+                        <!-- MODAL RINCIAN PAKET ASET (DAFTAR PINJAM) -->
                         @if($p->details && $p->details->count() > 0)
                         <div class="modal fade text-start" id="modalRincianAset{{ $p->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
