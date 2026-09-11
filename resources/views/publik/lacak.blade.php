@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lacak Status Pengajuan - SPARTA-PW STIKES Panti Waluya</title>
+    
+    <!-- Theme Script (Instant execution to prevent flash) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('sparta_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
 
     <!-- Google Fonts -->
@@ -44,6 +53,72 @@
             border: 1px solid #cbd5e1;
             display: inline-block;
         }
+
+        /* Dark Theme Overrides */
+        [data-bs-theme="dark"] body {
+            background-color: #0F172A;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] nav.navbar {
+            background-color: #0B1329 !important;
+            border-bottom: 1px solid #1E293B !important;
+        }
+
+        [data-bs-theme="dark"] .search-box-card,
+        [data-bs-theme="dark"] .card {
+            background-color: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .text-dark {
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .bg-light {
+            background-color: #0F172A !important;
+            border-color: #334155 !important;
+        }
+
+        [data-bs-theme="dark"] .form-control,
+        [data-bs-theme="dark"] .input-group-text {
+            background-color: #0F172A;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .badge-code {
+            background-color: #0F172A;
+            color: #93C5FD;
+            border-color: #1E3A8A;
+        }
+
+        [data-bs-theme="dark"] footer {
+            background-color: #0B1329 !important;
+            border-top: 1px solid #1E293B !important;
+            color: #94A3B8 !important;
+        }
+
+        .theme-toggle-btn-lacak {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        [data-bs-theme="dark"] .theme-toggle-btn-lacak {
+            background: #1E293B;
+            border-color: #334155;
+            color: #F59E0B;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +133,11 @@
                     <small class="text-muted" style="font-size: 0.65rem;">STIKES PANTI WALUYA MALANG</small>
                 </div>
             </a>
-            <div class="d-flex gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <!-- Theme Toggle -->
+                <button type="button" class="theme-toggle-btn-lacak" id="btnThemeToggleLacak" onclick="toggleLacakTheme()" title="Ganti Mode Gelap / Terang">
+                    <i class="fa-solid fa-moon" id="themeIconLacak"></i>
+                </button>
                 <a href="{{ url('/') }}" class="btn btn-sm btn-outline-secondary">
                     <i class="fa-solid fa-house me-1"></i> Halaman Utama
                 </a>
@@ -263,5 +342,32 @@
         </div>
     </footer>
 
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function updateLacakThemeUI(theme) {
+            const icon = document.getElementById('themeIconLacak');
+            if (!icon) return;
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun text-warning';
+            } else {
+                icon.className = 'fa-solid fa-moon text-dark';
+            }
+        }
+
+        function toggleLacakTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('sparta_theme', newTheme);
+            updateLacakThemeUI(newTheme);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            updateLacakThemeUI(currentTheme);
+        });
+    </script>
 </body>
 </html>

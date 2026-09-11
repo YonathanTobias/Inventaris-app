@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard') &bull; SPARTA-PW STIKES Panti Waluya</title>
     
+    <!-- Theme Script (Instant execution to prevent flash) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('sparta_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
     
@@ -53,6 +61,28 @@
             --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
             --shadow-md: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
             --shadow-lg: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        /* Dark Theme Ergonomic Tokens */
+        [data-bs-theme="dark"] {
+            --color-navy: #09182E;
+            --color-sapphire: #1E3A8A;
+            --color-blue: #3B82F6;
+            --color-ice: #1E293B;
+            --color-sky: #0369A1;
+            
+            --primary: #3B82F6;
+            --primary-hover: #60A5FA;
+            --primary-light: #1E293B;
+            --primary-gradient: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+            --secondary: #94A3B8;
+            --accent: #3B82F6;
+            --dark: #F8FAFC;
+            --card-bg: #1E293B;
+            --body-bg: #0F172A;
+            --border-color: #334155;
+            --text-main: #F1F5F9;
+            --text-muted: #94A3B8;
         }
 
         body {
@@ -500,6 +530,126 @@
             color: var(--text-muted);
         }
 
+        /* Dark Theme Component Overrides */
+        [data-bs-theme="dark"] .navbar-custom {
+            background-color: #0B1329;
+            border-bottom: 1px solid #1E293B;
+        }
+
+        [data-bs-theme="dark"] .card,
+        [data-bs-theme="dark"] .card-stat,
+        [data-bs-theme="dark"] .card-header-modern {
+            background-color: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .card-header-modern {
+            border-bottom-color: #334155 !important;
+        }
+
+        [data-bs-theme="dark"] .table-modern thead th {
+            background-color: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #334155 !important;
+        }
+
+        [data-bs-theme="dark"] .table-modern tbody td {
+            border-bottom-color: #334155 !important;
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .table-modern tbody tr:hover {
+            background-color: #243248 !important;
+        }
+
+        [data-bs-theme="dark"] .form-control,
+        [data-bs-theme="dark"] .form-select {
+            background-color: #0F172A;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .form-control:focus,
+        [data-bs-theme="dark"] .form-select:focus {
+            background-color: #0F172A;
+            border-color: #3B82F6;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .form-label {
+            color: #CBD5E1;
+        }
+
+        [data-bs-theme="dark"] .modal-content {
+            background-color: #1E293B;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .modal-header,
+        [data-bs-theme="dark"] .modal-footer {
+            background-color: #0F172A;
+            border-color: #334155;
+        }
+
+        [data-bs-theme="dark"] .dropdown-menu {
+            background-color: #1E293B;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .dropdown-item {
+            color: #E2E8F0;
+        }
+
+        [data-bs-theme="dark"] .dropdown-item:hover {
+            background-color: #334155;
+            color: #FFFFFF;
+        }
+
+        [data-bs-theme="dark"] .footer-custom {
+            background-color: #0B1329 !important;
+            border-top: 1px solid #1E293B !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-bs-theme="dark"] .nav-link-custom.active {
+            color: #3B82F6 !important;
+            background-color: #1E293B !important;
+        }
+
+        [data-bs-theme="dark"] ::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        [data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        [data-bs-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #F8FAFC;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+
         /* Print Style */
         @media print {
             .navbar-custom, .btn, .no-print, .card-stat, form, .modal, .footer-custom {
@@ -593,6 +743,13 @@
                     </li>
                     @endif
 
+                    <!-- Theme Switch Toggle Button -->
+                    <li class="nav-item ms-lg-2 my-1 my-lg-0">
+                        <button type="button" class="theme-toggle-btn" id="btnThemeToggle" onclick="toggleAppTheme()" title="Ganti Mode Gelap / Terang" aria-label="Toggle theme">
+                            <i class="fa-solid fa-moon" id="themeIcon"></i>
+                        </button>
+                    </li>
+
                     @auth
                     <!-- User Profile & Logout Dropdown -->
                     <li class="nav-item dropdown ms-lg-3 mt-2 mt-lg-0">
@@ -662,6 +819,30 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
 
     <script>
+        // Theme Switcher Functions
+        function updateThemeUI(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (!icon) return;
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun text-warning';
+            } else {
+                icon.className = 'fa-solid fa-moon text-white';
+            }
+        }
+
+        function toggleAppTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('sparta_theme', newTheme);
+            updateThemeUI(newTheme);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            updateThemeUI(currentTheme);
+        });
+
         // SweetAlert Flash Messages
         @if(session('success'))
             Swal.fire({

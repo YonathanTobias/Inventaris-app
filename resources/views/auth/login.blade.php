@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login SPARTA-PW - STIKES Panti Waluya Malang</title>
     
+    <!-- Theme Script (Instant execution to prevent flash) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('sparta_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
 
@@ -28,6 +36,16 @@
             --text-muted: #475569;
         }
 
+        [data-bs-theme="dark"] {
+            --color-navy: #09182E;
+            --primary: #3B82F6;
+            --primary-hover: #60A5FA;
+            --body-bg: #0F172A;
+            --border-color: #334155;
+            --text-main: #F1F5F9;
+            --text-muted: #94A3B8;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--body-bg);
@@ -39,6 +57,7 @@
             color: var(--text-main);
             letter-spacing: -0.01em;
             -webkit-font-smoothing: antialiased;
+            position: relative;
         }
 
         :focus-visible {
@@ -106,9 +125,81 @@
             background-color: #0F2C59;
             color: #ffffff;
         }
+
+        /* Dark Theme Overrides */
+        [data-bs-theme="dark"] body {
+            background-color: #0F172A;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .login-card {
+            background: #1E293B;
+            border-color: #334155;
+        }
+
+        [data-bs-theme="dark"] .brand-header {
+            background-color: #1E293B;
+            border-bottom-color: #334155;
+        }
+
+        [data-bs-theme="dark"] .text-dark {
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .form-control {
+            background-color: #0F172A;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .form-control:focus {
+            background-color: #0F172A;
+            border-color: #3B82F6;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .input-group-text {
+            background-color: #0F172A !important;
+            border-color: #334155 !important;
+            color: #94A3B8 !important;
+        }
+
+        .theme-toggle-btn-login {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 20;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        [data-bs-theme="dark"] .theme-toggle-btn-login {
+            background: #1E293B;
+            border-color: #334155;
+            color: #F59E0B;
+        }
+
+        .theme-toggle-btn-login:hover {
+            transform: scale(1.08);
+        }
     </style>
 </head>
 <body>
+
+    <!-- Theme Switch Button -->
+    <button type="button" class="theme-toggle-btn-login" id="btnThemeToggleLogin" onclick="toggleLoginTheme()" title="Ganti Mode Gelap / Terang" aria-label="Toggle theme">
+        <i class="fa-solid fa-moon" id="themeIconLogin"></i>
+    </button>
 
     <div class="login-card">
         <!-- Brand Header -->
@@ -180,6 +271,29 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function updateLoginThemeUI(theme) {
+            const icon = document.getElementById('themeIconLogin');
+            if (!icon) return;
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun text-warning';
+            } else {
+                icon.className = 'fa-solid fa-moon text-dark';
+            }
+        }
+
+        function toggleLoginTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('sparta_theme', newTheme);
+            updateLoginThemeUI(newTheme);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            updateLoginThemeUI(currentTheme);
+        });
+
         function togglePasswordVisibility() {
             const passwordInput = document.getElementById('password');
             const toggleIcon = document.getElementById('toggleIcon');

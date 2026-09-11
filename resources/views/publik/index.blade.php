@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPARTA-PW - Portal Peminjaman Aset & Ruangan STIKES Panti Waluya Malang</title>
     
+    <!-- Theme Script (Instant execution to prevent flash) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('sparta_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
 
@@ -34,6 +42,23 @@
             --dark: #0F172A;
             --light-bg: #F8FAFC;
             --border-color: #E2E8F0;
+        }
+
+        [data-bs-theme="dark"] {
+            --color-navy: #09182E;
+            --color-sapphire: #1E3A8A;
+            --color-blue: #3B82F6;
+            --color-ice: #1E293B;
+            --color-sky: #0369A1;
+            
+            --primary: #3B82F6;
+            --primary-dark: #60A5FA;
+            --primary-light: #1E293B;
+            --emerald: #22C55E;
+            --accent: #3B82F6;
+            --dark: #F8FAFC;
+            --light-bg: #0F172A;
+            --border-color: #334155;
         }
 
         body {
@@ -261,6 +286,147 @@
             border-color: transparent !important;
             box-shadow: 0 4px 14px rgba(13, 71, 161, 0.25) !important;
         }
+
+        /* Dark Mode Theme Overrides */
+        [data-bs-theme="dark"] body {
+            background-color: #0F172A;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .public-nav {
+            background: #0B1329;
+            border-bottom: 1px solid #1E293B;
+        }
+
+        [data-bs-theme="dark"] .public-nav .text-dark {
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .hero-banner {
+            background-color: #0B1329;
+            border-bottom: 1px solid #1E293B;
+        }
+
+        [data-bs-theme="dark"] .form-card,
+        [data-bs-theme="dark"] .offcanvas-cart,
+        [data-bs-theme="dark"] .item-card,
+        [data-bs-theme="dark"] .modal-content,
+        [data-bs-theme="dark"] .card {
+            background-color: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .offcanvas-header,
+        [data-bs-theme="dark"] .offcanvas-body {
+            background-color: #1E293B;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .text-dark {
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .text-secondary {
+            color: #CBD5E1 !important;
+        }
+
+        [data-bs-theme="dark"] .bg-light {
+            background-color: #0F172A !important;
+        }
+
+        [data-bs-theme="dark"] .bg-white {
+            background-color: #1E293B !important;
+            color: #F1F5F9 !important;
+        }
+
+        [data-bs-theme="dark"] .table {
+            color: #F1F5F9;
+            border-color: #334155;
+        }
+
+        [data-bs-theme="dark"] .table thead th {
+            background-color: #0F172A;
+            color: #94A3B8;
+        }
+
+        [data-bs-theme="dark"] .form-control,
+        [data-bs-theme="dark"] .form-select,
+        [data-bs-theme="dark"] .input-group-text {
+            background-color: #0F172A;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .form-control:focus,
+        [data-bs-theme="dark"] .form-select:focus {
+            background-color: #0F172A;
+            border-color: #3B82F6;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .badge-code {
+            background-color: #0F172A;
+            color: #93C5FD;
+            border-color: #1E3A8A;
+        }
+
+        [data-bs-theme="dark"] .cart-item-row {
+            border-bottom-color: #334155;
+        }
+
+        [data-bs-theme="dark"] .qty-stepper-btn {
+            background: #0F172A;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+
+        [data-bs-theme="dark"] .qty-stepper-btn:hover {
+            background: #334155;
+        }
+
+        [data-bs-theme="dark"] .nav-pills-portal .nav-link {
+            background-color: #1E293B;
+            border-color: #334155;
+            color: #94A3B8;
+        }
+
+        [data-bs-theme="dark"] footer {
+            background-color: #0B1329 !important;
+            border-top: 1px solid #1E293B !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-bs-theme="dark"] #liveSearchResults,
+        [data-bs-theme="dark"] #dropdownRuanganResults {
+            background-color: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F1F5F9 !important;
+        }
+
+        .theme-toggle-btn-public {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        [data-bs-theme="dark"] .theme-toggle-btn-public {
+            background: #1E293B;
+            border-color: #334155;
+            color: #F59E0B;
+        }
+
+        .theme-toggle-btn-public:hover {
+            transform: scale(1.08);
+        }
     </style>
 </head>
 <body>
@@ -277,6 +443,11 @@
             </a>
 
             <div class="d-flex align-items-center gap-2">
+                <!-- Theme Switch Toggle Button -->
+                <button type="button" class="theme-toggle-btn-public" id="btnThemeTogglePublic" onclick="togglePublicTheme()" title="Ganti Mode Gelap / Terang" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon" id="themeIconPublic"></i>
+                </button>
+
                 <!-- Tombol Buka Daftar Pinjam di Navbar -->
                 <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-pill px-3 py-1.5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
                     <i class="fa-solid fa-clipboard-list me-1"></i> Daftar Pinjam
@@ -1326,8 +1497,29 @@
                 });
         }
 
+        // Theme Switcher Logic for Portal Publik
+        function updatePublicThemeUI(theme) {
+            const icon = document.getElementById('themeIconPublic');
+            if (!icon) return;
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun text-warning';
+            } else {
+                icon.className = 'fa-solid fa-moon text-dark';
+            }
+        }
+
+        function togglePublicTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('sparta_theme', newTheme);
+            updatePublicThemeUI(newTheme);
+        }
+
         // Inisialisasi saat load
         document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            updatePublicThemeUI(currentTheme);
             renderCart();
 
             // Restore old selected ruangan jika ada
