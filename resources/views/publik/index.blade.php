@@ -20,63 +20,63 @@
 
     <style>
         :root {
-            --color-navy: #0D47A1;
-            --color-vibrant: #2196F3;
-            --color-sky: #90CAF9;
-            --color-ice: #E3F2FD;
+            --color-navy: #0F2C59;
+            --color-sapphire: #1E3A8A;
+            --color-blue: #2563EB;
+            --color-ice: #F0F7FF;
+            --color-sky: #BAE6FD;
             
-            --primary: #2196F3;
-            --primary-dark: #0D47A1;
-            --primary-light: #E3F2FD;
-            --emerald: #0D47A1;
-            --accent: #2196F3;
-            --dark: #0a192f;
-            --light-bg: #f4f8fb;
-            --border-color: #dbeafe;
+            --primary: #1E3A8A;
+            --primary-dark: #0F2C59;
+            --primary-light: #EFF6FF;
+            --emerald: #15803D;
+            --accent: #0F2C59;
+            --dark: #0F172A;
+            --light-bg: #F8FAFC;
+            --border-color: #E2E8F0;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--light-bg);
-            color: #1e293b;
+            color: #0F172A;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :focus-visible {
+            outline: 2px solid #2563EB !important;
+            outline-offset: 2px !important;
         }
 
         /* Top Navbar */
         .public-nav {
             background: #ffffff;
-            border-bottom: 2px solid var(--color-ice);
-            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 0;
             position: sticky;
             top: 0;
             z-index: 1020;
-            box-shadow: 0 2px 8px rgba(13, 71, 161, 0.05);
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
         }
 
         .hero-banner {
-            background: linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #2196F3 100%);
+            background-color: #0F2C59;
             color: #ffffff;
-            padding: 3.5rem 0 3.2rem;
+            padding: 3rem 0 2.8rem;
             position: relative;
-            overflow: hidden;
-        }
-
-        .hero-banner::after {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            background: radial-gradient(circle at 80% 20%, rgba(144, 202, 249, 0.3) 0%, transparent 60%);
-            pointer-events: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .form-card {
             background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(13, 71, 161, 0.08);
-            border: 1px solid var(--color-sky);
-            margin-top: -2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+            border: 1px solid var(--border-color);
+            margin-top: -2rem;
             position: relative;
             z-index: 10;
         }
@@ -85,92 +85,86 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: var(--color-ice);
-            color: var(--color-navy);
-            padding: 0.4rem 0.9rem;
+            background: #EFF6FF;
+            color: #1E3A8A;
+            padding: 0.35rem 0.8rem;
             border-radius: 999px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            border: 1px solid var(--color-sky);
+            border: 1px solid #BFDBFE;
         }
 
         .step-pill-emerald {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: var(--color-ice);
-            color: var(--color-navy);
-            padding: 0.4rem 0.9rem;
+            background: #ECFDF5;
+            color: #15803D;
+            padding: 0.35rem 0.8rem;
             border-radius: 999px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            border: 1px solid var(--color-sky);
+            border: 1px solid #A7F3D0;
         }
 
         .item-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
             background: #ffffff;
         }
 
         .item-card:hover {
-            border-color: var(--color-vibrant);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(33, 150, 243, 0.15);
+            border-color: #94A3B8;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08);
         }
 
         .room-card:hover {
-            border-color: var(--color-vibrant) !important;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(13, 71, 161, 0.15) !important;
+            border-color: #94A3B8 !important;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08) !important;
         }
 
         .badge-code {
-            background-color: var(--color-ice);
-            color: var(--color-navy);
+            background-color: #F8FAFC;
+            color: #0F172A;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.78rem;
             padding: 0.25rem 0.55rem;
             border-radius: 6px;
             font-weight: 700;
-            border: 1px solid var(--color-sky);
+            border: 1px solid #CBD5E1;
             display: inline-block;
         }
 
         .btn-submit-pinjam {
-            background: linear-gradient(135deg, #0D47A1 0%, #2196F3 100%);
-            border: none;
+            background-color: #1E3A8A;
+            border: 1px solid #0F2C59;
             color: #ffffff;
             font-weight: 700;
-            padding: 0.9rem 2.2rem;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.35);
-            transition: all 0.2s ease;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+            transition: background-color 0.15s ease;
         }
 
         .btn-submit-pinjam:hover {
-            background: linear-gradient(135deg, #0a3880 0%, #1976D2 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(33, 150, 243, 0.45);
+            background-color: #0F2C59;
             color: #ffffff;
         }
 
         .btn-submit-ruangan {
-            background: linear-gradient(135deg, #0D47A1 0%, #2196F3 100%);
-            border: none;
+            background-color: #1E3A8A;
+            border: 1px solid #0F2C59;
             color: #ffffff;
             font-weight: 700;
-            padding: 0.9rem 2.2rem;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(13, 71, 161, 0.35);
-            transition: all 0.2s ease;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+            transition: background-color 0.15s ease;
         }
 
         .btn-submit-ruangan:hover {
-            background: linear-gradient(135deg, #0a3880 0%, #1976D2 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(13, 71, 161, 0.45);
+            background-color: #0F2C59;
             color: #ffffff;
         }
 
@@ -180,23 +174,22 @@
             bottom: 25px;
             right: 25px;
             z-index: 1040;
-            background: linear-gradient(135deg, #0D47A1, #2196F3);
+            background-color: #0F2C59;
             color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            padding: 0.85rem 1.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 0.75rem 1.4rem;
             font-weight: 700;
-            box-shadow: 0 8px 25px rgba(13, 71, 161, 0.4);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            transition: all 0.25s ease;
+            transition: background-color 0.15s ease;
             cursor: pointer;
         }
 
         .floating-cart-btn:hover {
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 12px 30px rgba(33, 150, 243, 0.55);
+            background-color: #1E3A8A;
             color: #ffffff;
         }
 
@@ -404,8 +397,8 @@
                 </div>
             @endif
 
-            @if($errors->any())
-                <div class="alert alert-danger rounded-3 py-2.5 small mb-4">
+            @if(isset($errors) && $errors->any())
+                <div class="alert alert-danger rounded-4 p-3 mb-4 shadow-sm" role="alert">
                     <i class="fa-solid fa-circle-exclamation me-2"></i> {{ $errors->first() }}
                 </div>
             @endif

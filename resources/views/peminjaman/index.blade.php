@@ -68,7 +68,7 @@
             <div class="card stat-card border-0 shadow-sm h-100 {{ request('status') === 'Kembali' ? 'border-success border-2' : '' }}">
                 <div class="card-body p-3 text-center">
                     <div class="text-success small fw-bold mb-1"><i class="fa-solid fa-check-double me-1"></i>Sudah Kembali</div>
-                    <div class="fs-4 fw-bold text-success">{{ number_format($stats['kembali']) }}</div>
+                    <div class="fs-4 fw-bold text-success">{{ number_format($stats['kembali'] ?? 0) }}</div>
                 </div>
             </div>
         </a>
@@ -78,7 +78,7 @@
             <div class="card stat-card border-0 shadow-sm h-100 {{ request('status') === 'Ditolak' ? 'border-danger border-2' : '' }}">
                 <div class="card-body p-3 text-center">
                     <div class="text-danger small fw-bold mb-1"><i class="fa-solid fa-ban me-1"></i>Ditolak</div>
-                    <div class="fs-4 fw-bold text-danger">{{ number_format($stats['ditolak']) }}</div>
+                    <div class="fs-4 fw-bold text-danger">{{ number_format($stats['ditolak'] ?? 0) }}</div>
                 </div>
             </div>
         </a>
@@ -500,7 +500,7 @@
                                 <option value="">-- Pilih Aset (Hanya yang Bisa Dipinjam) --</option>
                                 @foreach($barangBisaDipinjam as $b)
                                     <option value="{{ $b->id }}">
-                                        {{ $b->nama_barang }} [{{ $b->kode_barang }}] — Ruangan: {{ $b->ruangan->nama_ruangan ?? '-' }} (Sisa: {{ $b->jumlah }} unit)
+                                        {{ $b->nama_barang }} [{{ $b->kode_barang }}] • Ruangan: {{ $b->ruangan->nama_ruangan ?? '-' }} (Sisa: {{ $b->jumlah }} unit)
                                     </option>
                                 @endforeach
                             </select>

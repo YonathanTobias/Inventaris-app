@@ -111,7 +111,7 @@
                         <i class="fa-solid fa-filter text-primary"></i>
                         <span>Filter Ruangan & Cetak KIR</span>
                     </h6>
-                    <button class="btn btn-sm btn-outline-primary fw-semibold rounded-pill px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePengaturanTTD">
+                    <button class="btn btn-sm btn-outline-primary fw-semibold rounded-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePengaturanTTD">
                         <i class="fa-solid fa-pen-nib me-1"></i> Atur Penandatangan Laporan (Database)
                     </button>
                 </div>

@@ -11,7 +11,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5 & FontAwesome 6 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,99 +19,82 @@
 
     <style>
         :root {
-            --color-navy: #0D47A1;
-            --color-vibrant: #2196F3;
-            --color-sky: #90CAF9;
-            --color-ice: #E3F2FD;
-            
-            --primary: #2196F3;
-            --primary-hover: #0D47A1;
-            --primary-gradient: linear-gradient(135deg, #0D47A1 0%, #2196F3 100%);
-            --dark: #0a192f;
-            --card-bg: #ffffff;
-            --body-bg: #061126;
-            --border-color: #90CAF9;
+            --color-navy: #0F2C59;
+            --primary: #1E3A8A;
+            --primary-hover: #0F2C59;
+            --body-bg: #F1F5F9;
+            --border-color: #E2E8F0;
+            --text-main: #0F172A;
+            --text-muted: #475569;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--body-bg);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(33, 150, 243, 0.35) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(13, 71, 161, 0.45) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(6, 17, 38, 0.85) 0px, transparent 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
-            color: #1e293b;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :focus-visible {
+            outline: 2px solid #2563EB !important;
+            outline-offset: 2px !important;
         }
 
         .login-card {
             background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(13, 71, 161, 0.45);
-            border: 1px solid var(--color-sky);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+            border: 1px solid var(--border-color);
             overflow: hidden;
             width: 100%;
-            max-width: 460px;
-            position: relative;
-            z-index: 10;
+            max-width: 440px;
         }
 
         .brand-header {
             text-align: center;
             padding: 2.25rem 2rem 1.25rem;
-            background: linear-gradient(180deg, #E3F2FD 0%, #ffffff 100%);
-            border-bottom: 1px solid #E3F2FD;
-        }
-
-        .brand-icon-large {
-            width: 58px;
-            height: 58px;
-            background: var(--primary-gradient);
-            border-radius: 16px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.65rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.35);
+            background-color: #FFFFFF;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .form-control {
-            border: 1.5px solid #cbd5e1;
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            padding: 0.65rem 0.9rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            transition: all 0.2s ease;
+            color: var(--text-main);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
         .form-control:focus {
-            border-color: #2196F3;
-            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.15);
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
 
         .input-group-text {
-            border: 1.5px solid #cbd5e1;
-            border-radius: 12px;
-            background-color: var(--color-ice);
-            color: var(--color-navy);
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            background-color: #F8FAFC;
+            color: #475569;
         }
 
         .btn-login {
-            background: var(--primary-gradient);
-            border: none;
+            background-color: #1E3A8A;
+            border: 1px solid #0F2C59;
             color: #ffffff;
-            font-weight: 700;
-            font-size: 1rem;
-            padding: 0.85rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 6px 18px rgba(33, 150, 243, 0.4);
-            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+            transition: background-color 0.15s ease;
             width: 100%;
             display: flex;
             align-items: center;
@@ -120,9 +103,7 @@
         }
 
         .btn-login:hover {
-            background: linear-gradient(135deg, #0a3880 0%, #1976D2 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(33, 150, 243, 0.5);
+            background-color: #0F2C59;
             color: #ffffff;
         }
     </style>
@@ -132,13 +113,13 @@
     <div class="login-card">
         <!-- Brand Header -->
         <div class="brand-header">
-            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.12)); margin-bottom: 0.85rem;">
-            <h3 class="fw-extrabold mb-1 text-dark" style="letter-spacing: -0.03em;">SPARTA-PW</h3>
-            <p class="text-muted small mb-0">Sistem Peminjaman Aset & Ruangan Terpadu<br><strong class="text-primary">STIKES Panti Waluya Malang</strong></p>
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 75px; width: auto; object-fit: contain; margin-bottom: 0.75rem;">
+            <h4 class="fw-bold mb-1 text-dark" style="letter-spacing: -0.02em;">SPARTA-PW</h4>
+            <p class="text-muted small mb-0">Sistem Peminjaman Aset & Ruangan Terpadu<br><strong class="text-dark">STIKES Panti Waluya Malang</strong></p>
         </div>
 
         <!-- Form Area -->
-        <div class="px-4 pb-4">
+        <div class="p-4">
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show rounded-3 py-2 small mb-3" role="alert">
                     <i class="fa-solid fa-circle-check me-1"></i> {{ session('success') }}
@@ -146,7 +127,7 @@
                 </div>
             @endif
 
-            @if($errors->any())
+            @if(isset($errors) && $errors->any())
                 <div class="alert alert-danger rounded-3 py-2 small mb-3" role="alert">
                     <i class="fa-solid fa-triangle-exclamation me-1"></i> {{ $errors->first() }}
                 </div>
