@@ -265,6 +265,41 @@
             color: var(--color-vibrant);
         }
 
+        /* Card Pernyataan / Agreement Checkbox */
+        .card-pernyataan {
+            background-color: #F8FAFC;
+            border: 1.5px solid #CBD5E1;
+            border-left: 5px solid #1E3A8A !important;
+            transition: all 0.2s ease;
+        }
+
+        .card-pernyataan:hover {
+            background-color: #EFF6FF;
+            border-color: #93C5FD;
+        }
+
+        .check-pernyataan {
+            width: 22px !important;
+            height: 22px !important;
+            cursor: pointer;
+            border: 2px solid #64748B !important;
+            border-radius: 6px !important;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .check-pernyataan:checked {
+            background-color: #1E3A8A !important;
+            border-color: #1E3A8A !important;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.2) !important;
+        }
+
+        .text-pernyataan {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            color: #334155;
+            cursor: pointer;
+        }
+
         /* Custom Tabs Styling */
         .nav-pills-portal .nav-link {
             color: #64748b;
@@ -371,6 +406,38 @@
             border-color: #1E3A8A;
         }
 
+        [data-bs-theme="dark"] .text-success {
+            color: #34D399 !important;
+        }
+
+        [data-bs-theme="dark"] .bg-success-subtle {
+            background-color: rgba(16, 185, 129, 0.15) !important;
+            color: #34D399 !important;
+            border-color: rgba(52, 211, 153, 0.3) !important;
+        }
+
+        [data-bs-theme="dark"] .step-pill {
+            background: rgba(59, 130, 246, 0.15) !important;
+            color: #60A5FA !important;
+            border-color: rgba(96, 165, 250, 0.3) !important;
+        }
+
+        [data-bs-theme="dark"] .step-pill-emerald {
+            background: rgba(16, 185, 129, 0.15) !important;
+            color: #34D399 !important;
+            border-color: rgba(52, 211, 153, 0.3) !important;
+        }
+
+        [data-bs-theme="dark"] .btn-outline-success {
+            color: #34D399 !important;
+            border-color: #34D399 !important;
+        }
+
+        [data-bs-theme="dark"] .btn-outline-success:hover {
+            background-color: #059669 !important;
+            color: #FFFFFF !important;
+        }
+
         [data-bs-theme="dark"] .cart-item-row {
             border-bottom-color: #334155;
         }
@@ -402,6 +469,33 @@
             background-color: #1E293B !important;
             border-color: #334155 !important;
             color: #F1F5F9 !important;
+        }
+
+        /* Dark Mode Overrides for Pernyataan */
+        [data-bs-theme="dark"] .card-pernyataan {
+            background-color: #0F172A !important;
+            border: 1.5px solid #334155 !important;
+            border-left: 5px solid #3B82F6 !important;
+        }
+
+        [data-bs-theme="dark"] .card-pernyataan:hover {
+            background-color: #1E293B !important;
+            border-color: #475569 !important;
+        }
+
+        [data-bs-theme="dark"] .check-pernyataan {
+            border: 2px solid #94A3B8 !important;
+            background-color: #0F172A;
+        }
+
+        [data-bs-theme="dark"] .check-pernyataan:checked {
+            background-color: #3B82F6 !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+        }
+
+        [data-bs-theme="dark"] .text-pernyataan {
+            color: #E2E8F0 !important;
         }
 
         .theme-toggle-btn-public {
@@ -738,10 +832,13 @@
                         </div>
 
                         <!-- PERNYATAAN & SUBMIT ASET -->
-                        <div class="p-3.5 bg-light rounded-3 border mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="checkPernyataanAset" required>
-                                <label class="form-check-label small text-secondary" for="checkPernyataanAset">
+                        <div class="card-pernyataan p-3.5 mb-4 rounded-3 shadow-sm" onclick="document.getElementById('checkPernyataanAset').click();">
+                            <div class="form-check d-flex align-items-start gap-3 m-0" onclick="event.stopPropagation();">
+                                <input class="form-check-input check-pernyataan flex-shrink-0 mt-1" type="checkbox" id="checkPernyataanAset" required>
+                                <label class="form-check-label text-pernyataan user-select-none" for="checkPernyataanAset">
+                                    <strong class="d-block text-dark mb-1 fs-6">
+                                        Pernyataan Tanggung Jawab & Persetujuan Pemohon:
+                                    </strong>
                                     Saya menyatakan bahwa data yang diisi adalah benar, dan saya bersedia mematuhi tata tertib peminjaman, menjaga keutuhan seluruh aset STIKES Panti Waluya Malang, serta mengembalikannya tepat waktu.
                                 </label>
                             </div>
@@ -775,7 +872,7 @@
                         <!-- PILIH RUANGAN & JADWAL -->
                         <div class="row g-3 mb-4">
                             <div class="col-12">
-                                <h6 class="fw-bold text-success small text-uppercase mb-2">
+                                <h6 class="fw-bold text-primary small text-uppercase mb-2">
                                     1. Pilihan Ruangan & Waktu Pemakaian
                                 </h6>
                             </div>
@@ -852,7 +949,7 @@
                         <!-- IDENTITAS PEMOHON RUANGAN -->
                         <div class="row g-3 mb-4">
                             <div class="col-12">
-                                <h6 class="fw-bold text-success small text-uppercase mb-2">
+                                <h6 class="fw-bold text-primary small text-uppercase mb-2">
                                     2. Identitas Pemohon / Penanggung Jawab
                                 </h6>
                             </div>
@@ -893,10 +990,13 @@
                         </div>
 
                         <!-- PERNYATAAN & SUBMIT RUANGAN -->
-                        <div class="p-3.5 bg-light rounded-3 border mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="checkPernyataanRuangan" required>
-                                <label class="form-check-label small text-secondary" for="checkPernyataanRuangan">
+                        <div class="card-pernyataan p-3.5 mb-4 rounded-3 shadow-sm" onclick="document.getElementById('checkPernyataanRuangan').click();">
+                            <div class="form-check d-flex align-items-start gap-3 m-0" onclick="event.stopPropagation();">
+                                <input class="form-check-input check-pernyataan flex-shrink-0 mt-1" type="checkbox" id="checkPernyataanRuangan" required>
+                                <label class="form-check-label text-pernyataan user-select-none" for="checkPernyataanRuangan">
+                                    <strong class="d-block text-dark mb-1 fs-6">
+                                        Pernyataan Tanggung Jawab & Persetujuan Pemohon:
+                                    </strong>
                                     Saya bertanggung jawab penuh atas penggunaan ruangan, menjaga kebersihan, mematikan AC/lampu/perangkat proyektor setelah selesai, serta mengonfirmasi kepada petugas Sarpras saat kegiatan telah selesai agar ruangan dapat dikunci kembali.
                                 </label>
                             </div>
@@ -994,6 +1094,79 @@
                 <p class="text-muted mb-1"><i class="fa-solid fa-magnifying-glass fa-2x opacity-50 mb-2"></i></p>
                 <h6 class="fw-bold text-secondary">Aset Tidak Ditemukan</h6>
                 <p class="small text-muted mb-0">Tidak ada item yang sesuai dengan kata kunci pencarian Anda.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- KATALOG RUANGAN SIAP PINJAM (Hanya tampil saat Tab Ruangan Aktif) -->
+    <div class="container mb-5 pb-5" id="sectionKatalogRuangan" style="display: none;">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+            <div>
+                <h4 class="fw-bold text-dark mb-1">
+                    Daftar Ruangan Kampus yang Dapat Dipinjam
+                </h4>
+                <p class="text-muted small mb-0">Pilih ruangan yang dibutuhkan untuk kegiatan akademik, praktikum, ormawa, atau perkuliahan.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span id="catalogRuanganCountBadge" class="badge bg-light text-secondary border px-3 py-2 rounded-pill font-monospace">
+                    {{ $ruangans->count() }} Ruangan Siap Dipinjam
+                </span>
+            </div>
+        </div>
+
+        <!-- SEARCH INPUT UNTUK FILTER KATALOG RUANGAN -->
+        <div class="card p-3 mb-4 bg-light border-0 shadow-sm">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                        <input type="text" id="catalogRuanganSearchInput" class="form-control" placeholder="Cari ruangan di katalog (ketik nama ruangan atau kode)..." oninput="filterRuanganCards(this.value)">
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 w-md-auto" onclick="document.getElementById('catalogRuanganSearchInput').value=''; filterRuanganCards('');">
+                        <i class="fa-solid fa-rotate-left me-1"></i> Reset Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3" id="catalogRuanganCardsRow">
+            @forelse($ruangans as $ruang)
+            <div class="col-md-6 col-lg-4 catalog-ruangan-card" 
+                 data-name="{{ strtolower($ruang->nama_ruangan) }}" 
+                 data-code="{{ strtolower($ruang->kode_ruangan) }}">
+                <div class="item-card p-3 h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge-code">{{ $ruang->kode_ruangan }}</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small">
+                                <i class="fa-solid fa-circle-check me-1"></i>Tersedia
+                            </span>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-1">{{ $ruang->nama_ruangan }}</h6>
+                        <p class="text-muted small mb-0" style="font-size: 0.8rem;">
+                            <i class="fa-solid fa-building me-1 text-secondary"></i> STIKES Panti Waluya Malang
+                        </p>
+                    </div>
+
+                    <div class="mt-3 pt-2.5 border-top d-flex justify-content-between align-items-center">
+                        <span class="small text-muted font-monospace">{{ $ruang->kode_ruangan }}</span>
+                        <button type="button" class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3 shadow-sm" onclick="chooseRuangan('{{ $ruang->id }}', '{{ addslashes($ruang->nama_ruangan) }}', '{{ $ruang->kode_ruangan }}'); scrollToFormRuangan();">
+                            <i class="fa-solid fa-check me-1"></i> Pilih Ruangan
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Belum ada ruangan yang diatur untuk dapat dipinjam.</p>
+            </div>
+            @endforelse
+            <div id="catalogRuanganNoMatchMessage" class="col-12 text-center py-5 d-none">
+                <p class="text-muted mb-1"><i class="fa-solid fa-magnifying-glass fa-2x opacity-50 mb-2"></i></p>
+                <h6 class="fw-bold text-secondary">Ruangan Tidak Ditemukan</h6>
+                <p class="small text-muted mb-0">Tidak ada ruangan yang sesuai dengan kata kunci pencarian Anda.</p>
             </div>
         </div>
     </div>
@@ -1334,9 +1507,10 @@
             document.getElementById('cartSummaryText').innerText = totalJenis + ' jenis aset dipilih';
             document.getElementById('cartTotalQty').innerText = totalUnit + ' Unit';
 
-            // Floating button visibility
+            // Floating button visibility (Hanya jika di Tab Aset)
             let floatingBtn = document.getElementById('btnFloatingCart');
-            if (totalJenis > 0) {
+            let isAsetTab = document.getElementById('pills-aset-tab')?.classList.contains('active');
+            if (totalJenis > 0 && isAsetTab) {
                 floatingBtn.style.display = 'flex';
             } else {
                 floatingBtn.style.display = 'none';
@@ -1438,12 +1612,21 @@
             if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
+        function scrollToFormRuangan() {
+            let tabBtn = document.getElementById('pills-ruangan-tab');
+            if (tabBtn) tabBtn.click();
+            let el = document.getElementById('sectionFormPortal');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
         function showToastSuccess(msg) {
             let floatingBtn = document.getElementById('btnFloatingCart');
-            floatingBtn.classList.add('animate__animated', 'animate__bounce');
-            setTimeout(() => {
-                floatingBtn.classList.remove('animate__animated', 'animate__bounce');
-            }, 1000);
+            if (floatingBtn && floatingBtn.style.display !== 'none') {
+                floatingBtn.classList.add('animate__animated', 'animate__bounce');
+                setTimeout(() => {
+                    floatingBtn.classList.remove('animate__animated', 'animate__bounce');
+                }, 1000);
+            }
         }
 
         // Hapus cart saat submit sukses dilakukan (di form aset)
@@ -1457,6 +1640,46 @@
                 localStorage.removeItem('stikes_loan_cart');
             }, 500);
         });
+
+        // Filter Kartu Ruangan di Katalog Ruangan
+        function filterRuanganCards(keyword) {
+            let kw = (keyword || '').trim().toLowerCase();
+            let cards = document.querySelectorAll('.catalog-ruangan-card');
+            let matched = 0;
+
+            cards.forEach(card => {
+                let name = card.getAttribute('data-name') || '';
+                let code = card.getAttribute('data-code') || '';
+                if (name.includes(kw) || code.includes(kw)) {
+                    card.style.display = '';
+                    matched++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            let noMatch = document.getElementById('catalogRuanganNoMatchMessage');
+            if (noMatch) {
+                noMatch.classList.toggle('d-none', matched > 0);
+            }
+        }
+
+        // Sinkronisasi Katalog Berdasarkan Tab yang Aktif
+        function handleTabChange(targetTabId) {
+            let sectionAset = document.getElementById('sectionKatalogAset');
+            let sectionRuangan = document.getElementById('sectionKatalogRuangan');
+            let floatingBtn = document.getElementById('btnFloatingCart');
+
+            if (targetTabId === 'pills-aset') {
+                if (sectionAset) sectionAset.style.display = 'block';
+                if (sectionRuangan) sectionRuangan.style.display = 'none';
+                if (floatingBtn && loanCart.length > 0) floatingBtn.style.display = 'flex';
+            } else if (targetTabId === 'pills-ruangan') {
+                if (sectionAset) sectionAset.style.display = 'none';
+                if (sectionRuangan) sectionRuangan.style.display = 'block';
+                if (floatingBtn) floatingBtn.style.display = 'none';
+            }
+        }
 
         // AJAX Cek Jadwal Ruangan
         function triggerCekJadwal() {
@@ -1522,6 +1745,14 @@
             updatePublicThemeUI(currentTheme);
             renderCart();
 
+            // Pasang event listener saat tab berpindah
+            document.querySelectorAll('#pills-tab button[data-bs-toggle="pill"]').forEach(tabBtn => {
+                tabBtn.addEventListener('shown.bs.tab', function(e) {
+                    let targetId = e.target.getAttribute('data-bs-target')?.replace('#', '') || '';
+                    handleTabChange(targetId);
+                });
+            });
+
             // Restore old selected ruangan jika ada
             let oldRuanganId = "{{ old('ruangan_id') }}";
             if (oldRuanganId) {
@@ -1534,7 +1765,10 @@
             // Hash navigation tab support (misal: /#tab-ruangan)
             if (window.location.hash === '#tab-ruangan') {
                 let tabRuangan = document.getElementById('pills-ruangan-tab');
-                if (tabRuangan) tabRuangan.click();
+                if (tabRuangan) {
+                    tabRuangan.click();
+                    handleTabChange('pills-ruangan');
+                }
             }
         });
     </script>

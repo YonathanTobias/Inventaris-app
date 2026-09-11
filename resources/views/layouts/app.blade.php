@@ -548,6 +548,120 @@
             border-bottom-color: #334155 !important;
         }
 
+        /* Dark Mode Text & Color Utilities */
+        [data-bs-theme="dark"] .text-dark { color: #F1F5F9 !important; }
+        [data-bs-theme="dark"] .text-muted { color: #94A3B8 !important; }
+        [data-bs-theme="dark"] .text-secondary { color: #CBD5E1 !important; }
+        [data-bs-theme="dark"] .text-body { color: #F1F5F9 !important; }
+
+        /* Dark Mode Backgrounds */
+        [data-bs-theme="dark"] .bg-white { background-color: #1E293B !important; color: #F1F5F9 !important; }
+        [data-bs-theme="dark"] .bg-light { background-color: #0F172A !important; border-color: #334155 !important; color: #94A3B8 !important; }
+        [data-bs-theme="dark"] .bg-dark-subtle { background-color: #0F172A !important; color: #F1F5F9 !important; border-color: #334155 !important; }
+        [data-bs-theme="dark"] .bg-primary-subtle { background-color: rgba(59, 130, 246, 0.15) !important; color: #60A5FA !important; border-color: rgba(96, 165, 250, 0.3) !important; }
+        [data-bs-theme="dark"] .bg-secondary-subtle { background-color: rgba(148, 163, 184, 0.15) !important; color: #94A3B8 !important; border-color: rgba(148, 163, 184, 0.3) !important; }
+        [data-bs-theme="dark"] .bg-warning-subtle { background-color: rgba(245, 158, 11, 0.15) !important; color: #FBBF24 !important; border-color: rgba(251, 191, 36, 0.3) !important; }
+        [data-bs-theme="dark"] .bg-danger-subtle { background-color: rgba(239, 68, 68, 0.15) !important; color: #F87171 !important; border-color: rgba(248, 113, 113, 0.3) !important; }
+        [data-bs-theme="dark"] .bg-info-subtle { background-color: rgba(14, 165, 233, 0.15) !important; color: #38BDF8 !important; border-color: rgba(56, 189, 248, 0.3) !important; }
+
+        /* Dark Mode Badges */
+        [data-bs-theme="dark"] .badge-code {
+            background-color: #0F172A !important;
+            color: #93C5FD !important;
+            border: 1px solid #334155 !important;
+        }
+        [data-bs-theme="dark"] .badge-room-code {
+            background-color: #0F172A !important;
+            color: #60A5FA !important;
+            border: 1px solid #1E3A8A !important;
+        }
+        [data-bs-theme="dark"] .badge-category {
+            background-color: #0F172A !important;
+            color: #CBD5E1 !important;
+            border: 1px solid #334155 !important;
+        }
+
+        /* Dark Mode Status Badges */
+        [data-bs-theme="dark"] .badge-status-baik {
+            background-color: rgba(16, 185, 129, 0.15) !important;
+            color: #34D399 !important;
+            border: 1px solid rgba(52, 211, 153, 0.3) !important;
+        }
+        [data-bs-theme="dark"] .badge-status-baik::before {
+            background-color: #34D399;
+        }
+        [data-bs-theme="dark"] .badge-status-ringan {
+            background-color: rgba(245, 158, 11, 0.15) !important;
+            color: #FBBF24 !important;
+            border: 1px solid rgba(251, 191, 36, 0.3) !important;
+        }
+        [data-bs-theme="dark"] .badge-status-ringan::before {
+            background-color: #FBBF24;
+        }
+        [data-bs-theme="dark"] .badge-status-berat {
+            background-color: rgba(239, 68, 68, 0.15) !important;
+            color: #F87171 !important;
+            border: 1px solid rgba(248, 113, 113, 0.3) !important;
+        }
+        [data-bs-theme="dark"] .badge-status-berat::before {
+            background-color: #F87171;
+        }
+
+        /* Dark Mode Stat Card Icons */
+        [data-bs-theme="dark"] .stat-icon.primary { background-color: rgba(59, 130, 246, 0.15) !important; color: #60A5FA !important; border: 1px solid rgba(96, 165, 250, 0.25) !important; }
+        [data-bs-theme="dark"] .stat-icon.success { background-color: rgba(16, 185, 129, 0.15) !important; color: #34D399 !important; border: 1px solid rgba(52, 211, 153, 0.25) !important; }
+        [data-bs-theme="dark"] .stat-icon.warning { background-color: rgba(245, 158, 11, 0.15) !important; color: #FBBF24 !important; border: 1px solid rgba(251, 191, 36, 0.25) !important; }
+        [data-bs-theme="dark"] .stat-icon.danger  { background-color: rgba(239, 68, 68, 0.15) !important; color: #F87171 !important; border: 1px solid rgba(248, 113, 113, 0.25) !important; }
+        [data-bs-theme="dark"] .stat-icon.info    { background-color: rgba(14, 165, 233, 0.15) !important; color: #38BDF8 !important; border: 1px solid rgba(56, 189, 248, 0.25) !important; }
+
+        /* Dark Mode Action Buttons */
+        [data-bs-theme="dark"] .btn-icon-primary {
+            background-color: rgba(59, 130, 246, 0.15) !important;
+            color: #60A5FA !important;
+            border-color: rgba(96, 165, 250, 0.3) !important;
+        }
+        [data-bs-theme="dark"] .btn-icon-primary:hover {
+            background-color: #2563EB !important;
+            color: #FFFFFF !important;
+        }
+        [data-bs-theme="dark"] .btn-icon-info {
+            background-color: rgba(14, 165, 233, 0.15) !important;
+            color: #38BDF8 !important;
+            border-color: rgba(56, 189, 248, 0.3) !important;
+        }
+        [data-bs-theme="dark"] .btn-icon-info:hover {
+            background-color: #0284C7 !important;
+            color: #FFFFFF !important;
+        }
+        [data-bs-theme="dark"] .btn-icon-warning {
+            background-color: rgba(245, 158, 11, 0.15) !important;
+            color: #FBBF24 !important;
+            border-color: rgba(251, 191, 36, 0.3) !important;
+        }
+        [data-bs-theme="dark"] .btn-icon-warning:hover {
+            background-color: #D97706 !important;
+            color: #FFFFFF !important;
+        }
+        [data-bs-theme="dark"] .btn-icon-danger {
+            background-color: rgba(239, 68, 68, 0.15) !important;
+            color: #F87171 !important;
+            border-color: rgba(248, 113, 113, 0.3) !important;
+        }
+        [data-bs-theme="dark"] .btn-icon-danger:hover {
+            background-color: #DC2626 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-bs-theme="dark"] .btn-outline-dark {
+            color: #CBD5E1 !important;
+            border-color: #475569 !important;
+        }
+        [data-bs-theme="dark"] .btn-outline-dark:hover {
+            background-color: #334155 !important;
+            color: #FFFFFF !important;
+            border-color: #64748B !important;
+        }
+
         [data-bs-theme="dark"] .table-modern thead th {
             background-color: #0F172A !important;
             color: #94A3B8 !important;
@@ -561,6 +675,12 @@
 
         [data-bs-theme="dark"] .table-modern tbody tr:hover {
             background-color: #243248 !important;
+        }
+
+        [data-bs-theme="dark"] .input-group-text {
+            background-color: #1E293B !important;
+            border-color: #334155 !important;
+            color: #94A3B8 !important;
         }
 
         [data-bs-theme="dark"] .form-control,
@@ -608,6 +728,10 @@
             color: #FFFFFF;
         }
 
+        [data-bs-theme="dark"] .text-success {
+            color: #34D399 !important;
+        }
+
         [data-bs-theme="dark"] .footer-custom {
             background-color: #0B1329 !important;
             border-top: 1px solid #1E293B !important;
@@ -615,8 +739,9 @@
         }
 
         [data-bs-theme="dark"] .nav-link-custom.active {
-            color: #3B82F6 !important;
-            background-color: #1E293B !important;
+            color: #60A5FA !important;
+            background-color: rgba(59, 130, 246, 0.18) !important;
+            border: 1px solid rgba(96, 165, 250, 0.3) !important;
         }
 
         [data-bs-theme="dark"] ::-webkit-scrollbar-track {
