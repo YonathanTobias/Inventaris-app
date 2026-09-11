@@ -650,12 +650,9 @@
 
     <!-- Footer -->
     <footer class="footer-custom no-print">
-        <div class="container text-center text-md-between d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <div class="container text-center">
             <div>
                 <strong>SPARTA-PW</strong> &bull; Sistem Peminjaman Aset & Ruangan Terpadu &copy; {{ date('Y') }} STIKES Panti Waluya Malang
-            </div>
-            <div class="text-muted small">
-                <i class="fa-solid fa-hospital text-primary me-1"></i> Lab Keperawatan, Kebidanan, & Sarpras
             </div>
         </div>
     </footer>
