@@ -54,6 +54,11 @@ class Peminjaman extends Model
         return $this->belongsTo(User::class, 'petugas_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'petugas_id');
+    }
+
     // Relasi ke Kepala Sarpras / Pejabat yang menyetujui
     public function penyetujui()
     {

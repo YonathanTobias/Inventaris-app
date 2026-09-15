@@ -25,8 +25,10 @@ return new class extends Migration
             $table->timestamp('tanggal_diambil')->nullable()->after('diserahkan_oleh');
         });
 
-        // Modifikasi tipe status peminjaman
-        \DB::statement("ALTER TABLE peminjamans MODIFY COLUMN status ENUM('Menunggu', 'Disetujui', 'Diambil', 'Ditolak', 'Kembali', 'Terlambat') DEFAULT 'Menunggu'");
+        // Modifikasi tipe status peminjaman (khusus MySQL/MariaDB)
+        if (\DB::getDriverName() !== 'sqlite') {
+            \DB::statement("ALTER TABLE peminjamans MODIFY COLUMN status ENUM('Menunggu', 'Disetujui', 'Diambil', 'Ditolak', 'Kembali', 'Terlambat') DEFAULT 'Menunggu'");
+        }
     }
 
     /**
@@ -48,6 +50,8 @@ return new class extends Migration
             ]);
         });
 
-        \DB::statement("ALTER TABLE peminjamans MODIFY COLUMN status ENUM('Dipinjam', 'Kembali', 'Terlambat') DEFAULT 'Dipinjam'");
+        if (\DB::getDriverName() !== 'sqlite') {
+            \DB::statement("ALTER TABLE peminjamans MODIFY COLUMN status ENUM('Dipinjam', 'Kembali', 'Terlambat') DEFAULT 'Dipinjam'");
+        }
     }
 };

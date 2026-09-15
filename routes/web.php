@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     // Manajemen Peminjaman Ruangan (Approval Sarpras, Serah Kunci, & Selesai)
     Route::resource('peminjaman-ruangan', PeminjamanRuanganController::class)->only(['index', 'destroy']);
     Route::post('peminjaman-ruangan/{id}/approve', [PeminjamanRuanganController::class, 'approve'])->name('peminjaman-ruangan.approve');
+    Route::post('peminjaman-ruangan/{id}/setujui', [PeminjamanRuanganController::class, 'approve'])->name('peminjaman-ruangan.setujui');
     Route::post('peminjaman-ruangan/{id}/reject', [PeminjamanRuanganController::class, 'reject'])->name('peminjaman-ruangan.reject');
     Route::post('peminjaman-ruangan/{id}/serahkan', [PeminjamanRuanganController::class, 'serahkan'])->name('peminjaman-ruangan.serahkan');
     Route::post('peminjaman-ruangan/{id}/selesai', [PeminjamanRuanganController::class, 'selesai'])->name('peminjaman-ruangan.selesai');

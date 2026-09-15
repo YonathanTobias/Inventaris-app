@@ -101,7 +101,7 @@ class PeminjamanRuanganPublikController extends Controller
         $tanggal = $request->input('tanggal', date('Y-m-d'));
 
         $bookings = PeminjamanRuangan::where('ruangan_id', $ruanganId)
-            ->where('tanggal_pemakaian', $tanggal)
+            ->whereDate('tanggal_pemakaian', $tanggal)
             ->whereIn('status', ['Menunggu', 'Disetujui', 'Digunakan'])
             ->orderBy('jam_mulai')
             ->get(['jam_mulai', 'jam_selesai', 'nama_peminjam', 'keperluan', 'status']);

@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mutasis', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade');
-        $table->enum('jenis_mutasi', ['Pindah Ruangan', 'Pengurangan/Rusak', 'Penambahan']);
-        $table->foreignId('ruangan_asal_id')->nullable()->constrained('ruangans')->onDelete('set null');
+            $table->id();
+            $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade');
+            $table->string('jenis_mutasi');
+            $table->foreignId('ruangan_asal_id')->nullable()->constrained('ruangans')->onDelete('set null');
         $table->foreignId('ruangan_tujuan_id')->nullable()->constrained('ruangans')->onDelete('set null');
         $table->integer('jumlah');
         $table->text('keterangan')->nullable(); // Alasan pindah / alasan rusak/hilang
