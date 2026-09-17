@@ -14,185 +14,20 @@
     </script>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-square.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5 & FontAwesome 6 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <style>
-        :root {
-            --color-navy: #0F2C59;
-            --primary: #1E3A8A;
-            --primary-hover: #0F2C59;
-            --body-bg: #F1F5F9;
-            --border-color: #E2E8F0;
-            --text-main: #0F172A;
-            --text-muted: #475569;
-        }
-
-        [data-bs-theme="dark"] {
-            --color-navy: #09182E;
-            --primary: #3B82F6;
-            --primary-hover: #60A5FA;
-            --body-bg: #0F172A;
-            --border-color: #334155;
-            --text-main: #F1F5F9;
-            --text-muted: #94A3B8;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--body-bg);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            color: var(--text-main);
-            letter-spacing: -0.01em;
-            -webkit-font-smoothing: antialiased;
-            position: relative;
-        }
-
-        :focus-visible {
-            outline: 2px solid #2563EB !important;
-            outline-offset: 2px !important;
-        }
-
-        .login-card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            width: 100%;
-            max-width: 440px;
-        }
-
-        .brand-header {
-            text-align: center;
-            padding: 2.25rem 2rem 1.25rem;
-            background-color: #FFFFFF;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .form-control {
-            border: 1px solid #CBD5E1;
-            border-radius: 8px;
-            padding: 0.65rem 0.9rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-main);
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .form-control:focus {
-            border-color: #2563EB;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-        }
-
-        .input-group-text {
-            border: 1px solid #CBD5E1;
-            border-radius: 8px;
-            background-color: #F8FAFC;
-            color: #475569;
-        }
-
-        .btn-login {
-            background-color: #1E3A8A;
-            border: 1px solid #0F2C59;
-            color: #ffffff;
-            font-weight: 600;
-            font-size: 0.95rem;
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
-            transition: background-color 0.15s ease;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-login:hover {
-            background-color: #0F2C59;
-            color: #ffffff;
-        }
-
-        /* Dark Theme Overrides */
-        [data-bs-theme="dark"] body {
-            background-color: #0F172A;
-            color: #F1F5F9;
-        }
-
-        [data-bs-theme="dark"] .login-card {
-            background: #1E293B;
-            border-color: #334155;
-        }
-
-        [data-bs-theme="dark"] .brand-header {
-            background-color: #1E293B;
-            border-bottom-color: #334155;
-        }
-
-        [data-bs-theme="dark"] .text-dark {
-            color: #F1F5F9 !important;
-        }
-
-        [data-bs-theme="dark"] .form-control {
-            background-color: #0F172A;
-            border-color: #334155;
-            color: #F1F5F9;
-        }
-
-        [data-bs-theme="dark"] .form-control:focus {
-            background-color: #0F172A;
-            border-color: #3B82F6;
-            color: #F1F5F9;
-        }
-
-        [data-bs-theme="dark"] .input-group-text {
-            background-color: #0F172A !important;
-            border-color: #334155 !important;
-            color: #94A3B8 !important;
-        }
-
-        .theme-toggle-btn-login {
-            position: absolute;
-            top: 1.25rem;
-            right: 1.25rem;
-            background: #FFFFFF;
-            border: 1px solid #CBD5E1;
-            color: #0F172A;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            z-index: 20;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        [data-bs-theme="dark"] .theme-toggle-btn-login {
-            background: #1E293B;
-            border-color: #334155;
-            color: #F59E0B;
-        }
-
-        .theme-toggle-btn-login:hover {
-            transform: scale(1.08);
-        }
-    </style>
+    <!-- Custom Login CSS -->
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 <body>
 
@@ -270,43 +105,6 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function updateLoginThemeUI(theme) {
-            const icon = document.getElementById('themeIconLogin');
-            if (!icon) return;
-            if (theme === 'dark') {
-                icon.className = 'fa-solid fa-sun text-warning';
-            } else {
-                icon.className = 'fa-solid fa-moon text-dark';
-            }
-        }
-
-        function toggleLoginTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('sparta_theme', newTheme);
-            updateLoginThemeUI(newTheme);
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
-            updateLoginThemeUI(currentTheme);
-        });
-
-        function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
-            }
-        }
-    </script>
+    <script src="{{ asset('js/login.js') }}"></script>
 </body>
 </html>

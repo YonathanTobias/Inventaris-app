@@ -13,113 +13,22 @@
         })();
     </script>
 
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-square.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .search-box-card {
-            background: #ffffff;
-            border-radius: 18px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-        }
-
-        .badge-code {
-            background-color: #f1f5f9;
-            color: #1e293b;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            padding: 0.25rem 0.6rem;
-            border-radius: 6px;
-            font-weight: 600;
-            border: 1px solid #cbd5e1;
-            display: inline-block;
-        }
-
-        /* Dark Theme Overrides */
-        [data-bs-theme="dark"] body {
-            background-color: #0F172A;
-            color: #F1F5F9;
-        }
-
-        [data-bs-theme="dark"] nav.navbar {
-            background-color: #0B1329 !important;
-            border-bottom: 1px solid #1E293B !important;
-        }
-
-        [data-bs-theme="dark"] .search-box-card,
-        [data-bs-theme="dark"] .card {
-            background-color: #1E293B !important;
-            border-color: #334155 !important;
-            color: #F1F5F9 !important;
-        }
-
-        [data-bs-theme="dark"] .text-dark {
-            color: #F1F5F9 !important;
-        }
-
-        [data-bs-theme="dark"] .bg-light {
-            background-color: #0F172A !important;
-            border-color: #334155 !important;
-        }
-
-        [data-bs-theme="dark"] .form-control,
-        [data-bs-theme="dark"] .input-group-text {
-            background-color: #0F172A;
-            border-color: #334155;
-            color: #F1F5F9;
-        }
-
-        [data-bs-theme="dark"] .badge-code {
-            background-color: #0F172A;
-            color: #93C5FD;
-            border-color: #1E3A8A;
-        }
-
-        [data-bs-theme="dark"] footer {
-            background-color: #0B1329 !important;
-            border-top: 1px solid #1E293B !important;
-            color: #94A3B8 !important;
-        }
-
-        .theme-toggle-btn-lacak {
-            background: #F1F5F9;
-            border: 1px solid #CBD5E1;
-            color: #0F172A;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        [data-bs-theme="dark"] .theme-toggle-btn-lacak {
-            background: #1E293B;
-            border-color: #334155;
-            color: #F59E0B;
-        }
-    </style>
+    <!-- Custom Lacak CSS -->
+    <link rel="stylesheet" href="{{ asset('css/lacak.css') }}">
 </head>
 <body>
 
@@ -127,7 +36,7 @@
     <nav class="navbar bg-white border-bottom py-2">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2">
-                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 38px;">
+                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 38px; width: auto; object-fit: contain;">
                 <div>
                     <span class="fw-extrabold text-dark small d-block" style="line-height: 1.1;">SPARTA-PW</span>
                     <small class="text-muted" style="font-size: 0.65rem;">STIKES PANTI WALUYA MALANG</small>
@@ -336,38 +245,21 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="mt-auto bg-white border-top py-3 text-center small text-muted">
+    <footer class="footer-portal mt-auto">
         <div class="container">
-            <strong>SPARTA-PW</strong> &copy; {{ date('Y') }} &bull; STIKES Panti Waluya Malang &bull; Sistem Peminjaman Aset & Ruangan Terpadu Akademik
+            <div class="row align-items-center gy-2">
+                <div class="col-md-6 text-center text-md-start">
+                    <span class="footer-brand-text">SPARTA-PW</span> &copy; {{ date('Y') }} &bull; <span class="fw-semibold">STIKES Panti Waluya Malang</span>
+                </div>
+                <div class="col-md-6 text-center text-md-end text-muted small">
+                    <span>Sistem Peminjaman Aset & Ruangan Terpadu Akademik</span>
+                </div>
+            </div>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        function updateLacakThemeUI(theme) {
-            const icon = document.getElementById('themeIconLacak');
-            if (!icon) return;
-            if (theme === 'dark') {
-                icon.className = 'fa-solid fa-sun text-warning';
-            } else {
-                icon.className = 'fa-solid fa-moon text-dark';
-            }
-        }
-
-        function toggleLacakTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('sparta_theme', newTheme);
-            updateLacakThemeUI(newTheme);
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
-            updateLacakThemeUI(currentTheme);
-        });
-    </script>
+    <script src="{{ asset('js/lacak.js') }}"></script>
 </body>
 </html>

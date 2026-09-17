@@ -100,12 +100,18 @@ class PeminjamanRuanganPublikController extends Controller
         $ruanganId = $request->input('ruangan_id');
         $tanggal = $request->input('tanggal', date('Y-m-d'));
 
-        $bookings = PeminjamanRuangan::where('ruangan_id', $ruanganId)
-            ->whereDate('tanggal_pemakaian', $tanggal)
+        $query = PeminjamanRuangan::whereDate('tanggal_pemakaian', $tanggal)
             ->whereIn('status', ['Menunggu', 'Disetujui', 'Digunakan'])
-            ->orderBy('jam_mulai')
-            ->get(['jam_mulai', 'jam_selesai', 'nama_peminjam', 'keperluan', 'status']);
+            ->orderBy('jam_mulai');
 
-        return response()->json($bookings);
+        if ($ruanganId) {
+            $bookings = $query->where('ruangan_id', $ruanganId)
+                ->get(['id', 'ruangan_id', 'jam_mulai', 'jam_selesai', 'nama_peminjam', 'keperluan', 'status']);
+            return response()->json($bookings);
+        }
+
+        // Jika ruangan_id tidak disertakan, kembalikan semua booking pada tanggal tersebut
+        $allBookings = $query->get(['id', 'ruangan_id', 'jam_mulai', 'jam_selesai', 'nama_peminjam', 'keperluan', 'status']);
+        return response()->json($allBookings);
     }
 }

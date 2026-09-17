@@ -130,16 +130,15 @@ class PeminjamanController extends Controller
 
         DB::beginTransaction();
         try {
-            // Potong stok seluruh item di keranjang
+            // Validasi ketersediaan stok fisik seluruh item di keranjang
             if ($peminjaman->details->count() > 0) {
                 foreach ($peminjaman->details as $detail) {
                     if ($detail->barang) {
-                        if ($detail->barang->jumlah < $detail->jumlah) {
-                            throw new \Exception("Stok aset [{$detail->barang->nama_barang}] tidak mencukupi!");
+                        if ($detail->barang->stok_tersedia < $detail->jumlah) {
+                            throw new \Exception("Stok fisik aset [{$detail->barang->nama_barang}] saat ini tidak mencukupi (Tersedia: {$detail->barang->stok_tersedia} unit)!");
                         }
 
-                        $detail->barang->decrement('jumlah', $detail->jumlah);
-
+                        // Catat Riwayat Mutasi Peminjaman (tanpa mengubah total registrasi aset di KIR)
                         Mutasi::create([
                             'barang_id'       => $detail->barang_id,
                             'jenis_mutasi'    => 'Dipinjam',
@@ -150,12 +149,11 @@ class PeminjamanController extends Controller
                     }
                 }
             } elseif ($peminjaman->barang) {
-                if ($peminjaman->barang->jumlah < $peminjaman->jumlah) {
-                    throw new \Exception("Stok aset [{$peminjaman->barang->nama_barang}] tidak mencukupi!");
+                if ($peminjaman->barang->stok_tersedia < $peminjaman->jumlah) {
+                    throw new \Exception("Stok fisik aset [{$peminjaman->barang->nama_barang}] saat ini tidak mencukupi (Tersedia: {$peminjaman->barang->stok_tersedia} unit)!");
                 }
 
-                $peminjaman->barang->decrement('jumlah', $peminjaman->jumlah);
-
+                // Catat Riwayat Mutasi Peminjaman
                 Mutasi::create([
                     'barang_id'       => $peminjaman->barang_id,
                     'jenis_mutasi'    => 'Dipinjam',
@@ -209,11 +207,10 @@ class PeminjamanController extends Controller
                 $ket .= " - Catatan: " . $request->catatan;
             }
 
-            // Kembalikan stok untuk semua item
+            // Catat log mutasi pengembalian
             if ($peminjaman->details->count() > 0) {
                 foreach ($peminjaman->details as $detail) {
                     if ($detail->barang) {
-                        $detail->barang->increment('jumlah', $detail->jumlah);
                         $detail->update(['kondisi_kembali' => $request->kondisi_kembali]);
 
                         Mutasi::create([
@@ -226,8 +223,6 @@ class PeminjamanController extends Controller
                     }
                 }
             } elseif ($peminjaman->barang) {
-                $peminjaman->barang->increment('jumlah', $peminjaman->jumlah);
-
                 Mutasi::create([
                     'barang_id'       => $peminjaman->barang_id,
                     'jenis_mutasi'    => 'Dikembalikan',
@@ -238,7 +233,7 @@ class PeminjamanController extends Controller
             }
 
             DB::commit();
-            return redirect()->back()->with('success', "Seluruh aset dalam peminjaman [{$peminjaman->kode_peminjaman}] berhasil dikembalikan! Stok fisik telah otomatis bertambah kembali ke lab masing-masing.");
+            return redirect()->back()->with('success', "Seluruh aset dalam peminjaman [{$peminjaman->kode_peminjaman}] berhasil dikembalikan! Stok tersedia otomatis pulih kembali.");
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal memproses pengembalian: ' . $e->getMessage());
@@ -248,21 +243,7 @@ class PeminjamanController extends Controller
     // Hapus data transaksi
     public function destroy($id)
     {
-        $peminjaman = Peminjaman::with(['barang', 'details.barang'])->findOrFail($id);
-
-        // Jika barang berstatus sedang diambil, kembalikan stok fisik sebelum dihapus
-        if (in_array($peminjaman->status, ['Diambil', 'Terlambat'])) {
-            if ($peminjaman->details->count() > 0) {
-                foreach ($peminjaman->details as $detail) {
-                    if ($detail->barang) {
-                        $detail->barang->increment('jumlah', $detail->jumlah);
-                    }
-                }
-            } elseif ($peminjaman->barang) {
-                $peminjaman->barang->increment('jumlah', $peminjaman->jumlah);
-            }
-        }
-
+        $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->delete();
 
         return redirect()->back()->with('success', 'Data peminjaman berhasil dihapus!');

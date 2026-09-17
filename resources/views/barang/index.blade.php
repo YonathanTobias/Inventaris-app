@@ -197,9 +197,15 @@
                             <span class="fw-medium text-dark">{{ $b->ruangan->nama_ruangan ?? '-' }}</span>
                         </td>
                         <td class="text-center">
-                            <span class="badge bg-dark-subtle text-dark border px-2.5 py-1.5 fw-bold rounded-pill" style="font-size: 0.85rem;">
+                            <span class="badge bg-dark-subtle text-dark border px-2.5 py-1.5 fw-bold rounded-pill" style="font-size: 0.85rem;" title="Total Aset Terdaftar di KIR: {{ $b->jumlah }} Unit">
                                 {{ number_format($b->jumlah) }} Unit
                             </span>
+                            @if($b->bisa_dipinjam && $b->stok_dipinjam > 0)
+                                <div class="mt-1 d-flex flex-column align-items-center" style="font-size: 0.68rem; line-height: 1.2;">
+                                    <span class="text-success fw-semibold">{{ $b->stok_tersedia }} Tersedia</span>
+                                    <span class="text-primary fw-semibold">{{ $b->stok_dipinjam }} Dipinjam</span>
+                                </div>
+                            @endif
                         </td>
                         <td>
                             @if($b->kondisi == 'Baik')

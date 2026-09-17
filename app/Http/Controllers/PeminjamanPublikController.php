@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\Kategori;
 use App\Models\Peminjaman;
 use App\Models\PeminjamanDetail;
 use App\Models\PeminjamanRuangan;
@@ -24,7 +25,11 @@ class PeminjamanPublikController extends Controller
             ->orderBy('nama_ruangan')
             ->get();
 
-        return view('publik.index', compact('barangs', 'ruangans'));
+        $kategoris = Kategori::whereHas('barangs', function ($query) {
+            $query->where('bisa_dipinjam', true);
+        })->orderBy('nama_kategori')->get();
+
+        return view('publik.index', compact('barangs', 'ruangans', 'kategoris'));
     }
 
     // Pemrosesan Pengajuan Peminjaman Mandiri (Mendukung Multi-Item Keranjang)
@@ -87,8 +92,8 @@ class PeminjamanPublikController extends Controller
                 return redirect()->back()->with('error', "Aset [{$barang->nama_barang}] tidak diizinkan untuk dipinjam.");
             }
 
-            if ($qty > $barang->jumlah) {
-                return redirect()->back()->with('error', "Jumlah pinjam untuk [{$barang->nama_barang}] ({$qty} unit) melebihi stok yang tersedia ({$barang->jumlah} unit)!");
+            if ($qty > $barang->stok_tersedia) {
+                return redirect()->back()->with('error', "Jumlah pinjam untuk [{$barang->nama_barang}] ({$qty} unit) melebihi stok yang tersedia saat ini ({$barang->stok_tersedia} unit)!");
             }
 
             if (!$firstBarangId) {

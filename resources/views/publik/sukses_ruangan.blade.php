@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiket Booking Ruangan [{{ $booking->kode_booking }}] - SPARTA-PW STIKES Panti Waluya</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-stikes.png') }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-square.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,7 +20,7 @@
 
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f8fafc;
             color: #334155;
             min-height: 100vh;
@@ -98,7 +100,7 @@
     <nav class="navbar bg-white border-bottom py-2 no-print">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2">
-                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 38px;">
+                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 38px; width: auto; object-fit: contain;">
                 <div>
                     <span class="fw-extrabold text-dark small d-block" style="line-height: 1.1;">SPARTA-PW</span>
                     <small class="text-muted" style="font-size: 0.65rem;">STIKES PANTI WALUYA MALANG</small>
