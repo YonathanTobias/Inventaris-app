@@ -1,4 +1,4 @@
-﻿/**
+/**
  * SPARTA-PW - Pusat Laporan & Rekapitulasi Controller
  */
 
@@ -14,7 +14,7 @@ function setLaporanTab(tabName) {
 function triggerPrintTab(target) {
     currentPrintTarget = target;
     
-    document.body.classList.remove('printing-kir', 'printing-peminjaman-aset', 'printing-peminjaman-ruangan');
+    document.body.classList.remove('printing-kir', 'printing-peminjaman-aset', 'printing-peminjaman-ruangan', 'printing-mutasi');
     
     if (target === 'kir') {
         document.body.classList.add('printing-kir');
@@ -22,6 +22,8 @@ function triggerPrintTab(target) {
         document.body.classList.add('printing-peminjaman-aset');
     } else if (target === 'peminjaman-ruangan') {
         document.body.classList.add('printing-peminjaman-ruangan');
+    } else if (target === 'mutasi') {
+        document.body.classList.add('printing-mutasi');
     }
 
     setTimeout(function() {
@@ -30,7 +32,7 @@ function triggerPrintTab(target) {
 }
 
 window.addEventListener('afterprint', function() {
-    document.body.classList.remove('printing-kir', 'printing-peminjaman-aset', 'printing-peminjaman-ruangan');
+    document.body.classList.remove('printing-kir', 'printing-peminjaman-aset', 'printing-peminjaman-ruangan', 'printing-mutasi');
 });
 
 // Sinkronisasi Live Preview Tanda Tangan
@@ -108,9 +110,7 @@ function saveSignaturesToDB(e) {
     });
 }
 
-// =========================================================================
-// INTERACTIVE CONTROLLER TABEL KIR: SEARCH, SORT & PAGINATION
-// =========================================================================
+// Interactive controller tabel KIR: search, sort, dan pagination
 let kirData = [];
 let kirFilteredData = [];
 let kirCurrentPage = 1;

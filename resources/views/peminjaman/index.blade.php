@@ -25,7 +25,7 @@
 <div class="row g-3 mb-4">
     <div class="col-xl-2 col-md-4 col-sm-6">
         <a href="{{ route('peminjaman.index') }}" class="text-decoration-none">
-            <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card card-stat-filter h-100 {{ !request('status') ? 'active-stat active-stat-primary' : '' }}">
                 <div class="card-body p-3 text-center">
                     <div class="text-muted small fw-semibold mb-1">Semua Pengajuan</div>
                     <div class="fs-4 fw-bold text-dark">{{ number_format($stats['total']) }}</div>
@@ -35,7 +35,7 @@
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6">
         <a href="{{ route('peminjaman.index', ['status' => 'Menunggu']) }}" class="text-decoration-none">
-            <div class="card stat-card border-0 shadow-sm h-100 {{ request('status') === 'Menunggu' ? 'border-warning border-2' : '' }}">
+            <div class="card card-stat-filter h-100 {{ request('status') === 'Menunggu' ? 'active-stat active-stat-warning' : '' }}">
                 <div class="card-body p-3 text-center">
                     <div class="text-warning small fw-bold mb-1"><i class="fa-solid fa-clock me-1"></i>Menunggu Approval</div>
                     <div class="fs-4 fw-bold text-warning">{{ number_format($stats['menunggu']) }}</div>
@@ -45,7 +45,7 @@
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6">
         <a href="{{ route('peminjaman.index', ['status' => 'Disetujui']) }}" class="text-decoration-none">
-            <div class="card stat-card border-0 shadow-sm h-100 {{ request('status') === 'Disetujui' ? 'border-primary border-2' : '' }}">
+            <div class="card card-stat-filter h-100 {{ request('status') === 'Disetujui' ? 'active-stat active-stat-primary' : '' }}">
                 <div class="card-body p-3 text-center">
                     <div class="text-primary small fw-bold mb-1"><i class="fa-solid fa-circle-check me-1"></i>Siap Diambil</div>
                     <div class="fs-4 fw-bold text-primary">{{ number_format($stats['disetujui']) }}</div>
@@ -55,7 +55,7 @@
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6">
         <a href="{{ route('peminjaman.index', ['status' => 'Diambil']) }}" class="text-decoration-none">
-            <div class="card stat-card border-0 shadow-sm h-100 {{ request('status') === 'Diambil' ? 'border-info border-2' : '' }}">
+            <div class="card card-stat-filter h-100 {{ request('status') === 'Diambil' ? 'active-stat active-stat-info' : '' }}">
                 <div class="card-body p-3 text-center">
                     <div class="text-info small fw-bold mb-1"><i class="fa-solid fa-box-open me-1"></i>Sudah Diambil</div>
                     <div class="fs-4 fw-bold text-info">{{ number_format($stats['diambil']) }}</div>
@@ -65,7 +65,7 @@
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6">
         <a href="{{ route('peminjaman.index', ['status' => 'Kembali']) }}" class="text-decoration-none">
-            <div class="card stat-card border-0 shadow-sm h-100 {{ request('status') === 'Kembali' ? 'border-success border-2' : '' }}">
+            <div class="card card-stat-filter h-100 {{ request('status') === 'Kembali' ? 'active-stat active-stat-success' : '' }}">
                 <div class="card-body p-3 text-center">
                     <div class="text-success small fw-bold mb-1"><i class="fa-solid fa-check-double me-1"></i>Sudah Kembali</div>
                     <div class="fs-4 fw-bold text-success">{{ number_format($stats['kembali'] ?? 0) }}</div>
@@ -75,7 +75,7 @@
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6">
         <a href="{{ route('peminjaman.index', ['status' => 'Ditolak']) }}" class="text-decoration-none">
-            <div class="card stat-card border-0 shadow-sm h-100 {{ request('status') === 'Ditolak' ? 'border-danger border-2' : '' }}">
+            <div class="card card-stat-filter h-100 {{ request('status') === 'Ditolak' ? 'active-stat active-stat-danger' : '' }}">
                 <div class="card-body p-3 text-center">
                     <div class="text-danger small fw-bold mb-1"><i class="fa-solid fa-ban me-1"></i>Ditolak</div>
                     <div class="fs-4 fw-bold text-danger">{{ number_format($stats['ditolak'] ?? 0) }}</div>
@@ -130,15 +130,15 @@
     </div>
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
-            <thead class="bg-light text-muted small text-uppercase">
+            <thead class="table-light text-muted small text-uppercase">
                 <tr>
-                    <th class="ps-4" style="width: 40px;">No</th>
-                    <th>Peminjam & Identitas</th>
-                    <th>Aset Dipinjam</th>
-                    <th class="text-center">Jumlah</th>
-                    <th>Tenggat Kembali</th>
-                    <th>Status Peminjaman</th>
-                    <th class="text-center pe-4" style="width: 220px;">Tindakan & Aksi</th>
+                    <th class="ps-4" style="width: 48px;">No</th>
+                    <th style="min-width: 250px;">Peminjam & Identitas</th>
+                    <th style="min-width: 240px;">Aset Dipinjam</th>
+                    <th class="text-center" style="width: 95px;">Jumlah</th>
+                    <th style="min-width: 190px;">Jadwal / Tenggat</th>
+                    <th class="text-center" style="min-width: 140px;">Status</th>
+                    <th class="text-center pe-4" style="width: 180px; min-width: 170px;">Tindakan & Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -146,77 +146,91 @@
                 <tr>
                     <td class="ps-4 fw-semibold text-muted">{{ $index + 1 }}</td>
                     <td>
-                        <div class="d-flex align-items-center gap-1.5">
-                            <span class="badge bg-secondary-subtle text-secondary border px-2 py-0.5" style="font-size: 0.7rem;">{{ $p->kategori_peminjam ?? 'Mahasiswa' }}</span>
-                            <span class="fw-bold text-dark">{{ $p->nama_peminjam }}</span>
-                        </div>
-                        <div class="text-muted small font-monospace mt-0.5">
-                            {{ $p->nomor_identitas }}
-                            @if($p->prodi_unit)
-                                &bull; <span class="text-secondary">{{ $p->prodi_unit }}</span>
-                            @endif
-                        </div>
-                        @if($p->kontak_peminjam)
-                            <div class="text-muted small" style="font-size: 0.75rem;">
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $p->kontak_peminjam) }}" target="_blank" class="text-success text-decoration-none">
-                                    {{ $p->kontak_peminjam }}
-                                </a>
+                        <div class="d-flex align-items-center gap-2.5">
+                            <div class="avatar-initial rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                {{ strtoupper(substr($p->nama_peminjam, 0, 1)) }}
                             </div>
-                        @endif
-                        <div class="mt-1">
-                            <span class="badge bg-light text-dark border font-monospace" style="font-size: 0.68rem;">{{ $p->kode_peminjaman }}</span>
+                            <div>
+                                <div class="fw-bold text-dark" style="font-size: 0.92rem; line-height: 1.2;">{{ $p->nama_peminjam }}</div>
+                                <div class="d-flex align-items-center gap-1.5 mt-1 flex-wrap">
+                                    <span class="badge bg-secondary-subtle text-secondary border px-2 py-0.5 rounded-pill" style="font-size: 0.68rem;">
+                                        {{ $p->kategori_peminjam ?? 'Mahasiswa' }}
+                                    </span>
+                                    <span class="text-muted small font-monospace">
+                                        {{ $p->nomor_identitas }}
+                                        @if($p->prodi_unit)
+                                            &bull; <span class="text-secondary fw-semibold">{{ $p->prodi_unit }}</span>
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
+                                    @if($p->kontak_peminjam)
+                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $p->kontak_peminjam) }}" target="_blank" class="badge bg-success-subtle text-success border border-success-subtle text-decoration-none px-2 py-0.5 rounded-pill" style="font-size: 0.72rem;">
+                                            <i class="fa-brands fa-whatsapp me-1"></i>{{ $p->kontak_peminjam }}
+                                        </a>
+                                    @endif
+                                    <span class="badge bg-light text-muted border font-monospace px-2 py-0.5 rounded" style="font-size: 0.68rem;">
+                                        <i class="fa-solid fa-ticket me-1"></i>{{ $p->kode_peminjaman }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </td>
                     <td>
                         @if($p->details && $p->details->count() > 1)
                             <div class="fw-bold text-dark">{{ $p->details->first()->barang->nama_barang ?? '-' }}</div>
-                            <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#modalRincianAset{{ $p->id }}" style="font-size: 0.75rem;">
-                                + {{ $p->details->count() - 1 }} Aset Lainnya (Lihat Paket)
-                            </button>
+                            <div class="mt-1">
+                                <button type="button" class="btn btn-sm btn-outline-primary py-0.5 px-2 rounded-pill fw-semibold" data-bs-toggle="modal" data-bs-target="#modalRincianAset{{ $p->id }}" style="font-size: 0.75rem;">
+                                    <i class="fa-solid fa-layer-group me-1"></i>+{{ $p->details->count() - 1 }} Aset Lainnya (Paket)
+                                </button>
+                            </div>
                         @elseif($p->details && $p->details->count() === 1)
                             <div class="fw-bold text-dark">{{ $p->details->first()->barang->nama_barang ?? '-' }}</div>
-                            <div class="d-flex align-items-center gap-1 mt-0.5">
-                                <span class="badge-code py-0">{{ $p->details->first()->barang->kode_barang ?? '-' }}</span>
-                                <span class="text-muted small">({{ $p->details->first()->barang->ruangan->nama_ruangan ?? '-' }})</span>
+                            <div class="d-flex align-items-center gap-1.5 mt-1 flex-wrap">
+                                <span class="badge-code py-0.5 px-1.5">{{ $p->details->first()->barang->kode_barang ?? '-' }}</span>
+                                <span class="text-muted small"><i class="fa-solid fa-door-open me-1"></i>{{ $p->details->first()->barang->ruangan->nama_ruangan ?? '-' }}</span>
                             </div>
                         @else
                             <div class="fw-bold text-dark">{{ $p->barang->nama_barang ?? 'Aset Telah Dihapus' }}</div>
-                            <div class="d-flex align-items-center gap-1 mt-0.5">
-                                <span class="badge-code py-0">{{ $p->barang->kode_barang ?? '-' }}</span>
-                                <span class="text-muted small">({{ $p->barang->ruangan->nama_ruangan ?? '-' }})</span>
+                            <div class="d-flex align-items-center gap-1.5 mt-1 flex-wrap">
+                                <span class="badge-code py-0.5 px-1.5">{{ $p->barang->kode_barang ?? '-' }}</span>
+                                <span class="text-muted small"><i class="fa-solid fa-door-open me-1"></i>{{ $p->barang->ruangan->nama_ruangan ?? '-' }}</span>
                             </div>
                         @endif
                         @if($p->keperluan)
-                            <div class="text-muted small text-truncate mt-1" style="max-width: 250px; font-size: 0.72rem;" title="{{ $p->keperluan }}">
-                                {{ $p->keperluan }}
+                            <div class="text-muted small mt-1.5 text-truncate" style="max-width: 240px; font-size: 0.75rem;" title="{{ $p->keperluan }}">
+                                <i class="fa-solid fa-quote-left text-muted me-1" style="font-size: 0.65rem;"></i>{{ $p->keperluan }}
                             </div>
                         @endif
                     </td>
                     <td class="text-center">
-                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fw-bold rounded-pill">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 fw-bold rounded-pill" style="font-size: 0.78rem;">
                             {{ $p->jumlah }} Unit
                         </span>
                     </td>
                     <td>
-                        <div class="small">
-                            <span class="text-muted">Pinjam:</span> {{ \Carbon\Carbon::parse($p->tanggal_pinjam)->locale('id')->translatedFormat('d M Y') }}
-                        </div>
-                        <div class="small">
-                            <span class="text-muted">Tenggat:</span> 
-                            <strong class="{{ in_array($p->status, ['Diambil', 'Terlambat']) && $p->tenggat_kembali < now()->toDateString() ? 'text-danger' : 'text-dark' }}">
-                                {{ \Carbon\Carbon::parse($p->tenggat_kembali)->locale('id')->translatedFormat('d M Y') }}
-                            </strong>
-                        </div>
-                        @if($p->tanggal_diambil)
-                            <div class="small text-info mt-1" style="font-size: 0.72rem;">
-                                <i class="fa-solid fa-box-open me-1"></i>Diambil: {{ $p->tanggal_diambil->locale('id')->translatedFormat('d M, H:i') }}
+                        <div class="d-flex flex-column gap-1">
+                            <div class="small d-flex align-items-center gap-1">
+                                <span class="text-muted" style="min-width: 52px;">Pinjam:</span>
+                                <span class="fw-semibold text-dark">{{ \Carbon\Carbon::parse($p->tanggal_pinjam)->locale('id')->translatedFormat('d M Y') }}</span>
                             </div>
-                        @endif
-                        @if($p->tanggal_kembali)
-                            <div class="small text-success mt-1" style="font-size: 0.72rem;">
-                                <i class="fa-solid fa-check-double me-1"></i>Kembali: {{ \Carbon\Carbon::parse($p->tanggal_kembali)->locale('id')->translatedFormat('d M Y') }}
+                            <div class="small d-flex align-items-center gap-1">
+                                <span class="text-muted" style="min-width: 52px;">Tenggat:</span>
+                                <strong class="{{ in_array($p->status, ['Diambil', 'Terlambat']) && $p->tenggat_kembali < now()->toDateString() ? 'text-danger' : 'text-dark' }}">
+                                    {{ \Carbon\Carbon::parse($p->tenggat_kembali)->locale('id')->translatedFormat('d M Y') }}
+                                </strong>
                             </div>
-                        @endif
+                            @if($p->tanggal_diambil)
+                                <div class="small text-info mt-0.5" style="font-size: 0.72rem;">
+                                    <i class="fa-solid fa-box-open me-1"></i>Diambil: {{ $p->tanggal_diambil->locale('id')->translatedFormat('d M, H:i') }}
+                                </div>
+                            @endif
+                            @if($p->tanggal_kembali)
+                                <div class="small text-success mt-0.5" style="font-size: 0.72rem;">
+                                    <i class="fa-solid fa-check-double me-1"></i>Kembali: {{ \Carbon\Carbon::parse($p->tanggal_kembali)->locale('id')->translatedFormat('d M Y') }}
+                                </div>
+                            @endif
+                        </div>
                     </td>
                     <td class="text-center">
                         @if($p->status === 'Menunggu')
@@ -236,14 +250,14 @@
                                 <i class="fa-solid fa-check-double me-1"></i>Kembali
                             </span>
                             @if($p->kondisi_kembali)
-                                <div class="small text-muted mt-0.5" style="font-size: 0.72rem;">Kondisi: <strong>{{ $p->kondisi_kembali }}</strong></div>
+                                <div class="small text-muted mt-1" style="font-size: 0.72rem;">Kondisi: <strong>{{ $p->kondisi_kembali }}</strong></div>
                             @endif
                         @elseif($p->status === 'Ditolak')
                             <span class="badge bg-danger text-white border border-danger px-2.5 py-1.5 rounded-pill text-nowrap">
                                 <i class="fa-solid fa-ban me-1"></i>Ditolak
                             </span>
                             @if($p->alasan_penolakan)
-                                <div class="small text-danger mt-0.5" style="font-size: 0.72rem;">Alasan: {{ $p->alasan_penolakan }}</div>
+                                <div class="small text-danger mt-1 text-truncate" style="font-size: 0.72rem; max-width: 130px;" title="{{ $p->alasan_penolakan }}">Alasan: {{ $p->alasan_penolakan }}</div>
                             @endif
                         @else
                             <span class="badge bg-danger text-white border border-danger px-2.5 py-1.5 rounded-pill text-nowrap">

@@ -11,6 +11,7 @@ class Kategori extends Model
 
     protected $fillable = [
         'nama_kategori',
+        'kode_kategori',
     ];
 
     // Relasi: Satu kategori bisa dimiliki oleh banyak barang

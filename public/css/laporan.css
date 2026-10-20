@@ -1,6 +1,4 @@
-﻿/* ========================================================================= */
-/* PUSAT LAPORAN & REKAPITULASI SARPRAS CSS                                  */
-/* ========================================================================= */
+/* Pusat Laporan dan Rekapitulasi Sarpras Stylesheet */
 
 .card-stat-modern {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -95,7 +93,7 @@
 @media print {
     @page {
         size: A4 portrait;
-        margin: 10mm 12mm;
+        margin: 8mm 10mm;
     }
     .page-web-header, .navbar-custom, .no-print, .d-print-none, .card-stat, form, .modal, .footer-custom, .alert, .nav-pills, .card {
         display: none !important;
@@ -121,16 +119,34 @@
         color: #000000 !important;
         background: #ffffff !important;
     }
+    body.printing-mutasi #printDocMutasi {
+        display: block !important;
+        width: 100%;
+        color: #000000 !important;
+        background: #ffffff !important;
+    }
     .table-kir-print {
         width: 100%;
         border-collapse: collapse;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 8.5pt;
-        margin-bottom: 15px;
+        font-size: 8pt;
+        line-height: 1.25;
+        margin-bottom: 12px;
+    }
+    .table-kir-print thead {
+        display: table-header-group;
+    }
+    .table-kir-print tbody {
+        display: table-row-group;
+    }
+    .table-kir-print tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
     }
     .table-kir-print th, .table-kir-print td {
         border: 1px solid #000000;
-        padding: 5px 6px;
+        padding: 3.5px 5px;
+        vertical-align: middle;
     }
     .table-kir-print th {
         background-color: #f0f0f0 !important;
@@ -138,9 +154,12 @@
         print-color-adjust: exact;
         font-weight: bold;
         text-align: center;
+        font-size: 8pt;
+        letter-spacing: 0.02em;
     }
     .kir-ttd-container {
         page-break-inside: avoid;
-        margin-top: 20px;
+        break-inside: avoid;
+        margin-top: 14px;
     }
 }

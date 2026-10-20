@@ -49,8 +49,9 @@ class BarangController extends Controller
         $allBarangs = Barang::with('ruangan')->where('jumlah', '>', 0)->orderBy('nama_barang')->get();
 
         $nextAssetCodes = [];
+        $firstKategori = $kategoris->first();
         foreach ($ruangans as $r) {
-            $nextAssetCodes[$r->id] = self::generateKodeBarangBaru($r);
+            $nextAssetCodes[$r->id] = self::generateKodeBarangBaru($r, $firstKategori);
         }
 
         return view('barang.index', compact('barangs', 'ruangans', 'kategoris', 'stats', 'allBarangs', 'nextAssetCodes'));
@@ -61,8 +62,9 @@ class BarangController extends Controller
         // Otomatis generate kode aset jika tidak diisi manual oleh user
         if (!$request->filled('kode_barang') && $request->filled('ruangan_id')) {
             $ruangan = Ruangan::find($request->ruangan_id);
+            $kategori = Kategori::find($request->kategori_id);
             if ($ruangan) {
-                $request->merge(['kode_barang' => self::generateKodeBarangBaru($ruangan)]);
+                $request->merge(['kode_barang' => self::generateKodeBarangBaru($ruangan, $kategori, $request->tahun_pengadaan)]);
             }
         }
 
@@ -120,7 +122,7 @@ class BarangController extends Controller
             'keterangan'        => 'nullable|string|max:500',
         ]);
 
-        $barangAsal = Barang::with('ruangan')->findOrFail($targetId);
+        $barangAsal = Barang::with(['ruangan', 'kategori'])->findOrFail($targetId);
 
         if ($request->jumlah > $barangAsal->jumlah) {
             return redirect()->back()->with('error', "Jumlah pemindahan ({$request->jumlah}) melebihi stok yang ada ({$barangAsal->jumlah})!");
@@ -134,15 +136,15 @@ class BarangController extends Controller
         $ruanganAsalNama = $barangAsal->ruangan->nama_ruangan ?? 'Ruangan Asal';
         $ruanganTujuan = Ruangan::findOrFail($request->ruangan_tujuan_id);
 
-        // Buat Kode Aset Baru yang otomatis menyesuaikan dengan kode Ruangan Tujuan
+        // Buat Kode Aset Baru yang otomatis menyesuaikan dengan format INV-[Ruang]-[Kat]-[YY]-[No]
         $kodeBaru = $request->filled('kode_baru') 
             ? trim($request->kode_baru) 
-            : $this->generateKodeBarangBaru($ruanganTujuan);
+            : $this->generateKodeBarangBaru($ruanganTujuan, $barangAsal->kategori, $barangAsal->tahun_pengadaan);
 
         // Pastikan kode baru tidak tabrakan dengan aset lain di database
         $cekBentrok = Barang::where('kode_barang', $kodeBaru)->where('id', '!=', $barangAsal->id)->exists();
         if ($cekBentrok) {
-            $kodeBaru = $this->generateKodeBarangBaru($ruanganTujuan);
+            $kodeBaru = $this->generateKodeBarangBaru($ruanganTujuan, $barangAsal->kategori, $barangAsal->tahun_pengadaan);
         }
 
         $oldKode = $barangAsal->kode_barang;
@@ -200,23 +202,46 @@ class BarangController extends Controller
         }
     }
 
-    // Helper: Generate Kode Aset Unik Otomatis Berdasarkan Ruangan Tujuan
-    public static function generateKodeBarangBaru(Ruangan $ruangan)
+    // Helper: Generate Kode Aset Unik Otomatis Format: INV-[KodeRuang]-[Kategori]-[YY]-[001]
+    public static function generateKodeBarangBaru(Ruangan $ruangan, ?Kategori $kategori = null, $tahun = null)
     {
-        $parts = explode('-', $ruangan->kode_ruangan);
-        $seg = '';
-        if (count($parts) >= 2) {
-            if (in_array(strtoupper($parts[0]), ['LAB', 'R', 'RK', 'RUANG'])) {
-                $seg = strtoupper(substr($parts[1], 0, 4));
-            } else {
-                $seg = strtoupper(substr($parts[0], 0, 4));
-            }
-        } else {
-            $seg = strtoupper(substr($ruangan->kode_ruangan, 0, 3));
+        // 1. Kode Ruangan (clean uppercase alphanumeric, misal R-IT -> RIT, RK-2A -> RK2A)
+        $cleanRuangan = strtoupper(preg_replace('/[^A-Z0-9]/', '', $ruangan->kode_ruangan));
+        if (empty($cleanRuangan)) {
+            $cleanRuangan = strtoupper(substr(preg_replace('/[^A-Z0-9]/', '', $ruangan->nama_ruangan), 0, 4)) ?: 'RNG';
         }
 
-        $prefix = "AST-PW-{$seg}";
+        // 2. Kode Kategori (gunakan $kategori->kode_kategori jika ada, atau deteksi otomatis)
+        $katCode = 'UMM';
+        if ($kategori) {
+            if (!empty($kategori->kode_kategori)) {
+                $katCode = strtoupper(preg_replace('/[^A-Z0-9]/', '', $kategori->kode_kategori)) ?: 'UMM';
+            } else {
+                $namaKat = strtoupper($kategori->nama_kategori);
+                if (str_contains($namaKat, 'ELEKTRONIK') || str_contains($namaKat, 'KOMPUTER') || str_contains($namaKat, 'IT') || str_contains($namaKat, 'MULTIMEDIA')) {
+                    $katCode = 'ELK';
+                } elseif (str_contains($namaKat, 'MEBEL') || str_contains($namaKat, 'FURNITUR') || str_contains($namaKat, 'FURNITURE')) {
+                    $katCode = 'MBL';
+                } elseif (str_contains($namaKat, 'MEDIS') || str_contains($namaKat, 'KESEHATAN') || str_contains($namaKat, 'ALKES')) {
+                    $katCode = 'MED';
+                } elseif (str_contains($namaKat, 'KANTOR') || str_contains($namaKat, 'ATK')) {
+                    $katCode = 'ATK';
+                } elseif (str_contains($namaKat, 'LAB') || str_contains($namaKat, 'PRAKTIKUM')) {
+                    $katCode = 'LAB';
+                } else {
+                    $cleanKat = preg_replace('/[^A-Z0-9]/', '', $namaKat);
+                    $katCode = substr($cleanKat, 0, 3) ?: 'UMM';
+                }
+            }
+        }
 
+        // 3. Tahun Pengadaan (2 Digit)
+        $yr = $tahun ? substr((string)$tahun, -2) : date('y');
+
+        // 4. Prefix Kode
+        $prefix = "INV-{$cleanRuangan}-{$katCode}-{$yr}";
+
+        // Cari nomor urut terbesar untuk prefix ini
         $lastBarangs = Barang::where('kode_barang', 'like', "{$prefix}-%")->get();
         $maxNum = 0;
         foreach ($lastBarangs as $lb) {

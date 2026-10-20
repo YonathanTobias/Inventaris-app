@@ -509,7 +509,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Lokasi / Ruangan <span class="text-danger">*</span></label>
-                            <select name="ruangan_id" id="selectRuanganTambah" class="form-select" required onchange="handleRuanganTambahChange(this)">
+                            <select name="ruangan_id" id="selectRuanganTambah" class="form-select" required onchange="handleRuanganTambahChange()">
                                 <option value="">-- Pilih Ruangan --</option>
                                 @foreach($ruangans as $r)
                                     <option value="{{ $r->id }}" data-kode-ruangan="{{ $r->kode_ruangan }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
@@ -525,21 +525,21 @@
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="fa-solid fa-barcode"></i></span>
-                                <input type="text" id="inputKodeBarangTambah" name="kode_barang" class="form-control font-monospace" placeholder="Otomatis mengikuti ruangan (atau ketik manual)">
+                                <input type="text" id="inputKodeBarangTambah" name="kode_barang" class="form-control font-monospace" placeholder="Otomatis: INV-[Ruang]-[Kat]-[YY]-[No]">
                                 <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangTambah()" title="Generate Otomatis">
                                     <i class="fa-solid fa-bolt text-warning"></i> Auto
                                 </button>
                             </div>
                             <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
-                                <i class="fa-solid fa-circle-check text-success me-1"></i>Kode otomatis terisi saat memilih ruangan (bisa diedit jika perlu).
+                                <i class="fa-solid fa-circle-check text-success me-1"></i>Format: <code class="fw-bold">INV-[Ruang]-[Kat]-[YY]-[No]</code> (bisa diedit manual).
                             </small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Kategori <span class="text-danger">*</span></label>
-                            <select name="kategori_id" class="form-select" required>
+                            <select name="kategori_id" id="selectKategoriTambah" class="form-select" required onchange="handleRuanganTambahChange()">
                                 <option value="">-- Pilih Kategori --</option>
                                 @foreach($kategoris as $k)
-                                    <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                                    <option value="{{ $k->id }}" data-kode-kategori="{{ $k->kode_kategori }}">{{ $k->nama_kategori }} ({{ $k->kode_kategori }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -557,7 +557,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Tahun Pengadaan</label>
-                            <input type="text" name="tahun_pengadaan" class="form-control" placeholder="Contoh: 2024" value="{{ date('Y') }}">
+                            <input type="text" name="tahun_pengadaan" id="inputTahunTambah" class="form-control" placeholder="Contoh: 2024" value="{{ date('Y') }}" oninput="handleRuanganTambahChange()">
                         </div>
                         <div class="col-12">
                             <label class="form-label">Keterangan / Spesifikasi (Opsional)</label>
@@ -808,32 +808,64 @@
         }
     }
 
-    // Auto-Generate Kode Aset pada Modal Tambah Barang
-    const nextAssetCodesMap = @json($nextAssetCodes ?? []);
+    // Auto-Generate Kode Aset Format: INV-[KodeRuang]-[Kategori]-[YY]-[001]
     let manualKodeBarangEdited = false;
 
     document.getElementById('inputKodeBarangTambah')?.addEventListener('input', function() {
         manualKodeBarangEdited = this.value.trim().length > 0;
     });
 
-    function handleRuanganTambahChange(selectEl) {
-        let rId = selectEl.value;
+    function computeAssetCodeClient(ruanganKode, kategoriNama, tahun, kategoriKodeExplicit) {
+        let cleanRuang = (ruanganKode || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase() || 'RNG';
+        
+        let katCode = (kategoriKodeExplicit || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+        if (!katCode) {
+            let namaKat = (kategoriNama || '').toUpperCase();
+            if (namaKat.includes('ELEKTRONIK') || namaKat.includes('KOMPUTER') || namaKat.includes('IT') || namaKat.includes('MULTIMEDIA')) {
+                katCode = 'ELK';
+            } else if (namaKat.includes('MEBEL') || namaKat.includes('FURNITUR') || namaKat.includes('FURNITURE')) {
+                katCode = 'MBL';
+            } else if (namaKat.includes('MEDIS') || namaKat.includes('KESEHATAN') || namaKat.includes('ALKES')) {
+                katCode = 'MED';
+            } else if (namaKat.includes('KANTOR') || namaKat.includes('ATK')) {
+                katCode = 'ATK';
+            } else if (namaKat.includes('LAB') || namaKat.includes('PRAKTIKUM')) {
+                katCode = 'LAB';
+            } else {
+                let clean = namaKat.replace(/[^A-Za-z0-9]/g, '');
+                katCode = (clean.substring(0, 3) || 'UMM').toUpperCase();
+            }
+        }
+
+        let yr = (tahun || '').trim();
+        yr = yr.length >= 2 ? yr.substring(yr.length - 2) : String(new Date().getFullYear()).substring(2);
+
+        return `INV-${cleanRuang}-${katCode}-${yr}-001`;
+    }
+
+    function handleRuanganTambahChange() {
+        let selectRuangan = document.getElementById('selectRuanganTambah');
+        let selectKat = document.getElementById('selectKategoriTambah');
+        let inputTahun = document.getElementById('inputTahunTambah');
         let inputKode = document.getElementById('inputKodeBarangTambah');
-        if (rId && nextAssetCodesMap[rId] && !manualKodeBarangEdited) {
-            inputKode.value = nextAssetCodesMap[rId];
+
+        if (!selectRuangan || !inputKode) return;
+
+        let optRuangan = selectRuangan.options[selectRuangan.selectedIndex];
+        let optKat = selectKat ? selectKat.options[selectKat.selectedIndex] : null;
+
+        if (optRuangan && optRuangan.value && !manualKodeBarangEdited) {
+            let rKode = optRuangan.getAttribute('data-kode-ruangan') || '';
+            let kNama = optKat && optKat.value ? optKat.text : '';
+            let kKode = optKat && optKat.value ? optKat.getAttribute('data-kode-kategori') : '';
+            let yr = inputTahun ? inputTahun.value : '';
+            inputKode.value = computeAssetCodeClient(rKode, kNama, yr, kKode);
         }
     }
 
     function triggerAutoKodeBarangTambah() {
         manualKodeBarangEdited = false;
-        let selectRuangan = document.getElementById('selectRuanganTambah');
-        let rId = selectRuangan.value;
-        let inputKode = document.getElementById('inputKodeBarangTambah');
-        if (rId && nextAssetCodesMap[rId]) {
-            inputKode.value = nextAssetCodesMap[rId];
-        } else if (!rId) {
-            alert('Silakan pilih lokasi / ruangan terlebih dahulu untuk membuat kode aset otomatis.');
-        }
+        handleRuanganTambahChange();
     }
 </script>
 @endsection

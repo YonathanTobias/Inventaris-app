@@ -102,9 +102,7 @@
             position: relative;
         }
 
-        /* ----------------------------------------------------
-           LAYOUT 1: QR CODE SIDE-BY-SIDE (MODERN)
-           ---------------------------------------------------- */
+        /* Tata letak stiker QR code berdampingan */
         .sticker-qr-layout {
             display: flex;
             align-items: center;
@@ -205,9 +203,7 @@
             padding-top: 0.3mm;
         }
 
-        /* ----------------------------------------------------
-           LAYOUT 2: BARCODE 1D TOP-TO-BOTTOM (CLASSIC)
-           ---------------------------------------------------- */
+        /* Tata letak stiker barcode 1D bertingkat */
         .sticker-barcode-layout {
             display: flex;
             flex-direction: column;

@@ -37,9 +37,9 @@
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
+        <div class="container-fluid px-lg-4 px-3">
             <a class="navbar-brand" href="{{ route('barang.index') }}">
-                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 40px; width: auto; object-fit: contain;" class="me-1">
+                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 38px; width: auto; object-fit: contain;" class="me-1">
                 <div>
                     <span class="d-block text-white" style="line-height: 1.1; font-weight: 800; letter-spacing: -0.02em;">SPARTA-PW</span>
                     <small style="font-size: 0.65rem; color: #CBD5E1; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">STIKES Panti Waluya Malang</small>
@@ -57,46 +57,85 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <!-- 1. Data Aset -->
                     <li class="nav-item">
                         <a class="nav-link-custom {{ request()->routeIs('barang.*') ? 'active' : '' }}" href="{{ route('barang.index') }}">
                             <i class="fa-solid fa-box-archive"></i>
                             <span>Data Aset</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom {{ request()->routeIs('peminjaman.*') ? 'active' : '' }}" href="{{ route('peminjaman.index') }}">
+
+                    <!-- 2. Peminjaman Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle {{ (request()->routeIs('peminjaman.*') || request()->routeIs('peminjaman-ruangan.*')) ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa-solid fa-hand-holding-hand"></i>
-                            <span>Pinjam Aset</span>
-                            @if(isset($pendingAsetCount) && $pendingAsetCount > 0)
-                                <span class="badge-pending-counter" title="{{ $pendingAsetCount }} pengajuan aset menunggu persetujuan">
-                                    {{ $pendingAsetCount > 99 ? '99+' : $pendingAsetCount }}
+                            <span>Peminjaman</span>
+                            @php
+                                $totalPending = ($pendingAsetCount ?? 0) + ($pendingRuanganCount ?? 0);
+                            @endphp
+                            @if($totalPending > 0)
+                                <span class="badge-pending-counter" title="{{ $totalPending }} pengajuan menunggu persetujuan">
+                                    {{ $totalPending > 99 ? '99+' : $totalPending }}
                                 </span>
                             @endif
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-custom shadow border-0 rounded-3 mt-2 p-2">
+                            <li>
+                                <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('peminjaman.*') ? 'active' : '' }}" href="{{ route('peminjaman.index') }}">
+                                    <div class="d-flex align-items-center justify-content-between w-100">
+                                        <span class="d-flex align-items-center gap-2">
+                                            <i class="fa-solid fa-boxes-stacked text-primary"></i>
+                                            <span>Peminjaman Aset</span>
+                                        </span>
+                                        @if(isset($pendingAsetCount) && $pendingAsetCount > 0)
+                                            <span class="badge bg-danger rounded-pill px-2 py-0.5 ms-2 font-monospace" style="font-size: 0.68rem;">
+                                                {{ $pendingAsetCount > 99 ? '99+' : $pendingAsetCount }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('peminjaman-ruangan.*') ? 'active' : '' }}" href="{{ route('peminjaman-ruangan.index') }}">
+                                    <div class="d-flex align-items-center justify-content-between w-100">
+                                        <span class="d-flex align-items-center gap-2">
+                                            <i class="fa-solid fa-calendar-check text-primary"></i>
+                                            <span>Peminjaman Ruangan</span>
+                                        </span>
+                                        @if(isset($pendingRuanganCount) && $pendingRuanganCount > 0)
+                                            <span class="badge bg-danger rounded-pill px-2 py-0.5 ms-2 font-monospace" style="font-size: 0.68rem;">
+                                                {{ $pendingRuanganCount > 99 ? '99+' : $pendingRuanganCount }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom {{ request()->routeIs('peminjaman-ruangan.*') ? 'active' : '' }}" href="{{ route('peminjaman-ruangan.index') }}">
-                            <i class="fa-solid fa-calendar-check"></i>
-                            <span>Pinjam Ruangan</span>
-                            @if(isset($pendingRuanganCount) && $pendingRuanganCount > 0)
-                                <span class="badge-pending-counter" title="{{ $pendingRuanganCount }} pengajuan ruangan menunggu persetujuan">
-                                    {{ $pendingRuanganCount > 99 ? '99+' : $pendingRuanganCount }}
-                                </span>
-                            @endif
+
+                    <!-- 3. Master Data Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle {{ (request()->routeIs('ruangan.*') || request()->routeIs('kategori.*')) ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span>Master Data</span>
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-custom shadow border-0 rounded-3 mt-2 p-2">
+                            <li>
+                                <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('ruangan.*') ? 'active' : '' }}" href="{{ route('ruangan.index') }}">
+                                    <i class="fa-solid fa-door-open text-primary me-2"></i>
+                                    <span>Data Ruangan</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('kategori.*') ? 'active' : '' }}" href="{{ route('kategori.index') }}">
+                                    <i class="fa-solid fa-tags text-primary me-2"></i>
+                                    <span>Kategori Aset</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom {{ request()->routeIs('ruangan.*') ? 'active' : '' }}" href="{{ route('ruangan.index') }}">
-                            <i class="fa-solid fa-door-open"></i>
-                            <span>Master Ruangan</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom {{ request()->routeIs('kategori.*') ? 'active' : '' }}" href="{{ route('kategori.index') }}">
-                            <i class="fa-solid fa-tags"></i>
-                            <span>Kategori</span>
-                        </a>
-                    </li>
+
+                    <!-- 4. Laporan & KIR -->
                     <li class="nav-item">
                         <a class="nav-link-custom {{ request()->routeIs('laporan.*') ? 'active' : '' }}" href="{{ route('laporan.index') }}">
                             <i class="fa-solid fa-file-lines"></i>
@@ -104,11 +143,12 @@
                         </a>
                     </li>
 
+                    <!-- 5. Pengguna (Khusus IT) -->
                     @if(auth()->check() && auth()->user()->role === 'it')
                     <li class="nav-item">
                         <a class="nav-link-custom {{ request()->routeIs('user.*') ? 'active' : '' }}" href="{{ route('user.index') }}">
                             <i class="fa-solid fa-users-gear"></i>
-                            <span>Manajemen User</span>
+                            <span>Pengguna</span>
                         </a>
                     </li>
                     @endif
@@ -176,15 +216,16 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer-custom no-print">
+    <footer class="footer-custom no-print mt-auto">
         <div class="container">
             <div class="row align-items-center gy-2">
                 <div class="col-md-6 text-center text-md-start">
                     <span class="footer-brand-text">SPARTA-PW</span> &copy; {{ date('Y') }} &bull; 
                     <span class="fw-semibold">STIKES Panti Waluya Malang</span>
+                    <span class="text-muted small ms-1 d-none d-sm-inline">&bull; Unit Sarana & Prasarana</span>
                 </div>
                 <div class="col-md-6 text-center text-md-end text-muted small">
-                    <span>Sistem Peminjaman Aset & Ruangan Terpadu</span>
+                    <span>Sistem Informasi Inventaris & Peminjaman Sarpras</span>
                 </div>
             </div>
         </div>

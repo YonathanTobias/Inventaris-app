@@ -39,7 +39,7 @@
                 <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 44px; width: auto; object-fit: contain;">
                 <div>
                     <h5 class="fw-extrabold mb-0 text-dark" style="letter-spacing: -0.03em;">SPARTA-PW</h5>
-                    <small class="text-muted" style="font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em;">PORTAL PEMINJAMAN ASET & RUANGAN STIKES PANTI WALUYA</small>
+                    <small class="text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em;">PORTAL PEMINJAMAN ASET & RUANGAN STIKES PANTI WALUYA</small>
                 </div>
             </a>
 
@@ -50,25 +50,20 @@
                 </button>
 
                 <!-- Tombol Buka Daftar Pinjam di Navbar -->
-                <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-pill px-3 py-1.5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
+                <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-3 px-3 py-1.5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
                     <i class="fa-solid fa-clipboard-list me-1"></i> Keranjang
                     <span class="badge bg-primary text-white ms-1 rounded-pill" id="navCartCount">0</span>
                 </button>
 
                 <!-- Tombol Lacak Status -->
-                <a href="{{ route('publik.lacak') }}" class="btn btn-sm btn-outline-secondary fw-semibold rounded-pill px-3 py-1.5">
+                <a href="{{ route('publik.lacak') }}" class="btn btn-sm btn-outline-secondary fw-semibold rounded-3 px-3 py-1.5">
                     <i class="fa-solid fa-magnifying-glass me-1"></i> Lacak Pengajuan
                 </a>
 
                 @auth
                     <!-- Jika Sudah Login -->
-                    <a href="{{ route('barang.index') }}" class="btn btn-sm btn-primary fw-bold rounded-pill px-3 py-1.5 shadow-sm">
+                    <a href="{{ route('barang.index') }}" class="btn btn-sm btn-primary fw-bold rounded-3 px-3 py-1.5 shadow-sm">
                         <i class="fa-solid fa-gauge me-1"></i> Dashboard Petugas
-                    </a>
-                @else
-                    <!-- Jika Belum Login -->
-                    <a href="{{ route('login') }}" class="btn btn-sm btn-dark fw-bold rounded-pill px-3.5 py-1.5 shadow-sm">
-                        <i class="fa-solid fa-lock me-1 text-warning"></i> Login Petugas
                     </a>
                 @endauth
             </div>
@@ -944,15 +939,81 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
+    <!-- FOOTER PORTAL PUBLIK -->
     <footer class="footer-portal mt-auto">
-        <div class="container">
-            <div class="row align-items-center gy-2">
-                <div class="col-md-6 text-center text-md-start">
-                    <span class="footer-brand-text">SPARTA-PW</span> &copy; {{ date('Y') }} &bull; <span class="fw-semibold">STIKES Panti Waluya Malang</span>
+        <div class="container py-4 py-lg-5">
+            <div class="row g-4 justify-content-between">
+                <!-- Kolom 1: Profil Kampus & Brand -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 48px; width: auto; object-fit: contain;">
+                        <div>
+                            <h6 class="fw-bold mb-0 footer-brand-title">SPARTA-PW</h6>
+                            <small class="text-muted" style="font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em;">STIKES PANTI WALUYA MALANG</small>
+                        </div>
+                    </div>
+                    <p class="footer-desc mb-3">
+                        Sistem Peminjaman Aset & Ruangan Terpadu Akademik yang dirancang untuk memberikan kemudahan, transparansi, dan efisiensi dalam pengelolaan sarana prasarana penunjang kegiatan tri dharma perguruan tinggi.
+                    </p>
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 rounded-pill small">
+                            <i class="fa-solid fa-shield-halved me-1"></i> Layanan Resmi Sarpras
+                        </span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill small">
+                            <i class="fa-solid fa-circle-check me-1"></i> Terintegrasi
+                        </span>
+                    </div>
                 </div>
-                <div class="col-md-6 text-center text-md-end text-muted small">
-                    <span>Sistem Peminjaman Aset & Ruangan Terpadu Akademik</span>
+
+                <!-- Kolom 2: Navigasi Layanan Cepat -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="fw-bold mb-3 footer-section-title">Layanan & Navigasi</h6>
+                    <ul class="list-unstyled footer-links mb-0">
+                        <li class="mb-2">
+                            <a href="{{ url('/') }}" class="footer-link">
+                                <i class="fa-solid fa-boxes-stacked me-2 text-primary opacity-75"></i> Katalog & Pinjam Aset
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url('/') }}" class="footer-link">
+                                <i class="fa-solid fa-door-open me-2 text-primary opacity-75"></i> Booking Ruangan & Lab
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('publik.lacak') }}" class="footer-link">
+                                <i class="fa-solid fa-magnifying-glass me-2 text-primary opacity-75"></i> Lacak Status Pengajuan
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Kontak & Jam Layanan -->
+                <div class="col-lg-3 col-md-12">
+                    <h6 class="fw-bold mb-3 footer-section-title">Unit Sarana & Prasarana</h6>
+                    <div class="footer-contact-item mb-2 d-flex align-items-start gap-2">
+                        <i class="fa-solid fa-location-dot mt-1 text-primary opacity-75 flex-shrink-0"></i>
+                        <span>Jl. Yulius Usman No. 62, Kasin, Kec. Klojen, Kota Malang, Jawa Timur 65117</span>
+                    </div>
+                    <div class="footer-contact-item mb-2 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-clock text-primary opacity-75 flex-shrink-0"></i>
+                        <span>Senin – Jumat: 08.00 – 16.00 WIB</span>
+                    </div>
+                    <div class="footer-contact-item d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-envelope text-primary opacity-75 flex-shrink-0"></i>
+                        <span>sarpras@pantiwaluya.ac.id</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Copyright Bar -->
+        <div class="footer-bottom-bar border-top py-3">
+            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 text-center text-md-start">
+                <div class="small text-muted">
+                    <span class="footer-brand-text">SPARTA-PW</span> &copy; {{ date('Y') }} &bull; <strong class="text-dark">STIKES Panti Waluya Malang</strong>. All Rights Reserved.
+                </div>
+                <div class="small text-muted">
+                    <span>Sistem Informasi Inventaris & Peminjaman Sarpras</span>
                 </div>
             </div>
         </div>

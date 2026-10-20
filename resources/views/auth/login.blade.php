@@ -62,20 +62,20 @@
             <form action="{{ route('login.process') }}" method="POST">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label small fw-bold text-secondary mb-1">Alamat Email</label>
+                    <label class="form-label small fw-bold text-secondary mb-1">Alamat Email Petugas</label>
                     <div class="input-group">
                         <span class="input-group-text border-end-0"><i class="fa-solid fa-envelope"></i></span>
-                        <input type="email" name="email" id="email" class="form-control border-start-0 ps-0" placeholder="nama@pantiwaluya.ac.id" value="{{ old('email') }}" required autofocus>
+                        <input type="email" name="email" id="email" class="form-control border-start-0 ps-2" value="{{ old('email') }}" required autofocus>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label small fw-bold text-secondary mb-1">Kata Sandi</label>
+                    <label class="form-label small fw-bold text-secondary mb-1">Kata Sandi Akun</label>
                     <div class="input-group">
                         <span class="input-group-text border-end-0"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" name="password" id="password" class="form-control border-start-0 border-end-0 ps-0" placeholder="Masukkan password" required>
-                        <button type="button" class="input-group-text border-start-0 bg-white" onclick="togglePasswordVisibility()">
-                            <i class="fa-regular fa-eye" id="toggleIcon"></i>
+                        <input type="password" name="password" id="password" class="form-control border-start-0 border-end-0 ps-2" required>
+                        <button type="button" class="input-group-text border-start-0 btn-toggle-pwd" onclick="togglePasswordVisibility()" aria-label="Lihat kata sandi">
+                            <i class="fa-regular fa-eye text-muted" id="toggleIcon"></i>
                         </button>
                     </div>
                 </div>

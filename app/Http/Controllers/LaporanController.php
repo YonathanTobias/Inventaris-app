@@ -11,6 +11,7 @@ use App\Models\Pengaturan;
 use App\Exports\AsetExport;
 use App\Exports\PeminjamanAsetExport;
 use App\Exports\PeminjamanRuanganExport;
+use App\Exports\MutasiExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
@@ -20,17 +21,14 @@ class LaporanController extends Controller
     {
         $ruangans = Ruangan::all();
         
-        // --- 1. DATA ASET & KIR ---
+        // Data aset dan KIR
         $queryAset = Barang::with(['kategori', 'ruangan']);
         if ($request->ruangan_id) {
             $queryAset->where('ruangan_id', $request->ruangan_id);
         }
         $barangs = $queryAset->latest()->get();
 
-        // Riwayat Mutasi / Pindah / Kerusakan
-        $mutasis = Mutasi::with(['barang', 'ruanganAsal', 'ruanganTujuan'])->latest()->take(30)->get();
-
-        // --- 2. DATA LAPORAN PEMINJAMAN ASET ---
+        // Data laporan peminjaman aset
         $queryPinjamAset = Peminjaman::with(['barang', 'details.barang', 'user']);
         if ($request->tgl_mulai_aset && $request->tgl_selesai_aset) {
             $queryPinjamAset->whereBetween('tanggal_pinjam', [$request->tgl_mulai_aset, $request->tgl_selesai_aset]);
@@ -44,7 +42,7 @@ class LaporanController extends Controller
         }
         $peminjamanAsets = $queryPinjamAset->latest()->get();
 
-        // --- 3. DATA LAPORAN PEMINJAMAN RUANGAN ---
+        // Data laporan peminjaman ruangan
         $queryPinjamRuangan = PeminjamanRuangan::with(['ruangan', 'approver', 'petugasSerah']);
         if ($request->tgl_mulai_ruangan && $request->tgl_selesai_ruangan) {
             $queryPinjamRuangan->whereBetween('tanggal_pemakaian', [$request->tgl_mulai_ruangan, $request->tgl_selesai_ruangan]);
@@ -61,11 +59,45 @@ class LaporanController extends Controller
         }
         $peminjamanRuangans = $queryPinjamRuangan->latest()->get();
 
+        // Data laporan mutasi perpindahan ruangan aset
+        $queryMutasi = Mutasi::where('jenis_mutasi', 'Pindah Ruangan')
+            ->with(['barang.kategori', 'ruanganAsal', 'ruanganTujuan']);
+
+        if ($request->tgl_mulai_mutasi && $request->tgl_selesai_mutasi) {
+            $queryMutasi->whereBetween('created_at', [
+                $request->tgl_mulai_mutasi . ' 00:00:00',
+                $request->tgl_selesai_mutasi . ' 23:59:59'
+            ]);
+        } elseif ($request->tgl_mulai_mutasi) {
+            $queryMutasi->whereDate('created_at', '>=', $request->tgl_mulai_mutasi);
+        } elseif ($request->tgl_selesai_mutasi) {
+            $queryMutasi->whereDate('created_at', '<=', $request->tgl_selesai_mutasi);
+        }
+
+        if ($request->ruangan_asal_id) {
+            $queryMutasi->where('ruangan_asal_id', $request->ruangan_asal_id);
+        }
+        if ($request->ruangan_tujuan_id) {
+            $queryMutasi->where('ruangan_tujuan_id', $request->ruangan_tujuan_id);
+        }
+
+        if ($request->search_mutasi) {
+            $s = $request->search_mutasi;
+            $queryMutasi->where(function($q) use ($s) {
+                $q->where('keterangan', 'like', "%{$s}%")
+                  ->orWhereHas('barang', function($qb) use ($s) {
+                      $qb->where('nama_barang', 'like', "%{$s}%")
+                         ->orWhere('kode_barang', 'like', "%{$s}%");
+                  });
+            });
+        }
+        $mutasis = $queryMutasi->latest()->get();
+
         $stats = [
             'total_aset_tercatat' => $barangs->count(),
             'total_unit_tercatat' => $barangs->sum('jumlah'),
             'total_ruangan'       => $ruangans->count(),
-            'total_mutasi'        => Mutasi::count(),
+            'total_mutasi'        => Mutasi::where('jenis_mutasi', 'Pindah Ruangan')->count(),
             'total_pinjam_aset'   => $peminjamanAsets->count(),
             'total_pinjam_ruangan'=> $peminjamanRuangans->count(),
         ];
@@ -154,5 +186,17 @@ class LaporanController extends Controller
 
         $filename = 'Laporan_Peminjaman_Ruangan_' . date('Ymd_His') . '.xlsx';
         return Excel::download(new PeminjamanRuanganExport($tgl_mulai, $tgl_selesai, $ruangan_id, $status), $filename);
+    }
+
+    // Export Excel Laporan Mutasi Ruangan Aset
+    public function exportMutasi(Request $request)
+    {
+        $tgl_mulai = $request->tgl_mulai_mutasi;
+        $tgl_selesai = $request->tgl_selesai_mutasi;
+        $ruangan_asal_id = $request->ruangan_asal_id;
+        $ruangan_tujuan_id = $request->ruangan_tujuan_id;
+
+        $filename = 'Laporan_Mutasi_Ruangan_Aset_' . date('Ymd_His') . '.xlsx';
+        return Excel::download(new MutasiExport($tgl_mulai, $tgl_selesai, $ruangan_asal_id, $ruangan_tujuan_id), $filename);
     }
 }

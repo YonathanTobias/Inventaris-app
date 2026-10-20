@@ -18,9 +18,7 @@ function getAvailableRuangans() {
     return window.SPARTA_CONFIG?.ruangans || [];
 }
 
-// ==========================================
-// 1. AUTO-FILL IDENTITAS & LOCALSTORAGE
-// ==========================================
+// Auto-fill identitas pemohon dari storage
 function saveProfileToStorage() {
     let profile = {
         kategori: document.getElementById('inputKategoriPeminjam')?.value || document.getElementById('inputKategoriRuangan')?.value || '',
@@ -72,9 +70,7 @@ function loadProfileFromStorage() {
     } catch (e) {}
 }
 
-// ==========================================
-// 2. UNIFIED SEARCH & CATEGORY FILTERING
-// ==========================================
+// Pencarian terpadu dan filter kategori
 let currentSelectedCategory = 'all';
 
 function filterByCategory(category, btnElement) {
@@ -124,9 +120,7 @@ function clearUnifiedAssetFilter() {
     filterByCategory('all', document.querySelector('.category-chip-btn[data-category="all"]'));
 }
 
-// ==========================================
-// 3. 2-STEP VIEW NAVIGATION & STEPPER
-// ==========================================
+// Navigasi langkah peminjaman formulir
 function proceedToStep2Form() {
     if (loanCart.length === 0) {
         alert('Keranjang masih kosong! Silakan pilih minimal 1 aset pada katalog di bawah sebelum melanjutkan pengisian formulir.');
@@ -196,9 +190,7 @@ function handleTabSwitch(tabName) {
     }
 }
 
-// ==========================================
-// 4. KERANJANG PINJAM ASET & FLOATING BAR
-// ==========================================
+// Keranjang pinjam aset dan floating action bar
 function saveCart() {
     try {
         localStorage.setItem('stikes_loan_cart', JSON.stringify(loanCart));
@@ -408,9 +400,7 @@ function renderCart() {
     }
 }
 
-// ==========================================
-// 5. DATA RUANGAN & LIVE SEARCH RUANGAN
-// ==========================================
+// Pencarian dan filter katalog ruangan
 function filterRuanganCards(keyword) {
     let kw = (keyword || '').trim().toLowerCase();
     let cards = document.querySelectorAll('.catalog-ruangan-card');
@@ -702,9 +692,7 @@ function scrollToFormRuangan() {
     proceedToStep2RuanganForm();
 }
 
-// ==========================================
-// 6. REAL-TIME JADWAL RUANGAN (AJAX)
-// ==========================================
+// Pengecekan ketersediaan jadwal ruangan (AJAX)
 function triggerCekJadwal() {
     let sel = document.getElementById('selectRuanganPublik');
     if (sel && sel.value) {
@@ -746,9 +734,7 @@ function cekJadwalRuangan(ruanganId) {
         });
 }
 
-// ==========================================
-// 7. THEME SWITCHER
-// ==========================================
+// Toggle tema terang dan gelap
 function updatePublicThemeUI(theme) {
     const icon = document.getElementById('themeIconPublic');
     if (!icon) return;
@@ -767,9 +753,7 @@ function togglePublicTheme() {
     updatePublicThemeUI(newTheme);
 }
 
-// ==========================================
-// 8. GLOBAL EVENT LISTENERS & INIT
-// ==========================================
+// Inisialisasi awal saat dokumen siap
 document.addEventListener('DOMContentLoaded', function() {
     const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
     updatePublicThemeUI(currentTheme);

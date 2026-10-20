@@ -91,18 +91,23 @@
     <div class="card-body p-2">
         <ul class="nav nav-pills nav-fill gap-2" id="pills-tab-laporan" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link fw-bold py-2.5 rounded-3 {{ request('tab') == 'peminjaman-aset' || request('tab') == 'peminjaman-ruangan' ? '' : 'active' }}" id="tab-kir-btn" data-bs-toggle="pill" data-bs-target="#tab-kir" type="button" role="tab" onclick="setLaporanTab('kir')">
-                    <i class="fa-solid fa-file-excel me-1.5 text-success"></i> 1. Kartu Inventaris Ruangan (KIR) & Data Aset
+                <button class="nav-link fw-bold py-2.5 rounded-3 {{ !in_array(request('tab'), ['peminjaman-aset', 'peminjaman-ruangan', 'mutasi']) ? 'active' : '' }}" id="tab-kir-btn" data-bs-toggle="pill" data-bs-target="#tab-kir" type="button" role="tab" onclick="setLaporanTab('kir')">
+                    <i class="fa-solid fa-file-excel me-1.5 text-success"></i> 1. KIR & Data Aset
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link fw-bold py-2.5 rounded-3 {{ request('tab') == 'peminjaman-aset' ? 'active' : '' }}" id="tab-pinjam-aset-btn" data-bs-toggle="pill" data-bs-target="#tab-pinjam-aset" type="button" role="tab" onclick="setLaporanTab('peminjaman-aset')">
-                    <i class="fa-solid fa-hand-holding-hand me-1.5 text-primary"></i> 2. Laporan Peminjaman Aset / Barang
+                    <i class="fa-solid fa-hand-holding-hand me-1.5 text-primary"></i> 2. Peminjaman Aset
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link fw-bold py-2.5 rounded-3 {{ request('tab') == 'peminjaman-ruangan' ? 'active' : '' }}" id="tab-pinjam-ruangan-btn" data-bs-toggle="pill" data-bs-target="#tab-pinjam-ruangan" type="button" role="tab" onclick="setLaporanTab('peminjaman-ruangan')">
-                    <i class="fa-solid fa-calendar-check me-1.5 text-warning"></i> 3. Laporan Peminjaman Ruangan
+                    <i class="fa-solid fa-calendar-check me-1.5 text-warning"></i> 3. Peminjaman Ruangan
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-bold py-2.5 rounded-3 {{ request('tab') == 'mutasi' ? 'active' : '' }}" id="tab-mutasi-btn" data-bs-toggle="pill" data-bs-target="#tab-mutasi" type="button" role="tab" onclick="setLaporanTab('mutasi')">
+                    <i class="fa-solid fa-right-left me-1.5 text-info"></i> 4. Mutasi Pindah Ruangan
                 </button>
             </li>
         </ul>
@@ -113,7 +118,7 @@
 <div class="tab-content" id="pills-tabContentLaporan">
 
     <!-- ================= TAB 1: KARTU INVENTARIS RUANGAN (KIR) ================= -->
-    <div class="tab-pane fade {{ request('tab') == 'peminjaman-aset' || request('tab') == 'peminjaman-ruangan' ? '' : 'show active' }}" id="tab-kir" role="tabpanel">
+    <div class="tab-pane fade {{ !in_array(request('tab'), ['peminjaman-aset', 'peminjaman-ruangan', 'mutasi']) ? 'show active' : '' }}" id="tab-kir" role="tabpanel">
         
         <!-- TOOLBAR TERPADU (Filter, Search & Action Group) -->
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print">
@@ -153,47 +158,11 @@
                             <span>Atur Penandatangan</span>
                         </button>
 
-                        <!-- Dropdown Aksi Cetak Bertingkat -->
-                        <div class="btn-group">
-                            <button type="button" onclick="triggerPrintTab('kir')" class="btn btn-dark fw-bold px-3 py-2 rounded-start-3 d-inline-flex align-items-center gap-1.5 shadow-sm">
-                                <i class="fa-solid fa-print"></i>
-                                <span>Cetak KIR</span>
-                            </button>
-                            <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split px-2.5 rounded-end-3 shadow-sm" data-bs-toggle="dropdown" aria-expanded="false" title="Pilihan Cetak">
-                                <span class="visually-hidden">Toggle Cetak</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 py-2 border-0 mt-1">
-                                <li>
-                                    <button type="button" class="dropdown-item py-2 px-3 d-flex align-items-center gap-2.5" onclick="triggerPrintTab('kir')">
-                                        <div class="p-1.5 rounded-2 bg-primary-subtle text-primary"><i class="fa-solid fa-file-lines"></i></div>
-                                        <div>
-                                            <div class="fw-semibold text-dark">Cetak Lembar KIR (A4)</div>
-                                            <small class="text-muted">Format resmi bertandatangan untuk ruangan</small>
-                                        </div>
-                                    </button>
-                                </li>
-                                <li><hr class="dropdown-divider my-1"></li>
-                                <li>
-                                    @if(request('ruangan_id'))
-                                        <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2.5" href="{{ route('ruangan.label', request('ruangan_id')) }}" target="_blank">
-                                            <div class="p-1.5 rounded-2 bg-secondary-subtle text-secondary"><i class="fa-solid fa-barcode"></i></div>
-                                            <div>
-                                                <div class="fw-semibold text-dark">Cetak Label QR Ruangan Ini</div>
-                                                <small class="text-muted">Stiker barcode aset khusus ruangan terpilih</small>
-                                            </div>
-                                        </a>
-                                    @else
-                                        <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2.5" href="{{ route('barang.label.massal') }}" target="_blank">
-                                            <div class="p-1.5 rounded-2 bg-secondary-subtle text-secondary"><i class="fa-solid fa-barcode"></i></div>
-                                            <div>
-                                                <div class="fw-semibold text-dark">Cetak Label Stiker Global</div>
-                                                <small class="text-muted">Cetak barcode seluruh aset terdaftar</small>
-                                            </div>
-                                        </a>
-                                    @endif
-                                </li>
-                            </ul>
-                        </div>
+                        <!-- Tombol Cetak Lembar KIR Langsung -->
+                        <button type="button" onclick="triggerPrintTab('kir')" class="btn btn-dark fw-bold px-3.5 py-2 rounded-3 d-inline-flex align-items-center gap-1.5 shadow-sm" title="Cetak Dokumen KIR Resmi Format A4">
+                            <i class="fa-solid fa-print"></i>
+                            <span>Cetak KIR</span>
+                        </button>
 
                         <!-- Export Excel -->
                         <a href="{{ route('laporan.export', request()->query()) }}" class="btn btn-success fw-bold px-3 py-2 rounded-3 d-inline-flex align-items-center gap-1.5 shadow-sm">
@@ -631,6 +600,152 @@
 
     </div>
 
+    <!-- ================= TAB 4: LAPORAN MUTASI PINDAH RUANGAN ASET ================= -->
+    <div class="tab-pane fade {{ request('tab') == 'mutasi' ? 'show active' : '' }}" id="tab-mutasi" role="tabpanel">
+        
+        <!-- Filter Form Mutasi Pindah Ruangan -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4 no-print">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-filter text-info"></i>
+                        <span>Filter Periode & Ruangan Mutasi Aset</span>
+                    </h6>
+                    <button type="button" class="btn btn-sm btn-outline-primary fw-semibold rounded-3 px-3" data-bs-toggle="modal" data-bs-target="#modalPengaturanTTD">
+                        <i class="fa-solid fa-pen-nib me-1"></i> Atur Penandatangan
+                    </button>
+                </div>
+
+                <form action="{{ route('laporan.index') }}" method="GET" class="row g-3 align-items-end" id="formFilterMutasi">
+                    <input type="hidden" name="tab" value="mutasi">
+
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-secondary">Tanggal Mulai</label>
+                        <input type="date" name="tgl_mulai_mutasi" class="form-control" value="{{ request('tgl_mulai_mutasi') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-secondary">Tanggal Selesai</label>
+                        <input type="date" name="tgl_selesai_mutasi" class="form-control" value="{{ request('tgl_selesai_mutasi') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-secondary">Ruangan Asal</label>
+                        <select name="ruangan_asal_id" class="form-select">
+                            <option value="">-- Semua Ruangan Asal --</option>
+                            @foreach($ruangans as $r)
+                                <option value="{{ $r->id }}" {{ request('ruangan_asal_id') == $r->id ? 'selected' : '' }}>
+                                    {{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-secondary">Ruangan Tujuan</label>
+                        <select name="ruangan_tujuan_id" class="form-select">
+                            <option value="">-- Semua Ruangan Tujuan --</option>
+                            @foreach($ruangans as $r)
+                                <option value="{{ $r->id }}" {{ request('ruangan_tujuan_id') == $r->id ? 'selected' : '' }}>
+                                    {{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2 justify-content-between flex-wrap pt-3 border-top">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary fw-bold px-4 py-2 shadow-sm rounded-3">
+                                <i class="fa-solid fa-magnifying-glass me-1"></i> Terapkan Filter
+                            </button>
+                            <a href="{{ route('laporan.index') }}?tab=mutasi" class="btn btn-outline-secondary py-2 px-3 rounded-3" title="Reset Filter">
+                                <i class="fa-solid fa-rotate-left"></i> Reset
+                            </a>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <!-- Export Excel -->
+                            <a href="{{ route('laporan.mutasi.export', request()->all()) }}" class="btn btn-success fw-bold px-3.5 py-2 shadow-sm rounded-3 d-inline-flex align-items-center gap-1.5">
+                                <i class="fa-solid fa-file-excel"></i>
+                                <span>Export Excel (.xlsx)</span>
+                            </a>
+                            <!-- Print A4 -->
+                            <button type="button" onclick="triggerPrintTab('mutasi')" class="btn btn-dark fw-bold px-3.5 py-2 shadow-sm rounded-3 d-inline-flex align-items-center gap-1.5">
+                                <i class="fa-solid fa-print"></i>
+                                <span>Cetak Laporan Mutasi</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Web Table Preview Mutasi -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4 no-print overflow-hidden">
+            <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="p-1.5 rounded-2 bg-info-subtle text-info"><i class="fa-solid fa-right-left"></i></span>
+                    <h6 class="fw-bold mb-0 text-dark">Daftar Rekapitulasi Mutasi Pindah Ruangan Aset</h6>
+                </div>
+                <span class="badge bg-light text-secondary border font-monospace px-2.5 py-1.5 rounded-pill">{{ $mutasis->count() }} Data Mutasi</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-muted small text-uppercase">
+                        <tr>
+                            <th class="text-center" style="width: 55px;">No</th>
+                            <th class="text-start ps-3" style="width: 150px;">Waktu Mutasi</th>
+                            <th class="text-start">Aset / Barang</th>
+                            <th class="text-start" style="width: 170px;">Ruangan Asal</th>
+                            <th class="text-start" style="width: 170px;">Ruangan Tujuan</th>
+                            <th class="text-center" style="width: 100px;">Jumlah Unit</th>
+                            <th class="text-start">Keterangan / Berita Acara</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($mutasis as $index => $m)
+                        <tr>
+                            <td class="text-center fw-semibold text-muted">{{ $index + 1 }}</td>
+                            <td class="text-start ps-3 small font-monospace text-muted">
+                                {{ $m->created_at ? $m->created_at->locale('id')->translatedFormat('d M Y, H:i') : '-' }}
+                            </td>
+                            <td class="text-start">
+                                <div class="fw-bold text-dark">{{ $m->barang->nama_barang ?? 'Aset Telah Dihapus' }}</div>
+                                <div class="d-flex align-items-center gap-1.5 mt-0.5">
+                                    <span class="badge-code py-0">{{ $m->barang->kode_barang ?? '-' }}</span>
+                                    <span class="text-muted small">({{ $m->barang->kategori->nama_kategori ?? '-' }})</span>
+                                </div>
+                            </td>
+                            <td class="text-start">
+                                <span class="badge bg-light text-dark border px-2.5 py-1.5 rounded-3 d-inline-flex align-items-center gap-1.5">
+                                    <i class="fa-solid fa-door-closed text-muted"></i>
+                                    <span>{{ $m->ruanganAsal->nama_ruangan ?? '-' }}</span>
+                                </span>
+                            </td>
+                            <td class="text-start">
+                                <span class="badge bg-primary-subtle text-primary border border-primary px-2.5 py-1.5 rounded-3 d-inline-flex align-items-center gap-1.5">
+                                    <i class="fa-solid fa-door-open text-primary"></i>
+                                    <span>{{ $m->ruanganTujuan->nama_ruangan ?? '-' }}</span>
+                                </span>
+                            </td>
+                            <td class="text-center fw-bold font-monospace text-dark">
+                                {{ $m->jumlah }} Unit
+                            </td>
+                            <td class="text-start small text-muted text-truncate" style="max-width: 250px;" title="{{ $m->keterangan }}">
+                                {{ $m->keterangan ?? '-' }}
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
+                                Belum ada riwayat mutasi pindah ruangan pada filter ini.
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
 </div>
 
 <!-- ========================================================================= -->
@@ -738,32 +853,32 @@
 <!-- 1. DOKUMEN CETAK KIR A4 -->
 <div id="printDocKIR" class="kir-print-document">
     <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
-    <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
-        <div style="width: 85px;" class="text-center flex-shrink-0">
-            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 78px; height: auto;" onerror="this.style.display='none'">
+    <div class="d-flex align-items-center justify-content-between pb-1.5 mb-2" style="border-bottom: 2.5px double #000000; font-family: 'Times New Roman', Times, serif;">
+        <div style="width: 75px;" class="text-center flex-shrink-0">
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 68px; height: auto;" onerror="this.style.display='none'">
         </div>
         <div class="text-center flex-grow-1 px-2">
-            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.3rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.15rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
                 SEKOLAH TINGGI ILMU KESEHATAN
             </h4>
-            <h3 class="fw-bold mb-1 text-uppercase" style="font-size: 1.55rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+            <h3 class="fw-bold mb-0.5 text-uppercase" style="font-size: 1.38rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
                 PANTI WALUYA MALANG
             </h3>
-            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+            <p class="mb-0 text-dark" style="font-size: 0.78rem; line-height: 1.2; font-family: 'Times New Roman', Times, serif;">
                 Jalan Yulius Usman No. 62 Malang &ndash; 65117 Telp (0341) 369003 Fax. 368737
             </p>
-            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+            <p class="mb-0 text-dark" style="font-size: 0.78rem; line-height: 1.2; font-family: 'Times New Roman', Times, serif;">
                 Email : <u>stikes.pantiwaluyamlg@gmail.com</u>, website : <u>www.stikespantiwaluya.ac.id</u>
             </p>
         </div>
-        <div style="width: 85px;" class="flex-shrink-0"></div>
+        <div style="width: 75px;" class="flex-shrink-0"></div>
     </div>
 
-    <div class="text-center mb-3">
-        <h5 class="fw-bold text-uppercase mb-1 text-decoration-underline" style="font-family: 'Times New Roman', Times, serif; font-size: 1.1rem;">
+    <div class="text-center mb-2.5">
+        <h5 class="fw-bold text-uppercase mb-0.5 text-decoration-underline" style="font-family: 'Times New Roman', Times, serif; font-size: 1.05rem;">
             KARTU INVENTARIS RUANGAN (KIR)
         </h5>
-        <div class="fw-semibold small text-uppercase" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="fw-semibold small text-uppercase" style="font-family: 'Times New Roman', Times, serif; font-size: 0.82rem;">
             @if(request('ruangan_id'))
                 LOKASI RUANGAN : {{ $ruangans->find(request('ruangan_id'))->nama_ruangan ?? '-' }} ({{ $ruangans->find(request('ruangan_id'))->kode_ruangan ?? '-' }})
             @else
@@ -775,48 +890,48 @@
     <table class="table-kir-print">
         <thead>
             <tr>
-                <th style="width: 30px;" class="text-center">NO</th>
-                <th style="width: 95px;" class="text-center">KODE ASET</th>
+                <th style="width: 25px;" class="text-center">NO</th>
+                <th style="width: 90px;" class="text-center">KODE ASET</th>
                 <th>NAMA BARANG / ASET</th>
                 <th style="width: 100px;">KATEGORI</th>
                 <th style="width: 100px;">RUANGAN</th>
-                <th style="width: 45px;" class="text-center">JML</th>
+                <th style="width: 35px;" class="text-center">JML</th>
                 <th style="width: 75px;" class="text-center">KONDISI</th>
-                <th style="width: 50px;" class="text-center">TAHUN</th>
+                <th style="width: 45px;" class="text-center">TAHUN</th>
             </tr>
         </thead>
         <tbody>
             @foreach($barangs as $index => $b)
             <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
-                <td class="text-center font-monospace">{{ $b->kode_barang }}</td>
+                <td class="text-center font-monospace" style="white-space: nowrap; font-size: 7.5pt;">{{ $b->kode_barang }}</td>
                 <td class="fw-bold">{{ $b->nama_barang }}</td>
                 <td>{{ $b->kategori->nama_kategori ?? '-' }}</td>
                 <td>{{ $b->ruangan->nama_ruangan ?? '-' }}</td>
                 <td class="text-center fw-bold">{{ $b->jumlah }}</td>
-                <td class="text-center">{{ $b->kondisi }}</td>
-                <td class="text-center">{{ $b->tahun_pengadaan ?? '-' }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ $b->kondisi }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ $b->tahun_pengadaan ?? '-' }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
     <!-- Tanda Tangan KIR -->
-    <div class="kir-ttd-container mt-4 pt-2">
+    <div class="kir-ttd-container mt-3 pt-1">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
-            <div class="text-center" style="width: 320px;">
-                <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
-                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
-                <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">{{ $pejabat['nip_ketua'] }}</p>
+            <div class="text-center" style="width: 300px;">
+                <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
+                <div style="height: 48px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
-            <div class="text-center" style="width: 320px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+            <div class="text-center" style="width: 300px;">
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
+                <div style="height: 48px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
         </div>
     </div>
@@ -825,32 +940,32 @@
 <!-- 2. DOKUMEN CETAK LAPORAN PEMINJAMAN ASET A4 -->
 <div id="printDocPinjamAset" class="kir-print-document">
     <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
-    <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
-        <div style="width: 85px;" class="text-center flex-shrink-0">
-            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 78px; height: auto;" onerror="this.style.display='none'">
+    <div class="d-flex align-items-center justify-content-between pb-1.5 mb-2" style="border-bottom: 2.5px double #000000; font-family: 'Times New Roman', Times, serif;">
+        <div style="width: 75px;" class="text-center flex-shrink-0">
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 68px; height: auto;" onerror="this.style.display='none'">
         </div>
         <div class="text-center flex-grow-1 px-2">
-            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.3rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.15rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
                 SEKOLAH TINGGI ILMU KESEHATAN
             </h4>
-            <h3 class="fw-bold mb-1 text-uppercase" style="font-size: 1.55rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+            <h3 class="fw-bold mb-0.5 text-uppercase" style="font-size: 1.38rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
                 PANTI WALUYA MALANG
             </h3>
-            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+            <p class="mb-0 text-dark" style="font-size: 0.78rem; line-height: 1.2; font-family: 'Times New Roman', Times, serif;">
                 Jalan Yulius Usman No. 62 Malang &ndash; 65117 Telp (0341) 369003 Fax. 368737
             </p>
-            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+            <p class="mb-0 text-dark" style="font-size: 0.78rem; line-height: 1.2; font-family: 'Times New Roman', Times, serif;">
                 Email : <u>stikes.pantiwaluyamlg@gmail.com</u>, website : <u>www.stikespantiwaluya.ac.id</u>
             </p>
         </div>
-        <div style="width: 85px;" class="flex-shrink-0"></div>
+        <div style="width: 75px;" class="flex-shrink-0"></div>
     </div>
 
-    <div class="text-center mb-3">
-        <h5 class="fw-bold text-uppercase mb-1 text-decoration-underline" style="font-family: 'Times New Roman', Times, serif; font-size: 1.1rem;">
+    <div class="text-center mb-2.5">
+        <h5 class="fw-bold text-uppercase mb-0.5 text-decoration-underline" style="font-family: 'Times New Roman', Times, serif; font-size: 1.05rem;">
             LAPORAN REKAPITULASI PEMINJAMAN ASET & BARANG
         </h5>
-        <div class="fw-semibold small" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="fw-semibold small" style="font-family: 'Times New Roman', Times, serif; font-size: 0.82rem;">
             Periode: 
             @if(request('tgl_mulai_aset') && request('tgl_selesai_aset'))
                 {{ date('d/m/Y', strtotime(request('tgl_mulai_aset'))) }} s/d {{ date('d/m/Y', strtotime(request('tgl_selesai_aset'))) }}
@@ -866,11 +981,11 @@
     <table class="table-kir-print">
         <thead>
             <tr>
-                <th style="width: 30px;" class="text-center">NO</th>
-                <th style="width: 90px;" class="text-center">KODE</th>
+                <th style="width: 25px;" class="text-center">NO</th>
+                <th style="width: 85px;" class="text-center">KODE</th>
                 <th>NAMA PEMINJAM / IDENTITAS</th>
                 <th>DAFTAR ASET YANG DIPINJAM</th>
-                <th style="width: 40px;" class="text-center">JML</th>
+                <th style="width: 35px;" class="text-center">JML</th>
                 <th style="width: 75px;" class="text-center">TGL PINJAM</th>
                 <th style="width: 75px;" class="text-center">TENGGAT</th>
                 <th style="width: 70px;" class="text-center">STATUS</th>
@@ -880,7 +995,7 @@
             @foreach($peminjamanAsets as $index => $pa)
             <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
-                <td class="text-center font-monospace">{{ $pa->kode_peminjaman }}</td>
+                <td class="text-center font-monospace" style="white-space: nowrap; font-size: 7.5pt;">{{ $pa->kode_peminjaman }}</td>
                 <td>
                     <div class="fw-bold">{{ $pa->nama_peminjam }}</div>
                     <small class="text-muted">{{ $pa->nomor_identitas }} - {{ $pa->prodi_unit ?? '-' }}</small>
@@ -895,30 +1010,30 @@
                     @endif
                 </td>
                 <td class="text-center fw-bold">{{ $pa->jumlah }}</td>
-                <td class="text-center">{{ date('d/m/Y', strtotime($pa->tanggal_pinjam)) }}</td>
-                <td class="text-center">{{ date('d/m/Y', strtotime($pa->tenggat_kembali)) }}</td>
-                <td class="text-center fw-bold">{{ $pa->status }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ date('d/m/Y', strtotime($pa->tanggal_pinjam)) }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ date('d/m/Y', strtotime($pa->tenggat_kembali)) }}</td>
+                <td class="text-center fw-bold" style="white-space: nowrap;">{{ $pa->status }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
     <!-- Tanda Tangan Laporan Aset -->
-    <div class="kir-ttd-container mt-4 pt-2">
+    <div class="kir-ttd-container mt-3 pt-1">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
-            <div class="text-center" style="width: 320px;">
-                <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
-                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
-                <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">{{ $pejabat['nip_ketua'] }}</p>
+            <div class="text-center" style="width: 300px;">
+                <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
+                <div style="height: 48px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
-            <div class="text-center" style="width: 320px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+            <div class="text-center" style="width: 300px;">
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
+                <div style="height: 48px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
         </div>
     </div>
@@ -927,32 +1042,32 @@
 <!-- 3. DOKUMEN CETAK LAPORAN PEMINJAMAN RUANGAN A4 -->
 <div id="printDocPinjamRuangan" class="kir-print-document">
     <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
-    <div class="d-flex align-items-center justify-content-between pb-2 mb-3" style="border-bottom: 3px double #000000; font-family: 'Times New Roman', Times, serif;">
-        <div style="width: 85px;" class="text-center flex-shrink-0">
-            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 78px; height: auto;" onerror="this.style.display='none'">
+    <div class="d-flex align-items-center justify-content-between pb-1.5 mb-2" style="border-bottom: 2.5px double #000000; font-family: 'Times New Roman', Times, serif;">
+        <div style="width: 75px;" class="text-center flex-shrink-0">
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 68px; height: auto;" onerror="this.style.display='none'">
         </div>
         <div class="text-center flex-grow-1 px-2">
-            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.3rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.15rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
                 SEKOLAH TINGGI ILMU KESEHATAN
             </h4>
-            <h3 class="fw-bold mb-1 text-uppercase" style="font-size: 1.55rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+            <h3 class="fw-bold mb-0.5 text-uppercase" style="font-size: 1.38rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
                 PANTI WALUYA MALANG
             </h3>
-            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+            <p class="mb-0 text-dark" style="font-size: 0.78rem; line-height: 1.2; font-family: 'Times New Roman', Times, serif;">
                 Jalan Yulius Usman No. 62 Malang &ndash; 65117 Telp (0341) 369003 Fax. 368737
             </p>
-            <p class="mb-0 text-dark" style="font-size: 0.85rem; line-height: 1.25; font-family: 'Times New Roman', Times, serif;">
+            <p class="mb-0 text-dark" style="font-size: 0.78rem; line-height: 1.2; font-family: 'Times New Roman', Times, serif;">
                 Email : <u>stikes.pantiwaluyamlg@gmail.com</u>, website : <u>www.stikespantiwaluya.ac.id</u>
             </p>
         </div>
-        <div style="width: 85px;" class="flex-shrink-0"></div>
+        <div style="width: 75px;" class="flex-shrink-0"></div>
     </div>
 
-    <div class="text-center mb-3">
-        <h5 class="fw-bold text-uppercase mb-1 text-decoration-underline" style="font-family: 'Times New Roman', Times, serif; font-size: 1.1rem;">
+    <div class="text-center mb-2.5">
+        <h5 class="fw-bold text-uppercase mb-0.5 text-decoration-underline" style="font-family: 'Times New Roman', Times, serif; font-size: 1.05rem;">
             LAPORAN REKAPITULASI PEMINJAMAN & BOOKING RUANGAN
         </h5>
-        <div class="fw-semibold small" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="fw-semibold small" style="font-family: 'Times New Roman', Times, serif; font-size: 0.82rem;">
             Periode: 
             @if(request('tgl_mulai_ruangan') && request('tgl_selesai_ruangan'))
                 {{ date('d/m/Y', strtotime(request('tgl_mulai_ruangan'))) }} s/d {{ date('d/m/Y', strtotime(request('tgl_selesai_ruangan'))) }}
@@ -971,11 +1086,11 @@
     <table class="table-kir-print">
         <thead>
             <tr>
-                <th style="width: 30px;" class="text-center">NO</th>
-                <th style="width: 95px;" class="text-center">KODE</th>
+                <th style="width: 25px;" class="text-center">NO</th>
+                <th style="width: 85px;" class="text-center">KODE</th>
                 <th>NAMA PEMOHON / IDENTITAS</th>
                 <th>RUANGAN KEGIATAN</th>
-                <th style="width: 85px;" class="text-center">TGL PAKAI</th>
+                <th style="width: 80px;" class="text-center">TGL PAKAI</th>
                 <th style="width: 85px;" class="text-center">JAM KEGIATAN</th>
                 <th style="width: 70px;" class="text-center">STATUS</th>
                 <th>KEPERLUAN ACARA</th>
@@ -985,7 +1100,7 @@
             @foreach($peminjamanRuangans as $index => $pr)
             <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
-                <td class="text-center font-monospace">{{ $pr->kode_booking }}</td>
+                <td class="text-center font-monospace" style="white-space: nowrap; font-size: 7.5pt;">{{ $pr->kode_booking }}</td>
                 <td>
                     <div class="fw-bold">{{ $pr->nama_peminjam }}</div>
                     <small class="text-muted">{{ $pr->nomor_identitas }} - {{ $pr->prodi_unit ?? '-' }}</small>
@@ -994,9 +1109,9 @@
                     <div class="fw-bold">{{ $pr->ruangan->nama_ruangan ?? '-' }}</div>
                     <small class="font-monospace text-muted">{{ $pr->ruangan->kode_ruangan ?? '-' }}</small>
                 </td>
-                <td class="text-center">{{ date('d/m/Y', strtotime($pr->tanggal_pemakaian)) }}</td>
-                <td class="text-center">{{ date('H:i', strtotime($pr->jam_mulai)) }} - {{ date('H:i', strtotime($pr->jam_selesai)) }}</td>
-                <td class="text-center fw-bold">{{ $pr->status }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ date('d/m/Y', strtotime($pr->tanggal_pemakaian)) }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ date('H:i', strtotime($pr->jam_mulai)) }} - {{ date('H:i', strtotime($pr->jam_selesai)) }}</td>
+                <td class="text-center fw-bold" style="white-space: nowrap;">{{ $pr->status }}</td>
                 <td>{{ $pr->keperluan ?? '-' }}</td>
             </tr>
             @endforeach
@@ -1004,21 +1119,121 @@
     </table>
 
     <!-- Tanda Tangan Laporan Ruangan -->
-    <div class="kir-ttd-container mt-4 pt-2">
+    <div class="kir-ttd-container mt-3 pt-1">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
-            <div class="text-center" style="width: 320px;">
-                <p class="mb-0" style="font-size: 0.95rem;">Mengetahui,</p>
-                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Ketua STIKes Panti Waluya</p>
-                <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.85rem;">{{ $pejabat['nip_ketua'] }}</p>
+            <div class="text-center" style="width: 300px;">
+                <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
+                <div style="height: 48px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
-            <div class="text-center" style="width: 320px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.95rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0" style="font-size: 0.95rem;">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 60px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.95rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.85rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+            <div class="text-center" style="width: 300px;">
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
+                <div style="height: 48px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 4. DOKUMEN CETAK LAPORAN MUTASI PINDAH RUANGAN A4 -->
+<div id="printDocMutasi" class="kir-print-document">
+    <!-- KOP SURAT RESMI STIKES PANTI WALUYA MALANG -->
+    <div class="d-flex align-items-center justify-content-between pb-1.5 mb-2" style="border-bottom: 2.5px double #000000; font-family: 'Times New Roman', Times, serif;">
+        <div style="width: 75px;" class="text-center flex-shrink-0">
+            <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="width: 68px; height: auto;" onerror="this.style.display='none'">
+        </div>
+        <div class="text-center flex-grow-1 px-2">
+            <h4 class="fw-bold mb-0 text-uppercase" style="font-size: 1.15rem; letter-spacing: 0.03em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+                SEKOLAH TINGGI ILMU KESEHATAN
+            </h4>
+            <h3 class="fw-bold mb-0.5 text-uppercase" style="font-size: 1.38rem; letter-spacing: 0.04em; line-height: 1.15; color: #000; font-family: 'Times New Roman', Times, serif;">
+                PANTI WALUYA MALANG
+            </h3>
+            <p class="mb-0 text-dark" style="font-size: 0.78rem; line-height: 1.2; font-family: 'Times New Roman', Times, serif;">
+                Jalan Yulius Usman No. 62 Malang &ndash; 65117 Telp (0341) 369003 Fax. 368737
+            </p>
+            <p class="mb-0 text-dark" style="font-size: 0.78rem; line-height: 1.2; font-family: 'Times New Roman', Times, serif;">
+                Email : <u>stikes.pantiwaluyamlg@gmail.com</u>, website : <u>www.stikespantiwaluya.ac.id</u>
+            </p>
+        </div>
+        <div style="width: 75px;" class="flex-shrink-0"></div>
+    </div>
+
+    <div class="text-center mb-2.5">
+        <h5 class="fw-bold text-uppercase mb-0.5 text-decoration-underline" style="font-family: 'Times New Roman', Times, serif; font-size: 1.05rem;">
+            LAPORAN REKAPITULASI MUTASI PINDAH RUANGAN ASET
+        </h5>
+        <div class="fw-semibold small" style="font-family: 'Times New Roman', Times, serif; font-size: 0.82rem;">
+            Periode: 
+            @if(request('tgl_mulai_mutasi') && request('tgl_selesai_mutasi'))
+                {{ date('d/m/Y', strtotime(request('tgl_mulai_mutasi'))) }} s/d {{ date('d/m/Y', strtotime(request('tgl_selesai_mutasi'))) }}
+            @else
+                Semua Periode Mutasi
+            @endif
+            @if(request('ruangan_asal_id'))
+                | Asal: {{ $ruangans->find(request('ruangan_asal_id'))->nama_ruangan ?? '-' }}
+            @endif
+            @if(request('ruangan_tujuan_id'))
+                | Tujuan: {{ $ruangans->find(request('ruangan_tujuan_id'))->nama_ruangan ?? '-' }}
+            @endif
+        </div>
+    </div>
+
+    <table class="table-kir-print">
+        <thead>
+            <tr>
+                <th style="width: 25px;" class="text-center">NO</th>
+                <th style="width: 75px;" class="text-center">WAKTU</th>
+                <th style="width: 85px;" class="text-center">KODE ASET</th>
+                <th>NAMA BARANG / ASET</th>
+                <th style="width: 85px;">KATEGORI</th>
+                <th style="width: 95px;">RUANGAN ASAL</th>
+                <th style="width: 95px;">RUANGAN TUJUAN</th>
+                <th style="width: 35px;" class="text-center">JML</th>
+                <th>KETERANGAN / BERITA ACARA</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($mutasis as $index => $m)
+            <tr>
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ $m->created_at ? $m->created_at->format('d/m/Y') : '-' }}</td>
+                <td class="text-center font-monospace" style="white-space: nowrap; font-size: 7.5pt;">{{ $m->barang->kode_barang ?? '-' }}</td>
+                <td class="fw-bold">{{ $m->barang->nama_barang ?? 'Aset Telah Dihapus' }}</td>
+                <td>{{ $m->barang->kategori->nama_kategori ?? '-' }}</td>
+                <td>{{ $m->ruanganAsal->nama_ruangan ?? '-' }}</td>
+                <td>{{ $m->ruanganTujuan->nama_ruangan ?? '-' }}</td>
+                <td class="text-center fw-bold">{{ $m->jumlah }}</td>
+                <td>{{ $m->keterangan ?? '-' }}</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="9" class="text-center py-3 text-muted">Tidak ada data mutasi pindah ruangan.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <!-- Tanda Tangan Laporan Mutasi -->
+    <div class="kir-ttd-container mt-3 pt-1">
+        <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
+            <div class="text-center" style="width: 300px;">
+                <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
+                <div style="height: 48px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
+            </div>
+            <div class="text-center" style="width: 300px;">
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
+                <div style="height: 48px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
         </div>
     </div>

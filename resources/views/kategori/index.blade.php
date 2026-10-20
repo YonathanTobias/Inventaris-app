@@ -67,7 +67,7 @@
 <div class="row g-4">
     <!-- Form Tambah Kategori -->
     <div class="col-lg-4">
-        <div class="card">
+        <div class="card border-0 shadow-sm rounded-4">
             <div class="card-header-modern">
                 <div class="d-flex align-items-center gap-2">
                     <i class="fa-solid fa-circle-plus text-primary"></i>
@@ -77,13 +77,30 @@
             <div class="card-body p-4">
                 <form action="{{ route('kategori.store') }}" method="POST">
                     @csrf
-                    <div class="mb-4">
-                        <label class="form-label">Nama Kategori <span class="text-danger">*</span></label>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Kategori <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="fa-solid fa-tag"></i></span>
-                            <input type="text" name="nama_kategori" class="form-control" placeholder="Misal: Elektronik, Mebel, Kendaraan" required>
+                            <input type="text" name="nama_kategori" id="inputNamaKategoriTambah" class="form-control" placeholder="Misal: Elektronik, Mebel, Alat Medis" required oninput="autoGenerateKodeKategori(this.value)">
                         </div>
-                        <div class="form-text small text-muted">Gunakan nama kategori yang umum dan mudah dipahami.</div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label fw-bold mb-0">Kode Kategori (Singkatan)</label>
+                            <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeKategori()">
+                                <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Generate Ulang
+                            </button>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fa-solid fa-barcode"></i></span>
+                            <input type="text" name="kode_kategori" id="inputKodeKategoriTambah" class="form-control font-monospace text-uppercase" placeholder="Otomatis (atau ketik manual)" maxlength="10">
+                            <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeKategori()" title="Otomatis Buat Kode">
+                                <i class="fa-solid fa-bolt text-warning"></i> Auto
+                            </button>
+                        </div>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
+                            <i class="fa-solid fa-circle-check text-success me-1"></i>Kode otomatis terisi mengikuti nama kategori (contoh: <code>ELK</code>, <code>MBL</code>, <code>MED</code>, <code>ATK</code>).
+                        </small>
                     </div>
                     <button type="submit" class="btn btn-modern-primary w-100 justify-content-center">
                         <i class="fa-solid fa-floppy-disk"></i>
@@ -96,7 +113,7 @@
 
     <!-- Tabel Daftar Kategori -->
     <div class="col-lg-8">
-        <div class="card">
+        <div class="card border-0 shadow-sm rounded-4">
             <div class="card-header-modern">
                 <div class="d-flex align-items-center gap-2">
                     <i class="fa-solid fa-tags text-primary"></i>
@@ -106,12 +123,13 @@
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-modern align-middle">
+                    <table class="table table-modern align-middle mb-0">
                         <thead>
                             <tr>
-                                <th class="ps-4" style="width: 70px;">No</th>
+                                <th class="ps-4" style="width: 60px;">No</th>
                                 <th>Nama Kategori</th>
-                                <th class="text-center" style="width: 180px;">Jumlah Barang Terkait</th>
+                                <th class="text-center" style="width: 140px;">Kode Singkatan</th>
+                                <th class="text-center" style="width: 160px;">Jumlah Aset</th>
                                 <th class="text-center pe-4" style="width: 110px;">Aksi</th>
                             </tr>
                         </thead>
@@ -128,6 +146,11 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
+                                    <span class="badge bg-primary-subtle text-primary border border-primary px-2.5 py-1 font-monospace fw-bold rounded-pill">
+                                        {{ $k->kode_kategori ?? '-' }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
                                     <span class="badge bg-info-subtle text-info-emphasis border px-3 py-1.5 fw-bold rounded-pill" style="font-size: 0.8rem;">
                                         <i class="fa-solid fa-box me-1"></i>{{ $k->barangs_count }} Item
                                     </span>
@@ -135,7 +158,7 @@
                                 <td class="text-center pe-4">
                                     <div class="d-inline-flex gap-1">
                                         <!-- Tombol Edit -->
-                                        <button type="button" class="btn-icon btn-icon-primary" data-bs-toggle="modal" data-bs-target="#modalEditKategori{{ $k->id }}" data-bs-toggle="tooltip" title="Edit Kategori">
+                                        <button type="button" class="btn-icon btn-icon-primary" data-bs-toggle="modal" data-bs-target="#modalEditKategori{{ $k->id }}" title="Edit Kategori">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
 
@@ -143,7 +166,7 @@
                                         <form action="{{ route('kategori.destroy', $k->id) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, this, 'kategori {{ $k->nama_kategori }}')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn-icon btn-icon-danger" data-bs-toggle="tooltip" title="Hapus Kategori">
+                                            <button type="submit" class="btn-icon btn-icon-danger" title="Hapus Kategori">
                                                 <i class="fa-solid fa-trash-can"></i>
                                             </button>
                                         </form>
@@ -164,8 +187,24 @@
                                                     @method('PUT')
                                                     <div class="modal-body">
                                                         <div class="mb-3">
-                                                            <label class="form-label">Nama Kategori <span class="text-danger">*</span></label>
-                                                            <input type="text" name="nama_kategori" class="form-control" value="{{ $k->nama_kategori }}" required>
+                                                            <label class="form-label fw-bold">Nama Kategori <span class="text-danger">*</span></label>
+                                                            <input type="text" id="inputNamaKategoriEdit{{ $k->id }}" name="nama_kategori" class="form-control" value="{{ $k->nama_kategori }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <label class="form-label fw-bold mb-0">Kode Kategori (Singkatan)</label>
+                                                                <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeKategoriEdit({{ $k->id }})">
+                                                                    <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Generate Ulang
+                                                                </button>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-light"><i class="fa-solid fa-barcode"></i></span>
+                                                                <input type="text" id="inputKodeKategoriEdit{{ $k->id }}" name="kode_kategori" class="form-control font-monospace text-uppercase" value="{{ $k->kode_kategori }}" placeholder="Misal: ELK, MBL, MED" maxlength="10">
+                                                                <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeKategoriEdit({{ $k->id }})" title="Otomatis Buat Kode">
+                                                                    <i class="fa-solid fa-bolt text-warning"></i> Auto
+                                                                </button>
+                                                            </div>
+                                                            <small class="text-muted">Kode singkatan yang dipakai pada barcode & format kode aset.</small>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -182,7 +221,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center py-5">
+                                <td colspan="5" class="text-center py-5">
                                     <div class="text-muted mb-2">
                                         <i class="fa-solid fa-tags fa-3x opacity-50"></i>
                                     </div>
@@ -198,4 +237,80 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection
+
+@push('scripts')
+<script>
+    let manualKodeKategoriEdited = false;
+
+    document.getElementById('inputKodeKategoriTambah')?.addEventListener('input', function() {
+        manualKodeKategoriEdited = this.value.trim().length > 0;
+    });
+
+    function generateKategoriCode(nama) {
+        if (!nama || nama.trim() === '') return '';
+        let str = nama.trim().toUpperCase();
+
+        if (str.includes('ELEKTRONIK') || str.includes('KOMPUTER') || str.includes('IT') || str.includes('MULTIMEDIA') || str.includes('AUDIO') || str.includes('PROYEKTOR')) {
+            return 'ELK';
+        } else if (str.includes('MEBEL') || str.includes('FURNITUR') || str.includes('FURNITURE') || str.includes('MEJA') || str.includes('KURSI') || str.includes('LEMARI')) {
+            return 'MBL';
+        } else if (str.includes('MEDIS') || str.includes('KESEHATAN') || str.includes('ALKES') || str.includes('KEPERAWATAN') || str.includes('KEBIDANAN') || str.includes('FARMASI')) {
+            return 'MED';
+        } else if (str.includes('KANTOR') || str.includes('ATK') || str.includes('TULIS') || str.includes('KERTAS')) {
+            return 'ATK';
+        } else if (str.includes('LAB') || str.includes('PRAKTIKUM') || str.includes('ANATOMI')) {
+            return 'LAB';
+        } else if (str.includes('BUKU') || str.includes('PUSTAKA') || str.includes('LITERATUR')) {
+            return 'BUK';
+        } else if (str.includes('KENDARAAN') || str.includes('TRANSPORTASI') || str.includes('MOBIL') || str.includes('MOTOR')) {
+            return 'KND';
+        } else if (str.includes('BERSIH') || str.includes('SANITASI') || str.includes('JANITOR')) {
+            return 'SBS';
+        } else {
+            // Algoritma singkatan kata: pisahkan kata atau ambil 3 huruf konsonan / huruf awal
+            let words = str.split(/[\s\-_/&,.]+/).filter(w => w.length > 0);
+            if (words.length >= 2) {
+                let acronym = words.map(w => w[0]).join('').substring(0, 4);
+                return acronym;
+            } else {
+                let word = words[0] || str;
+                // Ambil huruf konsonan dulu atau 3 karakter awal
+                let consonants = word.replace(/[AIUEO]/g, '');
+                if (consonants.length >= 3) {
+                    return consonants.substring(0, 3);
+                }
+                return word.substring(0, 3);
+            }
+        }
+    }
+
+    function autoGenerateKodeKategori(nama) {
+        if (manualKodeKategoriEdited) return;
+        let code = generateKategoriCode(nama);
+        let inputKode = document.getElementById('inputKodeKategoriTambah');
+        if (inputKode) {
+            inputKode.value = code;
+        }
+    }
+
+    function triggerAutoKodeKategori() {
+        manualKodeKategoriEdited = false;
+        let nama = document.getElementById('inputNamaKategoriTambah')?.value || '';
+        let code = generateKategoriCode(nama);
+        let inputKode = document.getElementById('inputKodeKategoriTambah');
+        if (inputKode) {
+            inputKode.value = code;
+        }
+    }
+
+    function triggerAutoKodeKategoriEdit(id) {
+        let nama = document.getElementById('inputNamaKategoriEdit' + id)?.value || '';
+        let code = generateKategoriCode(nama);
+        let inputKode = document.getElementById('inputKodeKategoriEdit' + id);
+        if (inputKode) {
+            inputKode.value = code;
+        }
+    }
+</script>
+@endpush

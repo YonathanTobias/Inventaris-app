@@ -1,6 +1,4 @@
-﻿/* ========================================================================= */
-/* SPARTA-PW - Login Page CSS                                                */
-/* ========================================================================= */
+/* SPARTA-PW Login Page Stylesheet */
 
 :root {
     --color-navy: #0F2C59;
@@ -73,11 +71,40 @@ body {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+.form-control::placeholder {
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 400;
+    opacity: 1;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+    color: #94A3B8;
+}
+
 .input-group-text {
     border: 1px solid #CBD5E1;
     border-radius: 8px;
     background-color: #F8FAFC;
     color: #475569;
+}
+
+.btn-toggle-pwd {
+    cursor: pointer;
+    background-color: #F8FAFC;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-toggle-pwd:hover {
+    background-color: #F1F5F9;
+}
+
+[data-bs-theme="dark"] .btn-toggle-pwd {
+    background-color: #0F172A !important;
+}
+
+[data-bs-theme="dark"] .btn-toggle-pwd:hover {
+    background-color: #1E293B !important;
 }
 
 .btn-login {

@@ -26,10 +26,10 @@ Route::get('/api/jadwal-ruangan', [PeminjamanRuanganPublikController::class, 'ja
 // Halaman Publik: Verifikasi Scan QR Code Aset (Bisa diakses tanpa login)
 Route::get('/cek/{kode_barang}', [BarangController::class, 'cekAsetPublik'])->name('aset.cek');
 
-// Guest Routes (Autentikasi)
+// Guest Routes (Autentikasi Petugas)
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1')->name('login.process');
+    Route::get('/sugar', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/sugar', [AuthController::class, 'login'])->middleware('throttle:6,1')->name('login.process');
 });
 
 // Authenticated Routes (Harus Login)
@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('laporan/export', [LaporanController::class, 'exportExcel'])->name('laporan.export');
     Route::get('laporan/peminjaman-aset/export', [LaporanController::class, 'exportPeminjamanAset'])->name('laporan.peminjaman-aset.export');
     Route::get('laporan/peminjaman-ruangan/export', [LaporanController::class, 'exportPeminjamanRuangan'])->name('laporan.peminjaman-ruangan.export');
+    Route::get('laporan/mutasi/export', [LaporanController::class, 'exportMutasi'])->name('laporan.mutasi.export');
     Route::post('laporan/pengaturan-ttd', [LaporanController::class, 'updateTtd'])->name('laporan.ttd.update');
 
     // Manajemen Pengguna (Khusus Admin IT / Super User)

@@ -22,11 +22,20 @@ class KategoriController extends Controller
     {
         $validated = $request->validate([
             'nama_kategori' => 'required|string|max:150|unique:kategoris,nama_kategori',
+            'kode_kategori' => 'nullable|string|max:20',
         ]);
+
+        if (empty($validated['kode_kategori'])) {
+            $nama = strtoupper($validated['nama_kategori']);
+            $clean = preg_replace('/[^A-Z0-9]/', '', $nama);
+            $validated['kode_kategori'] = substr($clean, 0, 3) ?: 'UMM';
+        } else {
+            $validated['kode_kategori'] = strtoupper(preg_replace('/[^A-Z0-9]/', '', $validated['kode_kategori']));
+        }
 
         Kategori::create($validated);
 
-        return redirect()->back()->with('success', 'Kategori berhasil ditambahkan!');
+        return redirect()->back()->with('success', "Kategori {$validated['nama_kategori']} ({$validated['kode_kategori']}) berhasil ditambahkan!");
     }
 
     public function update(Request $request, $id)
@@ -34,7 +43,16 @@ class KategoriController extends Controller
         $kategori = Kategori::findOrFail($id);
         $validated = $request->validate([
             'nama_kategori' => 'required|string|max:150|unique:kategoris,nama_kategori,' . $id,
+            'kode_kategori' => 'nullable|string|max:20',
         ]);
+
+        if (empty($validated['kode_kategori'])) {
+            $nama = strtoupper($validated['nama_kategori']);
+            $clean = preg_replace('/[^A-Z0-9]/', '', $nama);
+            $validated['kode_kategori'] = substr($clean, 0, 3) ?: 'UMM';
+        } else {
+            $validated['kode_kategori'] = strtoupper(preg_replace('/[^A-Z0-9]/', '', $validated['kode_kategori']));
+        }
 
         $kategori->update($validated);
 

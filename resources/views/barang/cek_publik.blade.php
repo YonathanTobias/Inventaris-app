@@ -371,9 +371,9 @@
                     <span>Buka & Kelola di Dashboard Admin</span>
                 </a>
             @else
-                <a href="{{ route('login') }}" class="btn btn-outline-dark w-100 py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center gap-2">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                    <span>Login Sebagai Pengelola Aset</span>
+                <a href="{{ url('/') }}" class="btn btn-outline-primary w-100 py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Kembali ke Halaman Utama</span>
                 </a>
             @endauth
         </div>

@@ -273,14 +273,14 @@ body {
 
 /* Custom Tabs Styling */
 .nav-pills-portal .nav-link {
-    color: #64748b;
+    color: #475569;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     transition: all 0.2s ease;
 }
 
 .nav-pills-portal .nav-link.active {
-    background: linear-gradient(135deg, #0D47A1 0%, #2196F3 100%) !important;
+    background: #1E3A8A !important;
     color: #ffffff !important;
     border-color: transparent !important;
     box-shadow: 0 4px 14px rgba(13, 71, 161, 0.25) !important;
@@ -653,10 +653,7 @@ body {
     color: #60A5FA;
 }
 
-/* ===================================================
-   SEARCH & CATEGORY FILTER TOOLBAR
-   =================================================== */
-
+/* Search and category filter toolbar */
 .search-filter-card {
     background: #FFFFFF;
     border: 1px solid #E2E8F0;
@@ -810,10 +807,7 @@ body {
     color: #FFFFFF;
 }
 
-/* ===================================================
-   CLEAN & SPACIOUS ASSET & ROOM CATALOG CARDS
-   =================================================== */
-
+/* Clean and spacious asset and room catalog cards */
 .asset-card {
     background: #FFFFFF;
     border: 1px solid #E2E8F0;
@@ -929,7 +923,7 @@ body {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.72rem;
     font-weight: 700;
-    color: #64748B;
+    color: #475569;
     letter-spacing: 0.02em;
 }
 
@@ -956,7 +950,7 @@ body {
 
 .asset-location {
     font-size: 0.8rem;
-    color: #64748B;
+    color: #475569;
     display: flex;
     align-items: center;
     white-space: nowrap;
@@ -970,7 +964,7 @@ body {
 
 .asset-notes-clean {
     font-size: 0.76rem;
-    color: #64748B;
+    color: #475569;
     line-height: 1.35;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -1220,32 +1214,103 @@ body {
 /* Footer Portal Publik */
 .footer-portal {
     margin-top: auto;
-    background-color: #ffffff;
+    background-color: #FFFFFF;
     border-top: 1px solid #E2E8F0;
-    padding: 1.25rem 0;
-    font-size: 0.825rem;
-    color: #64748B;
+    color: #475569;
+    font-size: 0.875rem;
     transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
 [data-bs-theme="dark"] .footer-portal {
-    background-color: #0F172A;
+    background-color: #0B1329;
     border-top-color: #1E293B;
     color: #94A3B8;
 }
 
-.footer-portal .footer-brand-text {
+.footer-brand-title {
+    color: #0F2C59;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+}
+
+[data-bs-theme="dark"] .footer-brand-title {
+    color: #F8FAFC;
+}
+
+.footer-desc {
+    font-size: 0.835rem;
+    line-height: 1.6;
+    color: #475569;
+}
+
+[data-bs-theme="dark"] .footer-desc {
+    color: #94A3B8;
+}
+
+.footer-section-title {
     color: #0F172A;
+    font-size: 0.9rem;
+    letter-spacing: -0.01em;
+}
+
+[data-bs-theme="dark"] .footer-section-title {
+    color: #F8FAFC;
+}
+
+.footer-links .footer-link {
+    color: #475569;
+    text-decoration: none;
+    font-size: 0.84rem;
+    font-weight: 500;
+    transition: color 0.15s ease, transform 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-links .footer-link:hover {
+    color: #1E3A8A;
+    transform: translateX(3px);
+}
+
+[data-bs-theme="dark"] .footer-links .footer-link {
+    color: #94A3B8;
+}
+
+[data-bs-theme="dark"] .footer-links .footer-link:hover {
+    color: #60A5FA;
+}
+
+.footer-contact-item {
+    font-size: 0.835rem;
+    color: #475569;
+    line-height: 1.5;
+}
+
+[data-bs-theme="dark"] .footer-contact-item {
+    color: #94A3B8;
+}
+
+.footer-bottom-bar {
+    background-color: #F8FAFC;
+    border-top: 1px solid #E2E8F0;
+    font-size: 0.8rem;
+}
+
+[data-bs-theme="dark"] .footer-bottom-bar {
+    background-color: #070D1E;
+    border-top-color: #1E293B;
+}
+
+.footer-portal .footer-brand-text {
+    color: #0F2C59;
     font-weight: 700;
 }
 
 [data-bs-theme="dark"] .footer-portal .footer-brand-text {
-    color: #F8FAFC;
+    color: #60A5FA;
 }
 
-/* ===================================================
-   ROOM CATALOG & SCHEDULE ENHANCEMENTS
-   =================================================== */
+/* Room catalog & schedule enhancements */
 
 .room-capacity-pill {
     font-size: 0.74rem;

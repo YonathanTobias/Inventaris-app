@@ -381,5 +381,18 @@
         </div>
     </div>
 
+    <!-- FOOTER PORTAL PUBLIK -->
+    <footer class="footer-portal mt-auto no-print">
+        <div class="footer-bottom-bar border-top py-3">
+            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 text-center text-md-start">
+                <div class="small text-muted">
+                    <span class="footer-brand-text">SPARTA-PW</span> &copy; {{ date('Y') }} &bull; <strong class="text-dark">STIKES Panti Waluya Malang</strong>. All Rights Reserved.
+                </div>
+                <div class="small text-muted">
+                    <span>Sistem Informasi Inventaris & Peminjaman Sarpras</span>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
