@@ -89,11 +89,11 @@
     display: none;
 }
 
-/* CSS Khusus Cetak Print A4 */
+/* CSS Khusus Cetak Print A4 (Disesuaikan untuk Kertas HVS A4 70 gsm) */
 @media print {
     @page {
         size: A4 portrait;
-        margin: 8mm 10mm;
+        margin: 10mm 12mm;
     }
     .page-web-header, .navbar-custom, .no-print, .d-print-none, .card-stat, form, .modal, .footer-custom, .alert, .nav-pills, .card {
         display: none !important;

@@ -947,7 +947,7 @@ body {
         margin: 0 !important;
     }
     @page {
-        size: portrait;
+        size: A4 portrait;
         margin: 10mm 12mm;
     }
 }

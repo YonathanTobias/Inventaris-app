@@ -255,7 +255,7 @@
                                 </form>
                             </div>
 
-                            <!-- MODAL EDIT BARANG -->
+                            <!-- Modal edit barang -->
                             <div class="modal fade text-start" id="modalEdit{{ $b->id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-lg modal-dialog-centered">
                                     <div class="modal-content">
@@ -271,8 +271,22 @@
                                             <div class="modal-body">
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
-                                                        <label class="form-label">Kode Aset / Barcode <span class="text-danger">*</span></label>
-                                                        <input type="text" name="kode_barang" class="form-control font-monospace" value="{{ $b->kode_barang }}" required>
+                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                            <label class="form-label mb-0" for="inputKodeBarangEdit{{ $b->id }}">Kode Aset / Barcode <span class="text-danger">*</span></label>
+                                                            <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeBarangEdit('{{ $b->id }}')" aria-label="Generate ulang kode aset otomatis">
+                                                                <i class="fa-solid fa-wand-magic-sparkles me-1" aria-hidden="true"></i>Generate Ulang
+                                                            </button>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-light"><i class="fa-solid fa-barcode" aria-hidden="true"></i></span>
+                                                            <input type="text" id="inputKodeBarangEdit{{ $b->id }}" name="kode_barang" class="form-control font-monospace" value="{{ $b->kode_barang }}" required>
+                                                            <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangEdit('{{ $b->id }}')" title="Generate Format Otomatis" aria-label="Generate format otomatis">
+                                                                <i class="fa-solid fa-bolt text-warning" aria-hidden="true"></i> Auto
+                                                            </button>
+                                                        </div>
+                                                        <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
+                                                            Format: <code class="fw-bold">INV-[Ruang]-[Kat]-[YY]-[No]</code>
+                                                        </small>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label">Nama Barang / Aset <span class="text-danger">*</span></label>
@@ -280,19 +294,19 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label">Kategori <span class="text-danger">*</span></label>
-                                                        <select name="kategori_id" class="form-select" required>
+                                                        <select name="kategori_id" id="selectKategoriEdit{{ $b->id }}" class="form-select" required>
                                                             @foreach($kategoris as $k)
-                                                                <option value="{{ $k->id }}" {{ $b->kategori_id == $k->id ? 'selected' : '' }}>
-                                                                    {{ $k->nama_kategori }}
+                                                                <option value="{{ $k->id }}" data-kode-kategori="{{ $k->kode_kategori }}" {{ $b->kategori_id == $k->id ? 'selected' : '' }}>
+                                                                    {{ $k->nama_kategori }} ({{ $k->kode_kategori }})
                                                                 </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label">Lokasi Ruangan <span class="text-danger">*</span></label>
-                                                        <select name="ruangan_id" class="form-select" required>
+                                                        <select name="ruangan_id" id="selectRuanganEdit{{ $b->id }}" class="form-select" required>
                                                             @foreach($ruangans as $r)
-                                                                <option value="{{ $r->id }}" {{ $b->ruangan_id == $r->id ? 'selected' : '' }}>
+                                                                <option value="{{ $r->id }}" data-kode-ruangan="{{ $r->kode_ruangan }}" {{ $b->ruangan_id == $r->id ? 'selected' : '' }}>
                                                                     {{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})
                                                                 </option>
                                                             @endforeach
@@ -312,7 +326,7 @@
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label class="form-label">Tahun Pengadaan</label>
-                                                        <input type="text" name="tahun_pengadaan" class="form-control" value="{{ $b->tahun_pengadaan }}" placeholder="Contoh: 2024">
+                                                        <input type="text" name="tahun_pengadaan" id="inputTahunEdit{{ $b->id }}" class="form-control" value="{{ $b->tahun_pengadaan }}" placeholder="Contoh: 2024">
                                                     </div>
                                                     <div class="col-12">
                                                         <label class="form-label">Keterangan / Spesifikasi</label>
@@ -342,7 +356,7 @@
                                 </div>
                             </div>
 
-                            <!-- MODAL PINDAH RUANGAN -->
+                            <!-- Modal pindah ruangan -->
                             <div class="modal fade text-start" id="modalPindah{{ $b->id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -420,7 +434,7 @@
                                 </div>
                             </div>
 
-                            <!-- MODAL KURANGI STOK -->
+                            <!-- Modal kurangi stok -->
                             <div class="modal fade text-start" id="modalKurang{{ $b->id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -486,7 +500,7 @@
     </div>
 </div>
 
-<!-- MODAL TAMBAH BARANG BARU -->
+<!-- Modal tambah aset baru -->
 <div class="modal fade" id="modalTambahBarang" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -518,20 +532,20 @@
                         </div>
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label mb-0">Kode Aset / Barcode</label>
-                                <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeBarangTambah()">
-                                    <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Generate Ulang
+                                <label class="form-label mb-0" for="inputKodeBarangTambah">Kode Aset / Barcode</label>
+                                <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeBarangTambah()" aria-label="Generate ulang kode aset otomatis">
+                                    <i class="fa-solid fa-wand-magic-sparkles me-1" aria-hidden="true"></i>Generate Ulang
                                 </button>
                             </div>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fa-solid fa-barcode"></i></span>
+                                <span class="input-group-text bg-light"><i class="fa-solid fa-barcode" aria-hidden="true"></i></span>
                                 <input type="text" id="inputKodeBarangTambah" name="kode_barang" class="form-control font-monospace" placeholder="Otomatis: INV-[Ruang]-[Kat]-[YY]-[No]">
-                                <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangTambah()" title="Generate Otomatis">
-                                    <i class="fa-solid fa-bolt text-warning"></i> Auto
+                                <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangTambah()" title="Generate Otomatis" aria-label="Generate format otomatis">
+                                    <i class="fa-solid fa-bolt text-warning" aria-hidden="true"></i> Auto
                                 </button>
                             </div>
                             <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
-                                <i class="fa-solid fa-circle-check text-success me-1"></i>Format: <code class="fw-bold">INV-[Ruang]-[Kat]-[YY]-[No]</code> (bisa diedit manual).
+                                <i class="fa-solid fa-circle-check text-success me-1" aria-hidden="true"></i>Format: <code class="fw-bold">INV-[Ruang]-[Kat]-[YY]-[No]</code> (bisa diedit manual).
                             </small>
                         </div>
                         <div class="col-md-6">
@@ -588,7 +602,7 @@
     </div>
 </div>
 
-<!-- MODAL GLOBAL PINDAH ASET KE RUANGAN LAIN -->
+<!-- Modal mutasi aset global -->
 <div class="modal fade" id="modalPindahAsetGlobal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -622,7 +636,7 @@
                                             data-ruangan-id="{{ $ab->ruangan_id }}"
                                             data-ruangan-nama="{{ $ab->ruangan->nama_ruangan ?? 'Belum Ditentukan' }}"
                                             data-jumlah="{{ $ab->jumlah }}">
-                                        {{ $ab->nama_barang }} ({{ $ab->kode_barang }}) &mdash; Lokasi: {{ $ab->ruangan->nama_ruangan ?? '-' }} [Stok: {{ $ab->jumlah }} Unit]
+                                        {{ $ab->nama_barang }} ({{ $ab->kode_barang }}) &bull; Lokasi: {{ $ab->ruangan->nama_ruangan ?? '-' }} [Stok: {{ $ab->jumlah }} Unit]
                                     </option>
                                 @endforeach
                             </select>
@@ -706,19 +720,16 @@
 <script>
     function computeTargetCode(oldKode, kodeRuangan) {
         if (!kodeRuangan) return oldKode;
-        let parts = kodeRuangan.split('-');
-        let seg = '';
-        if (parts.length >= 2) {
-            let first = parts[0].toUpperCase();
-            if (['LAB', 'R', 'RK', 'RUANG'].includes(first)) {
-                seg = parts[1].substring(0, 4).toUpperCase();
-            } else {
-                seg = parts[0].substring(0, 4).toUpperCase();
+        let cleanRuang = (kodeRuangan || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase() || 'RNG';
+        if (oldKode && oldKode.startsWith('INV-')) {
+            let parts = oldKode.split('-');
+            if (parts.length >= 4) {
+                let kat = parts[2] || 'UMM';
+                let yr = parts[3] || String(new Date().getFullYear()).substring(2);
+                return `INV-${cleanRuang}-${kat}-${yr}-xxx`;
             }
-        } else {
-            seg = kodeRuangan.substring(0, 3).toUpperCase();
         }
-        return 'AST-PW-' + seg + '-xxx';
+        return `INV-${cleanRuang}-...-xxx`;
     }
 
     function handleRowPindahChange(selectEl, rowId, oldKode) {
@@ -808,7 +819,7 @@
         }
     }
 
-    // Auto-Generate Kode Aset Format: INV-[KodeRuang]-[Kategori]-[YY]-[001]
+    // Auto-Generate Kode Aset Format: INV-[KodeRuang]-[Kategori]-[YY]-[NomorUrut]
     let manualKodeBarangEdited = false;
 
     document.getElementById('inputKodeBarangTambah')?.addEventListener('input', function() {
@@ -843,6 +854,33 @@
         return `INV-${cleanRuang}-${katCode}-${yr}-001`;
     }
 
+    let fetchKodeTimeout = null;
+    function fetchSequentialKodeAset(ruanganId, kategoriId, tahun, onResult) {
+        if (!ruanganId) return;
+        clearTimeout(fetchKodeTimeout);
+        fetchKodeTimeout = setTimeout(() => {
+            let url = `{{ route('barang.api.kode') }}?ruangan_id=${encodeURIComponent(ruanganId)}&kategori_id=${encodeURIComponent(kategoriId || '')}&tahun=${encodeURIComponent(tahun || '')}`;
+            fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('API Error');
+                return res.json();
+            })
+            .then(data => {
+                if (data && data.kode && typeof onResult === 'function') {
+                    onResult(data.kode);
+                }
+            })
+            .catch(err => {
+                console.warn('Gagal memuat nomor urut server:', err);
+            });
+        }, 120);
+    }
+
     function handleRuanganTambahChange() {
         let selectRuangan = document.getElementById('selectRuanganTambah');
         let selectKat = document.getElementById('selectKategoriTambah');
@@ -857,15 +895,71 @@
         if (optRuangan && optRuangan.value && !manualKodeBarangEdited) {
             let rKode = optRuangan.getAttribute('data-kode-ruangan') || '';
             let kNama = optKat && optKat.value ? optKat.text : '';
-            let kKode = optKat && optKat.value ? optKat.getAttribute('data-kode-kategori') : '';
+            let kKode = optKat && optKat.value ? (optKat.getAttribute('data-kode-kategori') || '') : '';
             let yr = inputTahun ? inputTahun.value : '';
+
+            // Tampilkan kalkulasi instan sebagai placeholder draft
             inputKode.value = computeAssetCodeClient(rKode, kNama, yr, kKode);
+
+            // Fetch kode urut sequential yang dijamin unik dari server
+            fetchSequentialKodeAset(optRuangan.value, optKat ? optKat.value : '', yr, function(resmi) {
+                if (!manualKodeBarangEdited) {
+                    inputKode.value = resmi;
+                }
+            });
         }
     }
 
     function triggerAutoKodeBarangTambah() {
         manualKodeBarangEdited = false;
-        handleRuanganTambahChange();
+        let selectRuangan = document.getElementById('selectRuanganTambah');
+        let selectKat = document.getElementById('selectKategoriTambah');
+        let inputTahun = document.getElementById('inputTahunTambah');
+        let inputKode = document.getElementById('inputKodeBarangTambah');
+
+        if (!selectRuangan || !selectRuangan.value) {
+            alert('Silakan pilih Lokasi / Ruangan terlebih dahulu!');
+            selectRuangan.focus();
+            return;
+        }
+
+        let optRuangan = selectRuangan.options[selectRuangan.selectedIndex];
+        let optKat = selectKat ? selectKat.options[selectKat.selectedIndex] : null;
+        let rKode = optRuangan ? (optRuangan.getAttribute('data-kode-ruangan') || '') : '';
+        let kNama = optKat && optKat.value ? optKat.text : '';
+        let kKode = optKat && optKat.value ? (optKat.getAttribute('data-kode-kategori') || '') : '';
+        let yr = inputTahun ? inputTahun.value : '';
+
+        inputKode.value = computeAssetCodeClient(rKode, kNama, yr, kKode);
+
+        fetchSequentialKodeAset(optRuangan.value, optKat ? optKat.value : '', yr, function(resmi) {
+            inputKode.value = resmi;
+        });
+    }
+
+    function triggerAutoKodeBarangEdit(id) {
+        let selectRuangan = document.getElementById('selectRuanganEdit' + id);
+        let selectKat = document.getElementById('selectKategoriEdit' + id);
+        let inputTahun = document.getElementById('inputTahunEdit' + id);
+        let inputKode = document.getElementById('inputKodeBarangEdit' + id);
+
+        if (!selectRuangan || !selectRuangan.value) {
+            alert('Silakan pilih Ruangan terlebih dahulu!');
+            return;
+        }
+
+        let optRuangan = selectRuangan.options[selectRuangan.selectedIndex];
+        let optKat = selectKat ? selectKat.options[selectKat.selectedIndex] : null;
+        let rKode = optRuangan ? (optRuangan.getAttribute('data-kode-ruangan') || '') : '';
+        let kNama = optKat && optKat.value ? optKat.text : '';
+        let kKode = optKat && optKat.value ? (optKat.getAttribute('data-kode-kategori') || '') : '';
+        let yr = inputTahun ? inputTahun.value : '';
+
+        inputKode.value = computeAssetCodeClient(rKode, kNama, yr, kKode);
+
+        fetchSequentialKodeAset(selectRuangan.value, optKat ? optKat.value : '', yr, function(resmi) {
+            inputKode.value = resmi;
+        });
     }
 </script>
 @endsection

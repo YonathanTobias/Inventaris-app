@@ -263,6 +263,27 @@ class BarangController extends Controller
         return $candidate;
     }
 
+    // API Endpoint: Generate Kode Aset Realtime & Terverifikasi Unik
+    public function apiGenerateKodeAset(Request $request)
+    {
+        $ruangan = Ruangan::find($request->ruangan_id);
+        if (!$ruangan) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Ruangan tidak valid atau belum dipilih',
+                'kode'    => '',
+            ], 400);
+        }
+
+        $kategori = Kategori::find($request->kategori_id);
+        $kode = self::generateKodeBarangBaru($ruangan, $kategori, $request->tahun);
+
+        return response()->json([
+            'status' => 'success',
+            'kode'   => $kode,
+        ]);
+    }
+
     // Fitur Pengurangan / Kerusakan Barang
     public function kurangiStok(Request $request, $id)
     {

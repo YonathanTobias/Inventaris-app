@@ -3,12 +3,51 @@
  */
 
 let currentPrintTarget = 'kir';
+let originalPageTitle = document.title;
 
 function setLaporanTab(tabName) {
     currentPrintTarget = tabName;
     let url = new URL(window.location);
     url.searchParams.set('tab', tabName);
     window.history.pushState({}, '', url);
+}
+
+// Dapatkan nama file yang rapi sesuai nama ruangan untuk export PDF KIR
+function getKIRSuggestedFileName() {
+    let namaRuanganEl = document.getElementById('kirNamaRuanganFile');
+    let namaRuangan = namaRuanganEl ? namaRuanganEl.value.trim() : '';
+
+    if (!namaRuangan) {
+        let selectRuangan = document.querySelector('select[name="ruangan_id"]');
+        if (selectRuangan && selectRuangan.selectedIndex > 0) {
+            let opt = selectRuangan.options[selectRuangan.selectedIndex];
+            namaRuangan = opt.text.replace(/^KIR\s*-\s*/i, '').trim();
+        }
+    }
+
+    if (namaRuangan) {
+        // Bersihkan karakter terlarang pada nama berkas: \ / : * ? " < > |
+        let cleanName = namaRuangan.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, ' ').trim();
+        return 'KIR - ' + cleanName;
+    }
+
+    return 'KIR - Rekapitulasi Global Seluruh Ruangan';
+}
+
+function updatePrintDocumentTitle(target) {
+    if (!originalPageTitle) {
+        originalPageTitle = document.title;
+    }
+
+    if (target === 'kir') {
+        document.title = getKIRSuggestedFileName();
+    } else if (target === 'peminjaman-aset') {
+        document.title = 'Laporan Peminjaman Aset';
+    } else if (target === 'peminjaman-ruangan') {
+        document.title = 'Laporan Peminjaman Ruangan';
+    } else if (target === 'mutasi') {
+        document.title = 'Laporan Mutasi Perpindahan Aset';
+    }
 }
 
 function triggerPrintTab(target) {
@@ -26,13 +65,23 @@ function triggerPrintTab(target) {
         document.body.classList.add('printing-mutasi');
     }
 
+    updatePrintDocumentTitle(target);
+
     setTimeout(function() {
         window.print();
     }, 150);
 }
 
+window.addEventListener('beforeprint', function() {
+    let activeTab = currentPrintTarget || 'kir';
+    updatePrintDocumentTitle(activeTab);
+});
+
 window.addEventListener('afterprint', function() {
     document.body.classList.remove('printing-kir', 'printing-peminjaman-aset', 'printing-peminjaman-ruangan', 'printing-mutasi');
+    if (originalPageTitle) {
+        document.title = originalPageTitle;
+    }
 });
 
 // Sinkronisasi Live Preview Tanda Tangan
@@ -41,17 +90,29 @@ function syncKIRSignaturesLive() {
     let ketuaNipEl  = document.getElementById('inputNipKetua');
     let kabagNamaEl = document.getElementById('inputNamaKabag');
     let kabagNipEl  = document.getElementById('inputNipKabag');
+    let pjNamaEl    = document.getElementById('inputNamaPjRuangan');
+    let pjNipEl     = document.getElementById('inputNipPjRuangan');
     let kotaEl      = document.getElementById('inputKotaDokumen');
+    let tglEl       = document.getElementById('inputTanggalDokumen');
 
     let ketuaNama = ketuaNamaEl ? ketuaNamaEl.value : '';
     let ketuaNip  = ketuaNipEl ? ketuaNipEl.value : '';
     let kabagNama = kabagNamaEl ? kabagNamaEl.value : '';
     let kabagNip  = kabagNipEl ? kabagNipEl.value : '';
+    let pjNama    = pjNamaEl ? pjNamaEl.value : '';
+    let pjNip     = pjNipEl ? pjNipEl.value : '';
     let kota      = kotaEl ? (kotaEl.value || 'Malang') : 'Malang';
     
-    // Format date string from current date
+    // Format date string
+    let dateObj = new Date();
+    if (tglEl && tglEl.value) {
+        let parts = tglEl.value.split('-');
+        if (parts.length === 3) {
+            dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        }
+    }
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    const dateFormatted = new Date().toLocaleDateString('id-ID', options);
+    const dateFormatted = dateObj.toLocaleDateString('id-ID', options);
     let formattedTgl = kota + ', ' + dateFormatted;
 
     let previewEl = document.getElementById('previewTglDokumen');
@@ -61,7 +122,36 @@ function syncKIRSignaturesLive() {
     document.querySelectorAll('.print-nip-ketua').forEach(el => el.innerText = ketuaNip);
     document.querySelectorAll('.print-nama-kabag').forEach(el => el.innerText = kabagNama);
     document.querySelectorAll('.print-nip-kabag').forEach(el => el.innerText = kabagNip);
+    document.querySelectorAll('.print-nama-pj').forEach(el => el.innerText = pjNama);
+    document.querySelectorAll('.print-nip-pj').forEach(el => el.innerText = pjNip);
     document.querySelectorAll('.print-tgl-dokumen').forEach(el => el.innerText = formattedTgl);
+
+    let quickTgl = document.getElementById('quickTanggalKIR');
+    if (quickTgl && tglEl && quickTgl.value !== tglEl.value) {
+        quickTgl.value = tglEl.value;
+    }
+}
+
+// Handler pengubahan tanggal TTD cepat dari toolbar KIR
+function handleQuickDateKIR(inputEl) {
+    let tglEl = document.getElementById('inputTanggalDokumen');
+    if (tglEl) {
+        tglEl.value = inputEl.value;
+    }
+    syncKIRSignaturesLive();
+
+    let form = document.getElementById('formPengaturanTTD');
+    if (form) {
+        let formData = new FormData(form);
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || formData.get('_token')
+            },
+            body: formData
+        }).catch(err => console.warn('Gagal menyimpan tanggal TTD otomatis:', err));
+    }
 }
 
 // Simpan ke Database via AJAX

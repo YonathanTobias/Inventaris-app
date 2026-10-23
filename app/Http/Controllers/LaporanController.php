@@ -106,8 +106,11 @@ class LaporanController extends Controller
             'nama_ketua'         => Pengaturan::get('nama_ketua', 'apt. Wida Padminingsih, S.Farm., M.Farm.'),
             'nip_ketua'          => Pengaturan::get('nip_ketua', 'NIDN. 0725048201'),
             'nama_kabag_sarpras' => Pengaturan::get('nama_kabag_sarpras', 'Petrus Tobias, S.Kom.'),
-            'nip_kabag_sarpras'  => Pengaturan::get('nip_kabag_sarpras', 'NIK. 2021.08.045'),
+            'nip_kabag_sarpras'  => Pengaturan::get('nip_kabag_sarpras', 'NIP. 2021.08.045'),
+            'nama_pj_ruangan'    => Pengaturan::get('nama_pj_ruangan', 'Penanggung Jawab Ruangan'),
+            'nip_pj_ruangan'     => Pengaturan::get('nip_pj_ruangan', 'NIP. -'),
             'kota_dokumen'       => Pengaturan::get('kota_dokumen', 'Malang'),
+            'tanggal_dokumen'    => Pengaturan::get('tanggal_dokumen', date('Y-m-d')),
         ];
 
         return view('laporan.index', compact(
@@ -129,15 +132,23 @@ class LaporanController extends Controller
             'nip_ketua'          => 'nullable|string|max:100',
             'nama_kabag_sarpras' => 'required|string|max:255',
             'nip_kabag_sarpras'  => 'nullable|string|max:100',
+            'nama_pj_ruangan'    => 'nullable|string|max:255',
+            'nip_pj_ruangan'     => 'nullable|string|max:100',
             'kota_dokumen'       => 'nullable|string|max:100',
+            'tanggal_dokumen'    => 'nullable|date',
         ]);
 
         Pengaturan::set('nama_ketua', $request->nama_ketua);
         Pengaturan::set('nip_ketua', $request->nip_ketua ?? '');
         Pengaturan::set('nama_kabag_sarpras', $request->nama_kabag_sarpras);
         Pengaturan::set('nip_kabag_sarpras', $request->nip_kabag_sarpras ?? '');
+        Pengaturan::set('nama_pj_ruangan', $request->nama_pj_ruangan ?? '');
+        Pengaturan::set('nip_pj_ruangan', $request->nip_pj_ruangan ?? '');
         if ($request->filled('kota_dokumen')) {
             Pengaturan::set('kota_dokumen', $request->kota_dokumen);
+        }
+        if ($request->filled('tanggal_dokumen')) {
+            Pengaturan::set('tanggal_dokumen', $request->tanggal_dokumen);
         }
 
         if ($request->ajax() || $request->wantsJson()) {

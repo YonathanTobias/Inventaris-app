@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('kategori', KategoriController::class)->except(['create', 'edit', 'show']);
 
     // Master Data Barang Aset & Mutasi
+    Route::get('barang/api/generate-kode', [BarangController::class, 'apiGenerateKodeAset'])->name('barang.api.kode');
     Route::get('barang/label/massal', [BarangController::class, 'cetakLabelMassal'])->name('barang.label.massal');
     Route::get('barang/{id}/label', [BarangController::class, 'cetakLabel'])->name('barang.label');
     Route::resource('barang', BarangController::class)->except(['create', 'edit', 'show']);

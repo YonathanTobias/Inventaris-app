@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
+@php
+    $selectedRuangan = request('ruangan_id') ? $ruangans->firstWhere('id', request('ruangan_id')) : null;
+    $pageTitle = $selectedRuangan ? 'KIR - ' . $selectedRuangan->nama_ruangan : 'Pusat Laporan & Rekapitulasi';
+@endphp
+@section('title', $pageTitle)
+
 @section('content')
+<input type="hidden" id="kirNamaRuanganFile" value="{{ $selectedRuangan ? $selectedRuangan->nama_ruangan : '' }}">
+<input type="hidden" id="kirKodeRuanganFile" value="{{ $selectedRuangan ? $selectedRuangan->kode_ruangan : '' }}">
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 no-print d-print-none page-web-header">
     <div>
@@ -22,8 +30,7 @@
                 <div>
                     <span class="text-muted fw-semibold small text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.04em;">Aset Terdaftar</span>
                     <div class="fs-3 fw-bold text-dark mt-1">{{ number_format($stats['total_aset_tercatat']) }}</div>
-                    <div class="text-muted small mt-1 d-flex align-items-center gap-1.5" style="font-size: 0.78rem; font-weight: 500;">
-                        <i class="fa-solid fa-boxes-stacked text-primary"></i>
+                    <div class="text-muted small mt-1" style="font-size: 0.78rem; font-weight: 500;">
                         <span><strong>{{ number_format($stats['total_unit_tercatat']) }}</strong> Unit Fisik</span>
                     </div>
                 </div>
@@ -39,8 +46,7 @@
                 <div>
                     <span class="text-muted fw-semibold small text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.04em;">Ruangan Terdata</span>
                     <div class="fs-3 fw-bold text-success mt-1">{{ number_format($stats['total_ruangan']) }}</div>
-                    <div class="text-muted small mt-1 d-flex align-items-center gap-1.5" style="font-size: 0.78rem; font-weight: 500;">
-                        <i class="fa-solid fa-door-open text-success"></i>
+                    <div class="text-muted small mt-1" style="font-size: 0.78rem; font-weight: 500;">
                         <span>Titik Lokasi KIR</span>
                     </div>
                 </div>
@@ -56,8 +62,7 @@
                 <div>
                     <span class="text-muted fw-semibold small text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.04em;">Peminjaman Aset</span>
                     <div class="fs-3 fw-bold text-info mt-1">{{ number_format($stats['total_pinjam_aset']) }}</div>
-                    <div class="text-muted small mt-1 d-flex align-items-center gap-1.5" style="font-size: 0.78rem; font-weight: 500;">
-                        <i class="fa-solid fa-hand-holding-hand text-info"></i>
+                    <div class="text-muted small mt-1" style="font-size: 0.78rem; font-weight: 500;">
                         <span>Data Transaksi</span>
                     </div>
                 </div>
@@ -73,8 +78,7 @@
                 <div>
                     <span class="text-muted fw-semibold small text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.04em;">Booking Ruangan</span>
                     <div class="fs-3 fw-bold text-warning mt-1">{{ number_format($stats['total_pinjam_ruangan']) }}</div>
-                    <div class="text-muted small mt-1 d-flex align-items-center gap-1.5" style="font-size: 0.78rem; font-weight: 500;">
-                        <i class="fa-solid fa-calendar-check text-warning"></i>
+                    <div class="text-muted small mt-1" style="font-size: 0.78rem; font-weight: 500;">
                         <span>Jadwal Kegiatan</span>
                     </div>
                 </div>
@@ -92,22 +96,22 @@
         <ul class="nav nav-pills nav-fill gap-2" id="pills-tab-laporan" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link fw-bold py-2.5 rounded-3 {{ !in_array(request('tab'), ['peminjaman-aset', 'peminjaman-ruangan', 'mutasi']) ? 'active' : '' }}" id="tab-kir-btn" data-bs-toggle="pill" data-bs-target="#tab-kir" type="button" role="tab" onclick="setLaporanTab('kir')">
-                    <i class="fa-solid fa-file-excel me-1.5 text-success"></i> 1. KIR & Data Aset
+                    1. KIR & Data Aset
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link fw-bold py-2.5 rounded-3 {{ request('tab') == 'peminjaman-aset' ? 'active' : '' }}" id="tab-pinjam-aset-btn" data-bs-toggle="pill" data-bs-target="#tab-pinjam-aset" type="button" role="tab" onclick="setLaporanTab('peminjaman-aset')">
-                    <i class="fa-solid fa-hand-holding-hand me-1.5 text-primary"></i> 2. Peminjaman Aset
+                    2. Peminjaman Aset
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link fw-bold py-2.5 rounded-3 {{ request('tab') == 'peminjaman-ruangan' ? 'active' : '' }}" id="tab-pinjam-ruangan-btn" data-bs-toggle="pill" data-bs-target="#tab-pinjam-ruangan" type="button" role="tab" onclick="setLaporanTab('peminjaman-ruangan')">
-                    <i class="fa-solid fa-calendar-check me-1.5 text-warning"></i> 3. Peminjaman Ruangan
+                    3. Peminjaman Ruangan
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link fw-bold py-2.5 rounded-3 {{ request('tab') == 'mutasi' ? 'active' : '' }}" id="tab-mutasi-btn" data-bs-toggle="pill" data-bs-target="#tab-mutasi" type="button" role="tab" onclick="setLaporanTab('mutasi')">
-                    <i class="fa-solid fa-right-left me-1.5 text-info"></i> 4. Mutasi Pindah Ruangan
+                    4. Mutasi Pindah Ruangan
                 </button>
             </li>
         </ul>
@@ -123,57 +127,62 @@
         <!-- TOOLBAR TERPADU (Filter, Search & Action Group) -->
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print">
             <div class="card-body p-3">
-                <div class="row g-2.5 align-items-center">
+                <div class="row g-2.5 align-items-center justify-content-between">
                     <!-- Sisi Kiri: Filter Ruangan & Search Bar -->
-                    <div class="col-lg-6 col-12">
-                        <div class="row g-2">
-                            <div class="col-md-6 col-12">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="fa-solid fa-door-open"></i></span>
-                                    <select name="ruangan_id" class="form-select border-start-0 ps-0" onchange="window.location.href='{{ route('laporan.index') }}?tab=kir&ruangan_id=' + this.value">
-                                        <option value="">-- SEMUA RUANGAN (REKAP GLOBAL) --</option>
-                                        @foreach($ruangans as $r)
-                                            <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
-                                                KIR - {{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                    <div class="col-xxl-5 col-xl-5 col-12">
+                        <div class="d-flex align-items-center gap-2">
+                            <!-- Filter Ruangan -->
+                            <div style="flex: 1 1 auto; min-width: 0;">
+                                <select name="ruangan_id" class="form-select text-truncate" onchange="window.location.href='{{ route('laporan.index') }}?tab=kir&ruangan_id=' + this.value" title="Pilih Ruangan untuk KIR">
+                                    <option value="">-- SEMUA RUANGAN (REKAP GLOBAL) --</option>
+                                    @foreach($ruangans as $r)
+                                        <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                            KIR - {{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-md-6 col-12">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                    <input type="text" id="tableSearchKIR" class="form-control border-start-0 ps-0" placeholder="Cari nama aset, kode, kategori..." oninput="onKIRTableFilter()">
-                                    <button class="btn btn-outline-secondary border-start-0 text-muted d-none" type="button" id="btnClearSearchKIR" onclick="clearKIRSearch()" title="Hapus pencarian"><i class="fa-solid fa-xmark"></i></button>
-                                </div>
+
+                            <!-- Search Bar Aset -->
+                            <div class="input-group" style="width: 200px; flex-shrink: 0;">
+                                <span class="input-group-text bg-light border-end-0 text-muted"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input type="text" id="tableSearchKIR" class="form-control border-start-0 ps-1" placeholder="Cari aset..." oninput="onKIRTableFilter()">
+                                <button class="btn btn-outline-secondary border-start-0 text-muted d-none" type="button" id="btnClearSearchKIR" onclick="clearKIRSearch()" title="Hapus pencarian"><i class="fa-solid fa-xmark"></i></button>
                             </div>
+
+                            <!-- Reset Filter -->
+                            <a href="{{ route('laporan.index') }}?tab=kir" class="btn btn-light border text-muted px-2.5 py-2 rounded-3 flex-shrink-0" title="Reset Filter">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Sisi Kanan: Atur Penandatangan, Cetak Dropdown, Export Excel, Reset -->
-                    <div class="col-lg-6 col-12 d-flex gap-2 justify-content-lg-end flex-wrap align-items-center">
-                        <!-- Tombol Atur Penandatangan (Modal Trigger) -->
-                        <button type="button" class="btn btn-outline-primary fw-semibold px-3 py-2 rounded-3 d-inline-flex align-items-center gap-1.5" data-bs-toggle="modal" data-bs-target="#modalPengaturanTTD">
-                            <i class="fa-solid fa-pen-nib"></i>
-                            <span>Atur Penandatangan</span>
-                        </button>
+                    <!-- Sisi Kanan: Tanggal TTD, Atur TTD, Cetak KIR, Export Excel -->
+                    <div class="col-xxl-7 col-xl-7 col-12">
+                        <div class="d-flex align-items-center justify-content-xl-end gap-2 flex-wrap">
+                            <!-- Tanggal TTD KIR Langsung -->
+                            <div class="d-inline-flex align-items-center gap-1.5 bg-light border rounded-3 px-2.5 py-1.5" title="Tanggal TTD Dokumen KIR">
+                                <span class="text-muted small fw-semibold text-nowrap">Tgl TTD:</span>
+                                <input type="date" id="quickTanggalKIR" class="form-control form-control-sm border-0 bg-transparent p-0 fw-bold font-monospace" style="width: 120px; font-size: 0.8rem; box-shadow: none;" value="{{ $pejabat['tanggal_dokumen'] }}" onchange="handleQuickDateKIR(this)" aria-label="Tanggal TTD Dokumen">
+                            </div>
 
-                        <!-- Tombol Cetak Lembar KIR Langsung -->
-                        <button type="button" onclick="triggerPrintTab('kir')" class="btn btn-dark fw-bold px-3.5 py-2 rounded-3 d-inline-flex align-items-center gap-1.5 shadow-sm" title="Cetak Dokumen KIR Resmi Format A4">
-                            <i class="fa-solid fa-print"></i>
-                            <span>Cetak KIR</span>
-                        </button>
+                            <!-- Tombol Atur Penandatangan -->
+                            <button type="button" class="btn btn-outline-primary btn-sm fw-semibold px-3 py-2 rounded-3 d-inline-flex align-items-center text-nowrap" data-bs-toggle="modal" data-bs-target="#modalPengaturanTTD">
+                                <span>Atur TTD</span>
+                            </button>
 
-                        <!-- Export Excel -->
-                        <a href="{{ route('laporan.export', request()->query()) }}" class="btn btn-success fw-bold px-3 py-2 rounded-3 d-inline-flex align-items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-file-excel"></i>
-                            <span>Export Excel</span>
-                        </a>
+                            <!-- Tombol Cetak Lembar KIR Langsung -->
+                            <button type="button" onclick="triggerPrintTab('kir')" class="btn btn-dark btn-sm fw-bold px-3 py-2 rounded-3 d-inline-flex align-items-center gap-1.5 shadow-sm text-nowrap" title="Cetak Dokumen KIR Resmi Format Kertas HVS A4 (70 gsm)">
+                                <i class="fa-solid fa-print"></i>
+                                <span>Cetak KIR (A4)</span>
+                            </button>
 
-                        <!-- Reset -->
-                        <a href="{{ route('laporan.index') }}?tab=kir" class="btn btn-light border text-muted px-2.5 py-2 rounded-3" title="Reset Filter">
-                            <i class="fa-solid fa-rotate-left"></i>
-                        </a>
+                            <!-- Export Excel -->
+                            <a href="{{ route('laporan.export', request()->query()) }}" class="btn btn-success btn-sm fw-bold px-3 py-2 rounded-3 d-inline-flex align-items-center gap-1.5 shadow-sm text-nowrap">
+                                <i class="fa-solid fa-file-excel"></i>
+                                <span>Export Excel</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,16 +191,13 @@
         <!-- Tabel Data Aset Preview KIR -->
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print overflow-hidden">
             <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="p-1.5 rounded-2 bg-primary-subtle text-primary"><i class="fa-solid fa-boxes-stacked"></i></span>
-                    <h6 class="fw-bold mb-0 text-dark">
-                        @if(request('ruangan_id'))
-                            Data Aset Ruangan: {{ $ruangans->find(request('ruangan_id'))->nama_ruangan ?? '' }}
-                        @else
-                            Rekapitulasi Seluruh Aset Sarpras (Global)
-                        @endif
-                    </h6>
-                </div>
+                <h6 class="fw-bold mb-0 text-dark">
+                    @if(request('ruangan_id'))
+                        Data Aset Ruangan: {{ $ruangans->find(request('ruangan_id'))->nama_ruangan ?? '' }}
+                    @else
+                        Rekapitulasi Seluruh Aset Sarpras (Global)
+                    @endif
+                </h6>
                 <div class="d-flex align-items-center gap-3">
                     <div class="d-flex align-items-center gap-1.5 text-muted small">
                         <span>Tampilkan:</span>
@@ -222,9 +228,6 @@
                             <th class="text-start" role="button" onclick="sortKIRTable('kategori')">
                                 <span>Kategori</span> <i class="fa-solid fa-sort small ms-0.5 text-muted" id="sortIcon-kategori"></i>
                             </th>
-                            <th class="text-start" role="button" onclick="sortKIRTable('ruangan')">
-                                <span>Lokasi Ruangan</span> <i class="fa-solid fa-sort small ms-0.5 text-muted" id="sortIcon-ruangan"></i>
-                            </th>
                             <th class="text-end pe-4" style="width: 95px;" role="button" onclick="sortKIRTable('jumlah')">
                                 <span>Jumlah</span> <i class="fa-solid fa-sort small ms-0.5 text-muted" id="sortIcon-jumlah"></i>
                             </th>
@@ -251,7 +254,6 @@
                             <td class="text-start ps-3"><span class="badge-code">{{ $b->kode_barang }}</span></td>
                             <td class="text-start fw-bold text-dark">{{ $b->nama_barang }}</td>
                             <td class="text-start"><span class="badge-category">{{ $b->kategori->nama_kategori ?? '-' }}</span></td>
-                            <td class="text-start"><span class="badge-room-code">{{ $b->ruangan->nama_ruangan ?? '-' }}</span></td>
                             <td class="text-end pe-4 fw-bold font-monospace text-dark" style="font-size: 0.95rem;">{{ $b->jumlah }}</td>
                             <td class="text-center">
                                 @if($b->kondisi === 'Baik')
@@ -272,7 +274,7 @@
                         </tr>
                         @empty
                         <tr id="emptyRowKIR">
-                            <td colspan="8" class="text-center py-5 text-muted">
+                            <td colspan="7" class="text-center py-5 text-muted">
                                 <i class="fa-solid fa-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
                                 Tidak ada data aset pada filter ini.
                             </td>
@@ -304,12 +306,11 @@
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                        <i class="fa-solid fa-filter text-primary"></i>
-                        <span>Filter Periode & Status Peminjaman Aset</span>
+                    <h6 class="fw-bold mb-0">
+                        Filter Periode & Status Peminjaman Aset
                     </h6>
                     <button type="button" class="btn btn-sm btn-outline-primary fw-semibold rounded-3 px-3" data-bs-toggle="modal" data-bs-target="#modalPengaturanTTD">
-                        <i class="fa-solid fa-pen-nib me-1"></i> Atur Penandatangan
+                        Atur Penandatangan
                     </button>
                 </div>
 
@@ -364,10 +365,7 @@
         <!-- Web Table Preview Peminjaman Aset -->
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print overflow-hidden">
             <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="p-1.5 rounded-2 bg-info-subtle text-info"><i class="fa-solid fa-hand-holding-hand"></i></span>
-                    <h6 class="fw-bold mb-0 text-dark">Rekapitulasi Peminjaman Aset Sarpras</h6>
-                </div>
+                <h6 class="fw-bold mb-0 text-dark">Rekapitulasi Peminjaman Aset Sarpras</h6>
                 <span class="badge bg-light text-secondary border font-monospace px-2.5 py-1.5 rounded-pill">{{ $peminjamanAsets->count() }} Data Transaksi</span>
             </div>
             <div class="table-responsive">
@@ -454,12 +452,11 @@
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                        <i class="fa-solid fa-filter text-primary"></i>
-                        <span>Filter Periode & Ruangan Kegiatan</span>
+                    <h6 class="fw-bold mb-0">
+                        Filter Periode & Ruangan Kegiatan
                     </h6>
                     <button type="button" class="btn btn-sm btn-outline-primary fw-semibold rounded-3 px-3" data-bs-toggle="modal" data-bs-target="#modalPengaturanTTD">
-                        <i class="fa-solid fa-pen-nib me-1"></i> Atur Penandatangan
+                        Atur Penandatangan
                     </button>
                 </div>
 
@@ -526,10 +523,7 @@
         <!-- Web Table Preview Peminjaman Ruangan -->
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print overflow-hidden">
             <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="p-1.5 rounded-2 bg-warning-subtle text-warning"><i class="fa-solid fa-calendar-check"></i></span>
-                    <h6 class="fw-bold mb-0 text-dark">Rekapitulasi Peminjaman & Booking Ruangan Kegiatan</h6>
-                </div>
+                <h6 class="fw-bold mb-0 text-dark">Rekapitulasi Peminjaman & Booking Ruangan Kegiatan</h6>
                 <span class="badge bg-light text-secondary border font-monospace px-2.5 py-1.5 rounded-pill">{{ $peminjamanRuangans->count() }} Jadwal Booking</span>
             </div>
             <div class="table-responsive">
@@ -679,10 +673,7 @@
         <!-- Web Table Preview Mutasi -->
         <div class="card border-0 shadow-sm rounded-4 mb-4 no-print overflow-hidden">
             <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="p-1.5 rounded-2 bg-info-subtle text-info"><i class="fa-solid fa-right-left"></i></span>
-                    <h6 class="fw-bold mb-0 text-dark">Daftar Rekapitulasi Mutasi Pindah Ruangan Aset</h6>
-                </div>
+                <h6 class="fw-bold mb-0 text-dark">Daftar Rekapitulasi Mutasi Pindah Ruangan Aset</h6>
                 <span class="badge bg-light text-secondary border font-monospace px-2.5 py-1.5 rounded-pill">{{ $mutasis->count() }} Data Mutasi</span>
             </div>
             <div class="table-responsive">
@@ -713,15 +704,13 @@
                                 </div>
                             </td>
                             <td class="text-start">
-                                <span class="badge bg-light text-dark border px-2.5 py-1.5 rounded-3 d-inline-flex align-items-center gap-1.5">
-                                    <i class="fa-solid fa-door-closed text-muted"></i>
-                                    <span>{{ $m->ruanganAsal->nama_ruangan ?? '-' }}</span>
+                                <span class="badge bg-light text-dark border px-2.5 py-1.5 rounded-3">
+                                    {{ $m->ruanganAsal->nama_ruangan ?? '-' }}
                                 </span>
                             </td>
                             <td class="text-start">
-                                <span class="badge bg-primary-subtle text-primary border border-primary px-2.5 py-1.5 rounded-3 d-inline-flex align-items-center gap-1.5">
-                                    <i class="fa-solid fa-door-open text-primary"></i>
-                                    <span>{{ $m->ruanganTujuan->nama_ruangan ?? '-' }}</span>
+                                <span class="badge bg-primary-subtle text-primary border border-primary px-2.5 py-1.5 rounded-3">
+                                    {{ $m->ruanganTujuan->nama_ruangan ?? '-' }}
                                 </span>
                             </td>
                             <td class="text-center fw-bold font-monospace text-dark">
@@ -755,14 +744,9 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             <div class="modal-header border-bottom px-4 py-3 bg-light">
-                <div class="d-flex align-items-center gap-2.5">
-                    <div class="rounded-3 bg-primary-subtle text-primary p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1.1rem;">
-                        <i class="fa-solid fa-pen-nib"></i>
-                    </div>
-                    <div>
-                        <h5 class="modal-title fw-bold mb-0 text-dark" id="modalPengaturanTTDLabel">Pengaturan Pejabat Penandatangan</h5>
-                        <small class="text-muted">Konfigurasi nama & NIP pejabat pada lembar cetak dokumen KIR dan laporan</small>
-                    </div>
+                <div>
+                    <h5 class="modal-title fw-bold mb-0 text-dark" id="modalPengaturanTTDLabel">Pengaturan Pejabat Penandatangan</h5>
+                    <small class="text-muted">Konfigurasi nama & NIP pejabat pada lembar cetak dokumen KIR dan laporan</small>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -775,53 +759,77 @@
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <!-- 1. Penanggung Jawab Ruangan -->
+                        <div class="col-md-4">
                             <div class="card border rounded-3 p-3 bg-light-subtle h-100">
-                                <label class="form-label fw-bold text-dark mb-2.5 d-flex align-items-center gap-2">
-                                    <span class="p-1 rounded bg-primary text-white"><i class="fa-solid fa-user-tie small"></i></span>
-                                    <span>Ketua STIKes Panti Waluya</span>
+                                <label class="form-label fw-bold text-dark mb-2.5">
+                                    PJ Ruangan
                                 </label>
                                 <div class="mb-2.5">
                                     <label class="form-label small text-muted mb-1">Nama Lengkap & Gelar</label>
-                                    <input type="text" name="nama_ketua" id="inputNamaKetua" class="form-control" value="{{ $pejabat['nama_ketua'] }}" placeholder="Nama Lengkap & Gelar Ketua" oninput="syncKIRSignaturesLive()" required>
+                                    <input type="text" name="nama_pj_ruangan" id="inputNamaPjRuangan" class="form-control" value="{{ $pejabat['nama_pj_ruangan'] }}" placeholder="Nama PJ Ruangan" oninput="syncKIRSignaturesLive()">
+                                </div>
+                                <div>
+                                    <label class="form-label small text-muted mb-1">NIP PJ Ruangan</label>
+                                    <input type="text" name="nip_pj_ruangan" id="inputNipPjRuangan" class="form-control font-monospace" value="{{ $pejabat['nip_pj_ruangan'] }}" placeholder="NIP PJ Ruangan" oninput="syncKIRSignaturesLive()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Kepala Sarana & Prasarana -->
+                        <div class="col-md-4">
+                            <div class="card border rounded-3 p-3 bg-light-subtle h-100">
+                                <label class="form-label fw-bold text-dark mb-2.5">
+                                    Kepala Sarpras
+                                </label>
+                                <div class="mb-2.5">
+                                    <label class="form-label small text-muted mb-1">Nama Lengkap & Gelar</label>
+                                    <input type="text" name="nama_kabag_sarpras" id="inputNamaKabag" class="form-control" value="{{ $pejabat['nama_kabag_sarpras'] }}" placeholder="Nama Lengkap & Gelar" oninput="syncKIRSignaturesLive()" required>
+                                </div>
+                                <div>
+                                    <label class="form-label small text-muted mb-1">NIP Kepala Sarpras</label>
+                                    <input type="text" name="nip_kabag_sarpras" id="inputNipKabag" class="form-control font-monospace" value="{{ $pejabat['nip_kabag_sarpras'] }}" placeholder="NIP Kepala Sarpras" oninput="syncKIRSignaturesLive()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Ketua STIKes Panti Waluya Malang -->
+                        <div class="col-md-4">
+                            <div class="card border rounded-3 p-3 bg-light-subtle h-100">
+                                <label class="form-label fw-bold text-dark mb-2.5">
+                                    Ketua STIKes
+                                </label>
+                                <div class="mb-2.5">
+                                    <label class="form-label small text-muted mb-1">Nama Lengkap & Gelar</label>
+                                    <input type="text" name="nama_ketua" id="inputNamaKetua" class="form-control" value="{{ $pejabat['nama_ketua'] }}" placeholder="Nama Lengkap & Gelar" oninput="syncKIRSignaturesLive()" required>
                                 </div>
                                 <div>
                                     <label class="form-label small text-muted mb-1">NIDN / NIP Ketua</label>
-                                    <input type="text" name="nip_ketua" id="inputNipKetua" class="form-control font-monospace" value="{{ $pejabat['nip_ketua'] }}" placeholder="NIDN / NIP Ketua" oninput="syncKIRSignaturesLive()">
+                                    <input type="text" name="nip_ketua" id="inputNipKetua" class="form-control font-monospace" value="{{ $pejabat['nip_ketua'] }}" placeholder="NIDN / NIP" oninput="syncKIRSignaturesLive()">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="card border rounded-3 p-3 bg-light-subtle h-100">
-                                <label class="form-label fw-bold text-dark mb-2.5 d-flex align-items-center gap-2">
-                                    <span class="p-1 rounded bg-primary text-white"><i class="fa-solid fa-user-gear small"></i></span>
-                                    <span>Kepala Bagian Sarpras</span>
-                                </label>
-                                <div class="mb-2.5">
-                                    <label class="form-label small text-muted mb-1">Nama Lengkap & Gelar</label>
-                                    <input type="text" name="nama_kabag_sarpras" id="inputNamaKabag" class="form-control" value="{{ $pejabat['nama_kabag_sarpras'] }}" placeholder="Nama Lengkap & Gelar Kabag Sarpras" oninput="syncKIRSignaturesLive()" required>
-                                </div>
-                                <div>
-                                    <label class="form-label small text-muted mb-1">NIK / NIP Kabag Sarpras</label>
-                                    <input type="text" name="nip_kabag_sarpras" id="inputNipKabag" class="form-control font-monospace" value="{{ $pejabat['nip_kabag_sarpras'] }}" placeholder="NIK / NIP Kabag Sarpras" oninput="syncKIRSignaturesLive()">
-                                </div>
-                            </div>
-                        </div>
-
+                        <!-- 4. Kota & Tanggal Dokumen -->
                         <div class="col-12">
                             <div class="card border rounded-3 p-3 bg-light-subtle">
-                                <div class="row g-2.5 align-items-center">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold text-dark mb-1 d-flex align-items-center gap-1.5">
-                                            <i class="fa-solid fa-location-dot text-primary"></i> Kota / Lokasi Terbit Dokumen
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold text-dark mb-1" for="inputKotaDokumen">
+                                            Kota Dokumen
                                         </label>
-                                        <input type="text" name="kota_dokumen" id="inputKotaDokumen" class="form-control" value="{{ $pejabat['kota_dokumen'] }}" placeholder="Kota Dokumen (e.g. Malang)" oninput="syncKIRSignaturesLive()">
+                                        <input type="text" name="kota_dokumen" id="inputKotaDokumen" class="form-control" value="{{ $pejabat['kota_dokumen'] }}" placeholder="Contoh: Malang" oninput="syncKIRSignaturesLive()">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small text-muted mb-1">Pratinjau Format Tanggal Cetak</label>
-                                        <div class="p-2 bg-white rounded border text-muted small">
-                                            Hasil cetak: <strong class="text-dark" id="previewTglDokumen">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</strong>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold text-dark mb-1" for="inputTanggalDokumen">
+                                            Tanggal TTD Dokumen
+                                        </label>
+                                        <input type="date" name="tanggal_dokumen" id="inputTanggalDokumen" class="form-control" value="{{ $pejabat['tanggal_dokumen'] }}" onchange="syncKIRSignaturesLive()" oninput="syncKIRSignaturesLive()">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-muted mb-1">Pratinjau Tanggal Cetak</label>
+                                        <div class="p-2 bg-white rounded border text-muted small text-truncate">
+                                            Hasil cetak: <strong class="text-dark" id="previewTglDokumen">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -891,13 +899,12 @@
         <thead>
             <tr>
                 <th style="width: 25px;" class="text-center">NO</th>
-                <th style="width: 90px;" class="text-center">KODE ASET</th>
+                <th style="width: 95px;" class="text-center">KODE ASET</th>
                 <th>NAMA BARANG / ASET</th>
-                <th style="width: 100px;">KATEGORI</th>
-                <th style="width: 100px;">RUANGAN</th>
-                <th style="width: 35px;" class="text-center">JML</th>
-                <th style="width: 75px;" class="text-center">KONDISI</th>
-                <th style="width: 45px;" class="text-center">TAHUN</th>
+                <th style="width: 120px;">KATEGORI</th>
+                <th style="width: 40px;" class="text-center">JML</th>
+                <th style="width: 80px;" class="text-center">KONDISI</th>
+                <th style="width: 50px;" class="text-center">TAHUN</th>
             </tr>
         </thead>
         <tbody>
@@ -907,7 +914,6 @@
                 <td class="text-center font-monospace" style="white-space: nowrap; font-size: 7.5pt;">{{ $b->kode_barang }}</td>
                 <td class="fw-bold">{{ $b->nama_barang }}</td>
                 <td>{{ $b->kategori->nama_kategori ?? '-' }}</td>
-                <td>{{ $b->ruangan->nama_ruangan ?? '-' }}</td>
                 <td class="text-center fw-bold">{{ $b->jumlah }}</td>
                 <td class="text-center" style="white-space: nowrap;">{{ $b->kondisi }}</td>
                 <td class="text-center" style="white-space: nowrap;">{{ $b->tahun_pengadaan ?? '-' }}</td>
@@ -916,22 +922,37 @@
         </tbody>
     </table>
 
-    <!-- Tanda Tangan KIR -->
-    <div class="kir-ttd-container mt-3 pt-1">
-        <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
-            <div class="text-center" style="width: 300px;">
-                <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
-                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
-                <div style="height: 48px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
+    <!-- Tanda Tangan KIR (Susunan Piramida: 2 Atas Sejajar, 1 Tengah Bawah) -->
+    <div class="kir-ttd-container mt-4 pt-2" style="font-family: 'Times New Roman', Times, serif;">
+        <!-- Baris 1: Penanggung Jawab Ruangan & Kepala Sarana & Prasarana -->
+        <div class="d-flex justify-content-between align-items-start text-center">
+            <!-- 1. Penanggung Jawab Ruangan (Kiri) -->
+            <div style="width: 290px;">
+                <p class="mb-0 invisible" style="font-size: 0.85rem;" aria-hidden="true">&nbsp;</p>
+                <p class="fw-bold mb-0" style="font-size: 0.85rem;">Penanggung Jawab Ruangan</p>
+                <div style="height: 68px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-pj" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_pj_ruangan'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-pj" style="font-size: 0.78rem;">{{ $pejabat['nip_pj_ruangan'] }}</p>
             </div>
-            <div class="text-center" style="width: 300px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 48px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+
+            <!-- 2. Kepala Sarana & Prasarana (Kanan) -->
+            <div style="width: 290px;">
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.85rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="fw-bold mb-0" style="font-size: 0.85rem;">Kepala Sarana &amp; Prasarana</p>
+                <div style="height: 68px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.78rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+            </div>
+        </div>
+
+        <!-- Baris 2: Ketua STIKes Panti Waluya Malang (Tengah Bawah) -->
+        <div class="d-flex justify-content-center text-center mt-4">
+            <div style="width: 330px;">
+                <p class="mb-0" style="font-size: 0.85rem;">Mengetahui,</p>
+                <p class="fw-bold mb-0" style="font-size: 0.85rem;">Ketua STIKes Panti Waluya Malang</p>
+                <div style="height: 68px;"></div>
+                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.78rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
         </div>
     </div>
@@ -1019,19 +1040,19 @@
     </table>
 
     <!-- Tanda Tangan Laporan Aset -->
-    <div class="kir-ttd-container mt-3 pt-1">
+    <div class="kir-ttd-container mt-4 pt-2">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
                 <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
-                <div style="height: 48px;"></div>
+                <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 300px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
                 <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 48px;"></div>
+                <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
@@ -1119,19 +1140,19 @@
     </table>
 
     <!-- Tanda Tangan Laporan Ruangan -->
-    <div class="kir-ttd-container mt-3 pt-1">
+    <div class="kir-ttd-container mt-4 pt-2">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
                 <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
-                <div style="height: 48px;"></div>
+                <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 300px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
                 <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 48px;"></div>
+                <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
@@ -1219,19 +1240,19 @@
     </table>
 
     <!-- Tanda Tangan Laporan Mutasi -->
-    <div class="kir-ttd-container mt-3 pt-1">
+    <div class="kir-ttd-container mt-4 pt-2">
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
                 <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
-                <div style="height: 48px;"></div>
+                <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 300px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</p>
+                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
                 <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
-                <div style="height: 48px;"></div>
+                <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
             </div>
