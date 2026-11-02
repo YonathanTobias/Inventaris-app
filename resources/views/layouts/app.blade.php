@@ -17,7 +17,7 @@
     <link rel="icon" type="image/png" href="{{ asset('images/favicon-square.png') }}">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
     
-    <!-- Google Fonts (Style UI Typography: Plus Jakarta Sans, Nunito, JetBrains Mono) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -29,13 +29,13 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css">
     
-    <!-- Custom App Dashboard CSS (Style UI Design System) -->
+    <!-- Custom App Dashboard CSS -->
     <link rel="stylesheet" href="{{ asset('css/app-dashboard.css') }}">
     @stack('styles')
 </head>
 <body>
 
-    <!-- Header Navbar (Style UI Pill Bar) -->
+    <!-- Header Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container-fluid px-lg-4 px-3">
             <a class="navbar-brand" href="{{ route('barang.index') }}">

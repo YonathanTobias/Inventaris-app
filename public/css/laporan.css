@@ -1,4 +1,4 @@
-/* Pusat Laporan dan Rekapitulasi Sarpras Stylesheet (Style UI Design System) */
+/* Pusat Laporan dan Rekapitulasi Sarpras Stylesheet */
 
 .card-stat-modern {
     transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
@@ -8,7 +8,7 @@
     box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.08) !important;
 }
 
-/* Style UI Segmented Pill Tabs (#pills-tab-laporan) with STIKES Brand Colors */
+/* Tab Navigasi Laporan */
 #pills-tab-laporan {
     background: #f0f7ff;
     border: 1px solid rgba(30, 58, 138, 0.12);
@@ -56,7 +56,7 @@
     box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Style UI Minimal Semantic Condition Badges (.price-badge style) */
+/* Badge Kondisi Aset */
 .badge-kondisi-status {
     display: inline-flex;
     align-items: center;

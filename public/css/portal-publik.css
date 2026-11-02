@@ -58,7 +58,7 @@ body {
     outline-offset: 2px !important;
 }
 
-/* Top Navbar (Style UI Frosted Glass Header) */
+/* Top Navbar */
 .public-nav {
     background: rgba(255, 255, 255, 0.84);
     backdrop-filter: blur(20px) saturate(140%);
@@ -292,7 +292,7 @@ body {
     cursor: pointer;
 }
 
-/* Custom Tabs Styling (Style UI Pill Tabs with STIKES Brand Colors) */
+/* Custom Tabs Styling */
 .nav-pills-portal .nav-link {
     color: #475569;
     background: #ffffff;

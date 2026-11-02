@@ -1,5 +1,5 @@
 :root {
-    /* Style UI Tokens (Light Theme Default) */
+    /* Light Theme Tokens */
     --bg-canvas: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-hover: #f1f5f9;
@@ -42,7 +42,7 @@
     --text-main: var(--text-primary);
     --text-muted: var(--text-secondary);
 
-    /* Sizing & Elevation (Style UI Scale) */
+    /* Sizing & Elevation */
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 14px;
@@ -53,13 +53,13 @@
     --shadow-lg: 0 12px 28px -4px rgba(15, 23, 42, 0.1);
     --shadow-card: 0 4px 16px rgba(15, 23, 42, 0.06);
 
-    /* Typography (Style UI Font Stack) */
+    /* Typography */
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-title: 'Nunito', var(--font-sans);
     --font-mono: 'JetBrains Mono', "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
-/* Style UI Dark Theme Tokens */
+/* Dark Theme Tokens */
 [data-bs-theme="dark"] {
     --bg-canvas: #0b0f17;
     --bg-surface: #131b26;
@@ -127,7 +127,7 @@ body {
     outline-offset: 2px !important;
 }
 
-/* Style UI Frosted Navbar & Pill Cluster */
+/* Navbar */
 .navbar-custom {
     background: rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(20px) saturate(140%);
@@ -357,7 +357,7 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-/* Style UI Cards & Surfaces */
+/* Cards & Surfaces */
 .card {
     background-color: var(--bg-surface);
     border: 1px solid var(--border-subtle);
@@ -503,7 +503,7 @@ body {
     background-color: var(--bg-surface-hover);
 }
 
-/* Style UI Minimal Badges (Inspired by .price-badge) */
+/* Status Badges */
 .badge {
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -637,7 +637,7 @@ body {
     font-size: 0.75rem;
 }
 
-/* Style UI Pill Buttons & Actions */
+/* Buttons & Actions */
 .btn {
     border-radius: 9999px;
     font-weight: 600;
@@ -824,7 +824,7 @@ body {
     margin-bottom: 0.35rem;
 }
 
-/* Modals (Style UI Clean Elevated Surface) */
+/* Modals */
 .modal-content {
     border-radius: 18px;
     border: 1px solid var(--border-subtle);
@@ -1108,7 +1108,7 @@ body {
     color: #94a3b8 !important;
 }
 
-/* Theme Toggle Button (Style UI Capsule Toggle) */
+/* Theme Toggle Button */
 .theme-toggle-btn {
     background: rgba(15, 23, 42, 0.05);
     border: 1px solid rgba(15, 23, 42, 0.1);
