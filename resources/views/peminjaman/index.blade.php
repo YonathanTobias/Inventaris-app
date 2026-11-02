@@ -6,7 +6,7 @@
 <div class="row g-3 mb-4 align-items-center">
     <div class="col-md-7">
         <h3 class="fw-bold text-dark mb-1" style="letter-spacing: -0.02em;">
-            <i class="fa-solid fa-hand-holding-hand text-primary me-2"></i>Manajemen Peminjaman Aset
+            Manajemen Peminjaman Aset
         </h3>
         <p class="text-muted small mb-0">Kelola persetujuan (approval) Kepala Sarpras, serah terima barang fisik, dan pengembalian aset.</p>
     </div>
@@ -15,7 +15,7 @@
             <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Buka Portal Publik
         </a>
         <button class="btn btn-modern-primary" data-bs-toggle="modal" data-bs-target="#modalTambahPeminjamanInternal">
-            <i class="fa-solid fa-plus-circle me-1"></i>
+            <i class="fa-solid fa-plus me-1"></i>
             <span>Catat Peminjaman Internal</span>
         </button>
     </div>
@@ -37,7 +37,7 @@
         <a href="{{ route('peminjaman.index', ['status' => 'Menunggu']) }}" class="text-decoration-none">
             <div class="card card-stat-filter h-100 {{ request('status') === 'Menunggu' ? 'active-stat active-stat-warning' : '' }}">
                 <div class="card-body p-3 text-center">
-                    <div class="text-warning small fw-bold mb-1"><i class="fa-solid fa-clock me-1"></i>Menunggu Approval</div>
+                    <div class="text-warning small fw-bold mb-1">Menunggu Approval</div>
                     <div class="fs-4 fw-bold text-warning">{{ number_format($stats['menunggu']) }}</div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
         <a href="{{ route('peminjaman.index', ['status' => 'Disetujui']) }}" class="text-decoration-none">
             <div class="card card-stat-filter h-100 {{ request('status') === 'Disetujui' ? 'active-stat active-stat-primary' : '' }}">
                 <div class="card-body p-3 text-center">
-                    <div class="text-primary small fw-bold mb-1"><i class="fa-solid fa-circle-check me-1"></i>Siap Diambil</div>
+                    <div class="text-primary small fw-bold mb-1">Siap Diambil</div>
                     <div class="fs-4 fw-bold text-primary">{{ number_format($stats['disetujui']) }}</div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
         <a href="{{ route('peminjaman.index', ['status' => 'Diambil']) }}" class="text-decoration-none">
             <div class="card card-stat-filter h-100 {{ request('status') === 'Diambil' ? 'active-stat active-stat-info' : '' }}">
                 <div class="card-body p-3 text-center">
-                    <div class="text-info small fw-bold mb-1"><i class="fa-solid fa-box-open me-1"></i>Sudah Diambil</div>
+                    <div class="text-info small fw-bold mb-1">Sudah Diambil</div>
                     <div class="fs-4 fw-bold text-info">{{ number_format($stats['diambil']) }}</div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
         <a href="{{ route('peminjaman.index', ['status' => 'Kembali']) }}" class="text-decoration-none">
             <div class="card card-stat-filter h-100 {{ request('status') === 'Kembali' ? 'active-stat active-stat-success' : '' }}">
                 <div class="card-body p-3 text-center">
-                    <div class="text-success small fw-bold mb-1"><i class="fa-solid fa-check-double me-1"></i>Sudah Kembali</div>
+                    <div class="text-success small fw-bold mb-1">Sudah Kembali</div>
                     <div class="fs-4 fw-bold text-success">{{ number_format($stats['kembali'] ?? 0) }}</div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
         <a href="{{ route('peminjaman.index', ['status' => 'Ditolak']) }}" class="text-decoration-none">
             <div class="card card-stat-filter h-100 {{ request('status') === 'Ditolak' ? 'active-stat active-stat-danger' : '' }}">
                 <div class="card-body p-3 text-center">
-                    <div class="text-danger small fw-bold mb-1"><i class="fa-solid fa-ban me-1"></i>Ditolak</div>
+                    <div class="text-danger small fw-bold mb-1">Ditolak</div>
                     <div class="fs-4 fw-bold text-danger">{{ number_format($stats['ditolak'] ?? 0) }}</div>
                 </div>
             </div>
@@ -108,11 +108,11 @@
             </div>
             <div class="col-md-3 text-md-end d-flex gap-2 justify-content-md-end">
                 <button type="submit" class="btn btn-sm btn-primary px-3">
-                    <i class="fa-solid fa-filter me-1"></i> Filter
+                    Filter
                 </button>
                 @if(request()->hasAny(['search', 'status']))
                     <a href="{{ route('peminjaman.index') }}" class="btn btn-sm btn-outline-secondary">
-                        <i class="fa-solid fa-rotate-left"></i> Reset
+                        Reset
                     </a>
                 @endif
             </div>
@@ -124,7 +124,7 @@
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
         <h6 class="fw-bold mb-0 text-dark">
-            <i class="fa-solid fa-list-check text-primary me-2"></i>Daftar Pengajuan & Peminjaman Aset
+            Daftar Pengajuan & Peminjaman Aset
         </h6>
         <span class="badge bg-light text-secondary border font-monospace">{{ $peminjamans->count() }} Data</span>
     </div>
@@ -170,7 +170,7 @@
                                         </a>
                                     @endif
                                     <span class="badge bg-light text-muted border font-monospace px-2 py-0.5 rounded" style="font-size: 0.68rem;">
-                                        <i class="fa-solid fa-ticket me-1"></i>{{ $p->kode_peminjaman }}
+                                        {{ $p->kode_peminjaman }}
                                     </span>
                                 </div>
                             </div>
@@ -181,25 +181,25 @@
                             <div class="fw-bold text-dark">{{ $p->details->first()->barang->nama_barang ?? '-' }}</div>
                             <div class="mt-1">
                                 <button type="button" class="btn btn-sm btn-outline-primary py-0.5 px-2 rounded-pill fw-semibold" data-bs-toggle="modal" data-bs-target="#modalRincianAset{{ $p->id }}" style="font-size: 0.75rem;">
-                                    <i class="fa-solid fa-layer-group me-1"></i>+{{ $p->details->count() - 1 }} Aset Lainnya (Paket)
+                                    +{{ $p->details->count() - 1 }} Aset Lainnya (Paket)
                                 </button>
                             </div>
                         @elseif($p->details && $p->details->count() === 1)
                             <div class="fw-bold text-dark">{{ $p->details->first()->barang->nama_barang ?? '-' }}</div>
                             <div class="d-flex align-items-center gap-1.5 mt-1 flex-wrap">
                                 <span class="badge-code py-0.5 px-1.5">{{ $p->details->first()->barang->kode_barang ?? '-' }}</span>
-                                <span class="text-muted small"><i class="fa-solid fa-door-open me-1"></i>{{ $p->details->first()->barang->ruangan->nama_ruangan ?? '-' }}</span>
+                                <span class="text-muted small">{{ $p->details->first()->barang->ruangan->nama_ruangan ?? '-' }}</span>
                             </div>
                         @else
                             <div class="fw-bold text-dark">{{ $p->barang->nama_barang ?? 'Aset Telah Dihapus' }}</div>
                             <div class="d-flex align-items-center gap-1.5 mt-1 flex-wrap">
                                 <span class="badge-code py-0.5 px-1.5">{{ $p->barang->kode_barang ?? '-' }}</span>
-                                <span class="text-muted small"><i class="fa-solid fa-door-open me-1"></i>{{ $p->barang->ruangan->nama_ruangan ?? '-' }}</span>
+                                <span class="text-muted small">{{ $p->barang->ruangan->nama_ruangan ?? '-' }}</span>
                             </div>
                         @endif
                         @if($p->keperluan)
                             <div class="text-muted small mt-1.5 text-truncate" style="max-width: 240px; font-size: 0.75rem;" title="{{ $p->keperluan }}">
-                                <i class="fa-solid fa-quote-left text-muted me-1" style="font-size: 0.65rem;"></i>{{ $p->keperluan }}
+                                "{{ $p->keperluan }}"
                             </div>
                         @endif
                     </td>
@@ -222,12 +222,12 @@
                             </div>
                             @if($p->tanggal_diambil)
                                 <div class="small text-info mt-0.5" style="font-size: 0.72rem;">
-                                    <i class="fa-solid fa-box-open me-1"></i>Diambil: {{ $p->tanggal_diambil->locale('id')->translatedFormat('d M, H:i') }}
+                                    Diambil: {{ $p->tanggal_diambil->locale('id')->translatedFormat('d M, H:i') }}
                                 </div>
                             @endif
                             @if($p->tanggal_kembali)
                                 <div class="small text-success mt-0.5" style="font-size: 0.72rem;">
-                                    <i class="fa-solid fa-check-double me-1"></i>Kembali: {{ \Carbon\Carbon::parse($p->tanggal_kembali)->locale('id')->translatedFormat('d M Y') }}
+                                    Kembali: {{ \Carbon\Carbon::parse($p->tanggal_kembali)->locale('id')->translatedFormat('d M Y') }}
                                 </div>
                             @endif
                         </div>
@@ -235,33 +235,33 @@
                     <td class="text-center">
                         @if($p->status === 'Menunggu')
                             <span class="badge bg-warning text-dark border border-warning px-2.5 py-1.5 rounded-pill text-nowrap">
-                                <i class="fa-solid fa-clock me-1"></i>Menunggu
+                                Menunggu
                             </span>
                         @elseif($p->status === 'Disetujui')
                             <span class="badge bg-primary text-white border border-primary px-2.5 py-1.5 rounded-pill text-nowrap">
-                                <i class="fa-solid fa-circle-check me-1"></i>Disetujui
+                                Disetujui
                             </span>
                         @elseif($p->status === 'Diambil')
                             <span class="badge bg-info text-dark border border-info px-2.5 py-1.5 rounded-pill text-nowrap">
-                                <i class="fa-solid fa-box-open me-1"></i>Diambil
+                                Diambil
                             </span>
                         @elseif($p->status === 'Kembali')
                             <span class="badge bg-success-subtle text-success border border-success px-2.5 py-1.5 rounded-pill text-nowrap">
-                                <i class="fa-solid fa-check-double me-1"></i>Kembali
+                                Kembali
                             </span>
                             @if($p->kondisi_kembali)
                                 <div class="small text-muted mt-1" style="font-size: 0.72rem;">Kondisi: <strong>{{ $p->kondisi_kembali }}</strong></div>
                             @endif
                         @elseif($p->status === 'Ditolak')
                             <span class="badge bg-danger text-white border border-danger px-2.5 py-1.5 rounded-pill text-nowrap">
-                                <i class="fa-solid fa-ban me-1"></i>Ditolak
+                                Ditolak
                             </span>
                             @if($p->alasan_penolakan)
                                 <div class="small text-danger mt-1 text-truncate" style="font-size: 0.72rem; max-width: 130px;" title="{{ $p->alasan_penolakan }}">Alasan: {{ $p->alasan_penolakan }}</div>
                             @endif
                         @else
                             <span class="badge bg-danger text-white border border-danger px-2.5 py-1.5 rounded-pill text-nowrap">
-                                <i class="fa-solid fa-triangle-exclamation me-1"></i>Terlambat
+                                Terlambat
                             </span>
                         @endif
                     </td>
@@ -273,13 +273,13 @@
                                 <form action="{{ route('peminjaman.approve', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin MENYETUJUI peminjaman aset ini sebagai Kepala Sarpras?')">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-primary fw-bold text-nowrap" title="Setujui Peminjaman">
-                                        <i class="fa-solid fa-check me-1"></i>Setujui
+                                        Setujui
                                     </button>
                                 </form>
 
                                 <!-- Tombol Tolak (Buka Modal) -->
                                 <button type="button" class="btn btn-sm btn-outline-danger text-nowrap" data-bs-toggle="modal" data-bs-target="#modalTolak{{ $p->id }}" title="Tolak Pengajuan">
-                                    <i class="fa-solid fa-xmark"></i> Tolak
+                                    Tolak
                                 </button>
 
                             <!-- AKSI TAHAP 2: SERAH TERIMA BARANG (BARANG SUDAH DIAMBIL) -->
@@ -287,14 +287,14 @@
                                 <form action="{{ route('peminjaman.serahkan', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Konfirmasi bahwa barang fisik telah diserahkan dan diambil oleh peminjam? Stok aset akan resmi dipotong.')">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-info text-white fw-bold shadow-sm text-nowrap" title="Serahkan Barang ke Pemohon">
-                                        <i class="fa-solid fa-box-open me-1"></i>Serahkan Barang
+                                        Serahkan Barang
                                     </button>
                                 </form>
 
                             <!-- AKSI TAHAP 3: PROSES PENGEMBALIAN BARANG -->
                             @elseif(in_array($p->status, ['Diambil', 'Terlambat']))
                                 <button type="button" class="btn btn-sm btn-success fw-bold shadow-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#modalKembali{{ $p->id }}" title="Proses Pengembalian Barang">
-                                    <i class="fa-solid fa-rotate-left me-1"></i>Kembalikan
+                                    Kembalikan
                                 </button>
                             @endif
 
@@ -320,7 +320,7 @@
                                 <div class="modal-content border-0 shadow">
                                     <div class="modal-header bg-danger text-white">
                                         <h5 class="modal-title fw-bold">
-                                            <i class="fa-solid fa-ban me-2"></i>Tolak Permohonan Peminjaman
+                                            Tolak Permohonan Peminjaman
                                         </h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                     </div>
@@ -338,7 +338,7 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                                             <button type="submit" class="btn btn-danger fw-bold">
-                                                <i class="fa-solid fa-ban me-1"></i> Konfirmasi Tolak
+                                                Konfirmasi Tolak
                                             </button>
                                         </div>
                                     </form>
@@ -354,7 +354,7 @@
                                 <div class="modal-content border-0 shadow">
                                     <div class="modal-header bg-success text-white">
                                         <h5 class="modal-title fw-bold">
-                                            <i class="fa-solid fa-rotate-left me-2"></i>Pengembalian Aset Fisik
+                                            Pengembalian Aset Fisik
                                         </h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                     </div>
@@ -391,14 +391,13 @@
                                             </div>
 
                                             <div class="alert alert-info py-2 px-3 small mb-0 rounded-3">
-                                                <i class="fa-solid fa-circle-info me-1"></i>
                                                 Setelah diproses, stok fisik aset sebanyak <strong>{{ $p->jumlah }} unit</strong> akan otomatis dikembalikan ke inventaris ruangan asal.
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                                             <button type="submit" class="btn btn-success fw-bold px-4">
-                                                <i class="fa-solid fa-check-circle me-1"></i> Konfirmasi Pengembalian
+                                                Konfirmasi Pengembalian
                                             </button>
                                         </div>
                                     </form>
@@ -412,7 +411,7 @@
                                 <div class="modal-content border-0 shadow">
                                     <div class="modal-header bg-dark text-white">
                                         <h6 class="modal-title fw-bold">
-                                            <i class="fa-solid fa-boxes-stacked text-primary me-2"></i>Rincian Paket Aset [{{ $p->kode_peminjaman }}]
+                                            Rincian Paket Aset [{{ $p->kode_peminjaman }}]
                                         </h6>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                     </div>
@@ -454,9 +453,6 @@
                 @empty
                 <tr>
                     <td colspan="7" class="text-center py-5">
-                        <div class="text-muted mb-2">
-                            <i class="fa-solid fa-hand-holding-hand fa-3x opacity-50"></i>
-                        </div>
                         <h6 class="fw-bold text-secondary mb-1">Belum Ada Data Peminjaman</h6>
                         <p class="text-muted small mb-3">Pengajuan dari dosen atau mahasiswa di portal publik akan masuk ke sini.</p>
                         <a href="{{ url('/') }}" target="_blank" class="btn btn-sm btn-outline-primary">
@@ -476,7 +472,7 @@
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title fw-bold">
-                    <i class="fa-solid fa-hand-holding-hand text-primary me-2"></i>Catat Peminjaman Langsung (Internal)
+                    Catat Peminjaman Langsung (Internal)
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -540,7 +536,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary fw-bold px-4">
-                        <i class="fa-solid fa-paper-plane me-1"></i> Simpan Peminjaman
+                        Simpan Peminjaman
                     </button>
                 </div>
             </form>

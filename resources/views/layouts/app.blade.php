@@ -17,10 +17,10 @@
     <link rel="icon" type="image/png" href="{{ asset('images/favicon-square.png') }}">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts (Style UI Typography: Plus Jakarta Sans, Nunito, JetBrains Mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Bootstrap 5 & FontAwesome 6 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,24 +29,24 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css">
     
-    <!-- Custom App Dashboard CSS -->
+    <!-- Custom App Dashboard CSS (Style UI Design System) -->
     <link rel="stylesheet" href="{{ asset('css/app-dashboard.css') }}">
     @stack('styles')
 </head>
 <body>
 
-    <!-- Header Navbar -->
+    <!-- Header Navbar (Style UI Pill Bar) -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container-fluid px-lg-4 px-3">
             <a class="navbar-brand" href="{{ route('barang.index') }}">
-                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 38px; width: auto; object-fit: contain;" class="me-1">
+                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 34px; width: auto; object-fit: contain;">
                 <div>
-                    <span class="d-block text-white" style="line-height: 1.1; font-weight: 800; letter-spacing: -0.02em;">SPARTA-PW</span>
-                    <small style="font-size: 0.65rem; color: #CBD5E1; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">STIKES Panti Waluya Malang</small>
+                    <span class="d-block nav-brand-title" style="line-height: 1.1; font-weight: 800; letter-spacing: -0.025em;">SPARTA-PW</span>
+                    <small class="nav-brand-subtitle" style="font-size: 0.64rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">STIKES Panti Waluya Malang</small>
                 </div>
             </a>
             
-            <button class="navbar-toggler border-0 text-white position-relative" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+            <button class="navbar-toggler border-0 position-relative" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <i class="fa-solid fa-bars-staggered"></i>
                 @if((isset($pendingAsetCount) && $pendingAsetCount > 0) || (isset($pendingRuanganCount) && $pendingRuanganCount > 0))
                     <span class="position-absolute top-0 start-100 translate-middle p-1.5 bg-danger border border-light rounded-circle">
@@ -56,11 +56,10 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
+                <ul class="navbar-nav mx-lg-auto align-items-lg-center nav-pill-cluster my-2 my-lg-0">
                     <!-- 1. Data Aset -->
                     <li class="nav-item">
                         <a class="nav-link-custom {{ request()->routeIs('barang.*') ? 'active' : '' }}" href="{{ route('barang.index') }}">
-                            <i class="fa-solid fa-box-archive"></i>
                             <span>Data Aset</span>
                         </a>
                     </li>
@@ -68,7 +67,6 @@
                     <!-- 2. Peminjaman Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link-custom dropdown-toggle {{ (request()->routeIs('peminjaman.*') || request()->routeIs('peminjaman-ruangan.*')) ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-hand-holding-hand"></i>
                             <span>Peminjaman</span>
                             @php
                                 $totalPending = ($pendingAsetCount ?? 0) + ($pendingRuanganCount ?? 0);
@@ -79,14 +77,11 @@
                                 </span>
                             @endif
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-custom shadow border-0 rounded-3 mt-2 p-2">
+                        <ul class="dropdown-menu dropdown-menu-custom shadow border-0 rounded-3 mt-2 p-1.5">
                             <li>
                                 <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('peminjaman.*') ? 'active' : '' }}" href="{{ route('peminjaman.index') }}">
                                     <div class="d-flex align-items-center justify-content-between w-100">
-                                        <span class="d-flex align-items-center gap-2">
-                                            <i class="fa-solid fa-boxes-stacked text-primary"></i>
-                                            <span>Peminjaman Aset</span>
-                                        </span>
+                                        <span>Peminjaman Aset</span>
                                         @if(isset($pendingAsetCount) && $pendingAsetCount > 0)
                                             <span class="badge bg-danger rounded-pill px-2 py-0.5 ms-2 font-monospace" style="font-size: 0.68rem;">
                                                 {{ $pendingAsetCount > 99 ? '99+' : $pendingAsetCount }}
@@ -98,10 +93,7 @@
                             <li>
                                 <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('peminjaman-ruangan.*') ? 'active' : '' }}" href="{{ route('peminjaman-ruangan.index') }}">
                                     <div class="d-flex align-items-center justify-content-between w-100">
-                                        <span class="d-flex align-items-center gap-2">
-                                            <i class="fa-solid fa-calendar-check text-primary"></i>
-                                            <span>Peminjaman Ruangan</span>
-                                        </span>
+                                        <span>Peminjaman Ruangan</span>
                                         @if(isset($pendingRuanganCount) && $pendingRuanganCount > 0)
                                             <span class="badge bg-danger rounded-pill px-2 py-0.5 ms-2 font-monospace" style="font-size: 0.68rem;">
                                                 {{ $pendingRuanganCount > 99 ? '99+' : $pendingRuanganCount }}
@@ -116,19 +108,16 @@
                     <!-- 3. Master Data Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link-custom dropdown-toggle {{ (request()->routeIs('ruangan.*') || request()->routeIs('kategori.*')) ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-layer-group"></i>
                             <span>Master Data</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-custom shadow border-0 rounded-3 mt-2 p-2">
+                        <ul class="dropdown-menu dropdown-menu-custom shadow border-0 rounded-3 mt-2 p-1.5">
                             <li>
                                 <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('ruangan.*') ? 'active' : '' }}" href="{{ route('ruangan.index') }}">
-                                    <i class="fa-solid fa-door-open text-primary me-2"></i>
                                     <span>Data Ruangan</span>
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('kategori.*') ? 'active' : '' }}" href="{{ route('kategori.index') }}">
-                                    <i class="fa-solid fa-tags text-primary me-2"></i>
                                     <span>Kategori Aset</span>
                                 </a>
                             </li>
@@ -138,7 +127,6 @@
                     <!-- 4. Laporan & KIR -->
                     <li class="nav-item">
                         <a class="nav-link-custom {{ request()->routeIs('laporan.*') ? 'active' : '' }}" href="{{ route('laporan.index') }}">
-                            <i class="fa-solid fa-file-lines"></i>
                             <span>Laporan & KIR</span>
                         </a>
                     </li>
@@ -147,48 +135,46 @@
                     @if(auth()->check() && auth()->user()->role === 'it')
                     <li class="nav-item">
                         <a class="nav-link-custom {{ request()->routeIs('user.*') ? 'active' : '' }}" href="{{ route('user.index') }}">
-                            <i class="fa-solid fa-users-gear"></i>
                             <span>Pengguna</span>
                         </a>
                     </li>
                     @endif
+                </ul>
 
+                <div class="d-flex align-items-center gap-2 ms-lg-auto mt-2 mt-lg-0">
                     <!-- Theme Switch Toggle Button -->
-                    <li class="nav-item ms-lg-2 my-1 my-lg-0">
-                        <button type="button" class="theme-toggle-btn" id="btnThemeToggle" onclick="toggleAppTheme()" title="Ganti Mode Gelap / Terang" aria-label="Toggle theme">
-                            <i class="fa-solid fa-moon" id="themeIcon"></i>
-                        </button>
-                    </li>
+                    <button type="button" class="theme-toggle-btn" id="btnThemeToggle" onclick="toggleAppTheme()" title="Ganti Mode Gelap / Terang" aria-label="Toggle theme">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
 
                     @auth
                     <!-- User Profile & Logout Dropdown -->
-                    <li class="nav-item dropdown ms-lg-3 mt-2 mt-lg-0">
-                        <a class="btn btn-outline-light text-white dropdown-toggle d-flex align-items-center gap-2 py-1.5 px-3 rounded-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-color: rgba(255,255,255,0.25);">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm" style="width: 26px; height: 26px; font-size: 0.75rem; background: {{ auth()->user()->role === 'it' ? '#1E3A8A' : '#15803D' }};">
+                    <div class="dropdown">
+                        <a class="btn-user-pill dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 24px; height: 24px; font-size: 0.72rem; background: {{ auth()->user()->role === 'it' ? '#2563eb' : '#059669' }};">
                                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                             </div>
                             <span class="small fw-semibold text-truncate" style="max-width: 130px;">{{ auth()->user()->name }}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border rounded-3 mt-2 p-2" style="min-width: 220px; border-color: #E2E8F0;">
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow border-0 rounded-3 mt-2 p-2" style="min-width: 220px;">
                             <li class="px-3 py-2 border-bottom mb-1">
                                 <div class="fw-bold small text-dark">{{ auth()->user()->name }}</div>
-                                <div class="text-muted" style="font-size: 0.72rem;">{{ auth()->user()->email }}</div>
-                                <div class="mt-1">
+                                <div class="text-muted font-monospace" style="font-size: 0.72rem;">{{ auth()->user()->email }}</div>
+                                <div class="mt-1.5">
                                     @if(auth()->user()->role === 'it')
-                                        <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-0.5 rounded-pill font-monospace" style="font-size: 0.68rem;">
-                                            <i class="fa-solid fa-shield-halved me-1"></i>Admin IT (Super User)
+                                        <span class="badge bg-primary-subtle text-primary px-2 py-0.5 rounded font-monospace" style="font-size: 0.68rem;">
+                                            Admin IT (Super User)
                                         </span>
                                     @else
-                                        <span class="badge bg-success-subtle text-success border border-success px-2 py-0.5 rounded-pill font-monospace" style="font-size: 0.68rem;">
-                                            <i class="fa-solid fa-boxes-packing me-1"></i>Admin SARPRAS
+                                        <span class="badge bg-success-subtle text-success px-2 py-0.5 rounded font-monospace" style="font-size: 0.68rem;">
+                                            Admin SARPRAS
                                         </span>
                                     @endif
                                 </div>
                             </li>
                             @if(auth()->user()->role === 'it')
                             <li>
-                                <a class="dropdown-item small rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('user.index') }}">
-                                    <i class="fa-solid fa-users-gear text-primary"></i>
+                                <a class="dropdown-item dropdown-item-custom small rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('user.index') }}">
                                     <span>Kelola Pengguna</span>
                                 </a>
                             </li>
@@ -196,16 +182,16 @@
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" id="formLogout">
                                     @csrf
-                                    <button type="submit" class="dropdown-item small rounded-2 py-2 text-danger d-flex align-items-center gap-2">
+                                    <button type="submit" class="dropdown-item dropdown-item-custom small rounded-2 py-2 text-danger d-flex align-items-center gap-2">
                                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                         <span>Keluar (Logout)</span>
                                     </button>
                                 </form>
                             </li>
                         </ul>
-                    </li>
+                    </div>
                     @endauth
-                </ul>
+                </div>
             </div>
         </div>
     </nav>

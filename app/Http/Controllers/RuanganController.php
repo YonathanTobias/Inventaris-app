@@ -28,9 +28,11 @@ class RuanganController extends Controller
         }
 
         $validated = $request->validate([
-            'kode_ruangan'   => 'required|string|max:50|unique:ruangans,kode_ruangan',
-            'nama_ruangan'   => 'required|string|max:255',
-            'bisa_dipinjam'  => 'nullable',
+            'kode_ruangan'         => 'required|string|max:50|unique:ruangans,kode_ruangan',
+            'nama_ruangan'         => 'required|string|max:255',
+            'penanggung_jawab'     => 'nullable|string|max:255',
+            'nip_penanggung_jawab' => 'nullable|string|max:100',
+            'bisa_dipinjam'        => 'nullable',
         ]);
 
         $validated['bisa_dipinjam'] = $request->boolean('bisa_dipinjam', true);
@@ -92,9 +94,11 @@ class RuanganController extends Controller
     {
         $ruangan = Ruangan::findOrFail($id);
         $validated = $request->validate([
-            'kode_ruangan'  => 'required|string|max:50|unique:ruangans,kode_ruangan,' . $id,
-            'nama_ruangan'  => 'required|string|max:255',
-            'bisa_dipinjam' => 'nullable',
+            'kode_ruangan'         => 'required|string|max:50|unique:ruangans,kode_ruangan,' . $id,
+            'nama_ruangan'         => 'required|string|max:255',
+            'penanggung_jawab'     => 'nullable|string|max:255',
+            'nip_penanggung_jawab' => 'nullable|string|max:100',
+            'bisa_dipinjam'        => 'nullable',
         ]);
 
         $validated['bisa_dipinjam'] = $request->boolean('bisa_dipinjam', false);

@@ -4,17 +4,14 @@
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <div>
-        <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
-            <span class="p-2 rounded-3 bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                <i class="fa-solid fa-users-gear"></i>
-            </span>
-            <span>Manajemen Pengguna & Hak Akses</span>
+        <h4 class="fw-bold mb-1">
+            Manajemen Pengguna & Hak Akses
         </h4>
-        <p class="text-muted small mb-0 ms-md-5">Kelola akun administrator, penugasan hak akses Admin IT & Admin SARPRAS.</p>
+        <p class="text-muted small mb-0">Kelola akun administrator, penugasan hak akses Admin IT & Admin SARPRAS.</p>
     </div>
     <div>
         <button class="btn btn-modern-primary" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
-            <i class="fa-solid fa-user-plus"></i>
+            <i class="fa-solid fa-plus me-1"></i>
             <span>Tambah Pengguna Baru</span>
         </button>
     </div>
@@ -24,43 +21,28 @@
 <div class="row g-3 mb-4">
     <div class="col-12 col-md-4">
         <div class="card-stat">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <div class="stat-label">Total Akun Terdaftar</div>
-                    <div class="stat-value mt-1">{{ number_format($stats['total_user']) }}</div>
-                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-users text-primary me-1"></i>Pengguna Aktif</div>
-                </div>
-                <div class="stat-icon primary">
-                    <i class="fa-solid fa-users"></i>
-                </div>
+            <div>
+                <div class="stat-label">Total Akun Terdaftar</div>
+                <div class="stat-value mt-1">{{ number_format($stats['total_user']) }}</div>
+                <div class="text-muted small mt-1" style="font-size: 0.75rem;">Pengguna Aktif</div>
             </div>
         </div>
     </div>
     <div class="col-6 col-md-4">
         <div class="card-stat">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <div class="stat-label">Admin IT (Super User)</div>
-                    <div class="stat-value mt-1 text-primary">{{ number_format($stats['total_it']) }}</div>
-                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-shield-halved text-primary me-1"></i>Akses Penuh Sistem</div>
-                </div>
-                <div class="stat-icon primary">
-                    <i class="fa-solid fa-user-shield"></i>
-                </div>
+            <div>
+                <div class="stat-label">Admin IT (Super User)</div>
+                <div class="stat-value mt-1 text-primary">{{ number_format($stats['total_it']) }}</div>
+                <div class="text-muted small mt-1" style="font-size: 0.75rem;">Akses Penuh Sistem</div>
             </div>
         </div>
     </div>
     <div class="col-6 col-md-4">
         <div class="card-stat">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <div class="stat-label">Admin SARPRAS</div>
-                    <div class="stat-value mt-1 text-success">{{ number_format($stats['total_sarpras']) }}</div>
-                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-boxes-packing text-success me-1"></i>Akses Inventaris & Aset</div>
-                </div>
-                <div class="stat-icon success">
-                    <i class="fa-solid fa-user-check"></i>
-                </div>
+            <div>
+                <div class="stat-label">Admin SARPRAS</div>
+                <div class="stat-value mt-1 text-success">{{ number_format($stats['total_sarpras']) }}</div>
+                <div class="text-muted small mt-1" style="font-size: 0.75rem;">Akses Inventaris & Aset</div>
             </div>
         </div>
     </div>
@@ -85,11 +67,11 @@
             </div>
             <div class="col-lg-2 col-md-2 d-flex gap-1">
                 <button type="submit" class="btn btn-primary w-100 fw-bold">
-                    <i class="fa-solid fa-filter me-1"></i> Filter
+                    Filter
                 </button>
                 @if(request()->hasAny(['search', 'role']))
                     <a href="{{ route('user.index') }}" class="btn btn-outline-secondary" title="Reset Filter">
-                        <i class="fa-solid fa-rotate-left"></i>
+                        Reset
                     </a>
                 @endif
             </div>
@@ -101,7 +83,6 @@
 <div class="card">
     <div class="card-header-modern">
         <div class="d-flex align-items-center gap-2">
-            <i class="fa-solid fa-user-group text-primary"></i>
             <span>Daftar Akun Pengguna</span>
             <span class="badge bg-primary-subtle text-primary rounded-pill ms-2">{{ $users->count() }} Akun</span>
         </div>
@@ -138,32 +119,29 @@
                             </div>
                         </td>
                         <td>
-                            <div class="d-flex align-items-center gap-1.5 text-secondary">
-                                <i class="fa-regular fa-envelope text-muted"></i>
-                                <span class="font-monospace small">{{ $u->email }}</span>
-                            </div>
+                            <span class="font-monospace small text-secondary">{{ $u->email }}</span>
                         </td>
                         <td>
                             @if($u->role === 'it')
                                 <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1.5 rounded-pill font-monospace" style="font-size: 0.78rem;">
-                                    <i class="fa-solid fa-shield-halved me-1"></i> Admin IT (Super User)
+                                    Admin IT (Super User)
                                 </span>
                             @else
                                 <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-3 py-1.5 rounded-pill font-monospace" style="font-size: 0.78rem;">
-                                    <i class="fa-solid fa-boxes-packing me-1"></i> Admin SARPRAS
+                                    Admin SARPRAS
                                 </span>
                             @endif
                         </td>
                         <td>
                             <span class="text-muted small">
-                                <i class="fa-regular fa-clock me-1"></i>{{ $u->created_at ? $u->created_at->format('d M Y') : '-' }}
+                                {{ $u->created_at ? $u->created_at->format('d M Y') : '-' }}
                             </span>
                         </td>
                         <td class="text-center pe-4">
                             <div class="d-inline-flex gap-1">
                                 <!-- Tombol Edit -->
                                 <button type="button" class="btn-icon btn-icon-primary" data-bs-toggle="modal" data-bs-target="#modalEditUser{{ $u->id }}" data-bs-toggle="tooltip" title="Edit Akun">
-                                    <i class="fa-solid fa-user-pen"></i>
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
 
                                 <!-- Tombol Hapus -->
@@ -188,7 +166,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header bg-primary text-white">
                                             <h5 class="modal-title fw-bold">
-                                                <i class="fa-solid fa-user-pen me-2"></i>Edit Data Pengguna
+                                                Edit Data Pengguna
                                             </h5>
                                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                         </div>
@@ -220,7 +198,7 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                                                 <button type="submit" class="btn btn-primary fw-bold">
-                                                    <i class="fa-solid fa-floppy-disk me-1"></i> Simpan Perubahan
+                                                    Simpan Perubahan
                                                 </button>
                                             </div>
                                         </form>
@@ -232,9 +210,6 @@
                     @empty
                     <tr>
                         <td colspan="5" class="text-center py-5">
-                            <div class="text-muted mb-2">
-                                <i class="fa-solid fa-users fa-3x opacity-50"></i>
-                            </div>
                             <h6 class="fw-bold text-secondary mb-1">Pengguna Tidak Ditemukan</h6>
                             <p class="text-muted small mb-0">Tidak ada data pengguna yang cocok dengan filter pencarian.</p>
                         </td>
@@ -252,7 +227,7 @@
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title fw-bold">
-                    <i class="fa-solid fa-user-plus text-primary me-2"></i>Tambah Pengguna Baru
+                    Tambah Pengguna Baru
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -261,40 +236,27 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="fa-solid fa-user"></i></span>
-                            <input type="text" name="name" class="form-control" placeholder="Misal: John Doe" required>
-                        </div>
+                        <input type="text" name="name" class="form-control" placeholder="Misal: John Doe" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Alamat Email <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="fa-solid fa-envelope"></i></span>
-                            <input type="email" name="email" class="form-control" placeholder="nama@inventaris.com" required>
-                        </div>
+                        <input type="email" name="email" class="form-control" placeholder="nama@inventaris.com" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Hak Akses (Role) <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="fa-solid fa-user-shield"></i></span>
-                            <select name="role" class="form-select" required>
-                                <option value="sarpras" selected>Admin SARPRAS (Kelola Aset & Ruangan)</option>
-                                <option value="it">Admin IT (Super User - Akses Penuh)</option>
-                            </select>
-                        </div>
+                        <select name="role" class="form-select" required>
+                            <option value="sarpras" selected>Admin SARPRAS (Kelola Aset & Ruangan)</option>
+                            <option value="it">Admin IT (Super User - Akses Penuh)</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Kata Sandi (Password) <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="fa-solid fa-lock"></i></span>
-                            <input type="password" name="password" class="form-control" placeholder="Minimal 6 karakter" required>
-                        </div>
+                        <input type="password" name="password" class="form-control" placeholder="Minimal 6 karakter" required>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-modern-primary">
-                        <i class="fa-solid fa-floppy-disk"></i>
                         <span>Simpan Pengguna</span>
                     </button>
                 </div>

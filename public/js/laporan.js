@@ -180,7 +180,7 @@ function saveSignaturesToDB(e) {
     .then(data => {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i> Simpan ke Database';
+            btn.innerHTML = 'Simpan ke Database';
         }
         if (data.success) {
             if (statusBadge) {
@@ -194,7 +194,7 @@ function saveSignaturesToDB(e) {
     .catch(err => {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i> Simpan ke Database';
+            btn.innerHTML = 'Simpan ke Database';
         }
         alert('Gagal menyimpan penandatangan ke database: ' + err);
     });

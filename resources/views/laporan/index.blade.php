@@ -752,6 +752,9 @@
             </div>
             <form id="formSimpanTTD" action="{{ route('laporan.ttd.update') }}" method="POST" onsubmit="saveSignaturesToDB(event)">
                 @csrf
+                @if(request('ruangan_id'))
+                    <input type="hidden" name="ruangan_id" value="{{ request('ruangan_id') }}">
+                @endif
                 <div class="modal-body p-4">
                     <div class="alert alert-info d-flex align-items-center gap-2.5 py-2.5 px-3 rounded-3 mb-4 small border-0 bg-primary-subtle text-primary-emphasis">
                         <i class="fa-solid fa-circle-info fs-5 flex-shrink-0"></i>
@@ -759,11 +762,13 @@
                     </div>
 
                     <div class="row g-3">
-                        <!-- 1. Penanggung Jawab Ruangan -->
+                        @if(request('ruangan_id'))
+                        <!-- 1. Penanggung Jawab Ruangan (Hanya tampil saat filter ruangan spesifik dipilih) -->
                         <div class="col-md-4">
                             <div class="card border rounded-3 p-3 bg-light-subtle h-100">
                                 <label class="form-label fw-bold text-dark mb-2.5">
                                     PJ Ruangan
+                                    <span class="text-primary small fw-normal">({{ $ruangans->find(request('ruangan_id'))->nama_ruangan ?? '' }})</span>
                                 </label>
                                 <div class="mb-2.5">
                                     <label class="form-label small text-muted mb-1">Nama Lengkap & Gelar</label>
@@ -775,12 +780,13 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
 
                         <!-- 2. Kepala Sarana & Prasarana -->
-                        <div class="col-md-4">
+                        <div class="{{ request('ruangan_id') ? 'col-md-4' : 'col-md-6' }}">
                             <div class="card border rounded-3 p-3 bg-light-subtle h-100">
                                 <label class="form-label fw-bold text-dark mb-2.5">
-                                    Kepala Sarpras
+                                    Kepala Sarana &amp; Prasarana
                                 </label>
                                 <div class="mb-2.5">
                                     <label class="form-label small text-muted mb-1">Nama Lengkap & Gelar</label>
@@ -794,10 +800,10 @@
                         </div>
 
                         <!-- 3. Ketua STIKes Panti Waluya Malang -->
-                        <div class="col-md-4">
+                        <div class="{{ request('ruangan_id') ? 'col-md-4' : 'col-md-6' }}">
                             <div class="card border rounded-3 p-3 bg-light-subtle h-100">
                                 <label class="form-label fw-bold text-dark mb-2.5">
-                                    Ketua STIKes
+                                    Ketua STIKes Panti Waluya Malang
                                 </label>
                                 <div class="mb-2.5">
                                     <label class="form-label small text-muted mb-1">Nama Lengkap & Gelar</label>
@@ -843,8 +849,7 @@
                     </span>
                     <div class="d-flex gap-2 ms-auto">
                         <button type="button" class="btn btn-outline-secondary px-3.5 py-2 rounded-3 fw-semibold" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" id="btnSimpanTTD" class="btn btn-primary px-4 py-2 rounded-3 fw-bold shadow-sm d-inline-flex align-items-center gap-1.5">
-                            <i class="fa-solid fa-floppy-disk"></i>
+                        <button type="submit" id="btnSimpanTTD" class="btn btn-primary px-4 py-2 rounded-3 fw-bold shadow-sm">
                             <span>Simpan ke Database</span>
                         </button>
                     </div>
@@ -922,39 +927,59 @@
         </tbody>
     </table>
 
-    <!-- Tanda Tangan KIR (Susunan Piramida: 2 Atas Sejajar, 1 Tengah Bawah) -->
+    <!-- Tanda Tangan KIR -->
     <div class="kir-ttd-container mt-4 pt-2" style="font-family: 'Times New Roman', Times, serif;">
-        <!-- Baris 1: Penanggung Jawab Ruangan & Kepala Sarana & Prasarana -->
-        <div class="d-flex justify-content-between align-items-start text-center">
-            <!-- 1. Penanggung Jawab Ruangan (Kiri) -->
-            <div style="width: 290px;">
-                <p class="mb-0 invisible" style="font-size: 0.85rem;" aria-hidden="true">&nbsp;</p>
-                <p class="fw-bold mb-0" style="font-size: 0.85rem;">Penanggung Jawab Ruangan</p>
-                <div style="height: 68px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-pj" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_pj_ruangan'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-pj" style="font-size: 0.78rem;">{{ $pejabat['nip_pj_ruangan'] }}</p>
+        @if(request('ruangan_id'))
+            <!-- KIR Ruangan Spesifik: Susunan Piramida (PJ Ruangan & Kepala Sarpras di atas, Ketua STIKes di tengah bawah) -->
+            <div class="d-flex justify-content-between align-items-start text-center">
+                <!-- 1. Penanggung Jawab Ruangan (Kiri) -->
+                <div style="width: 290px;">
+                    <p class="mb-0 invisible" style="font-size: 0.85rem;" aria-hidden="true">&nbsp;</p>
+                    <p class="fw-bold mb-0" style="font-size: 0.85rem;">Penanggung Jawab Ruangan</p>
+                    <div style="height: 68px;"></div>
+                    <p class="fw-bold mb-0 text-decoration-underline print-nama-pj" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_pj_ruangan'] }}</p>
+                    <p class="mb-0 small font-monospace print-nip-pj" style="font-size: 0.78rem;">{{ $pejabat['nip_pj_ruangan'] }}</p>
+                </div>
+
+                <!-- 2. Kepala Sarana & Prasarana (Kanan) -->
+                <div style="width: 290px;">
+                    <p class="mb-0 print-tgl-dokumen" style="font-size: 0.85rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
+                    <p class="fw-bold mb-0" style="font-size: 0.85rem;">Kepala Sarana &amp; Prasarana</p>
+                    <div style="height: 68px;"></div>
+                    <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                    <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.78rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+                </div>
             </div>
 
-            <!-- 2. Kepala Sarana & Prasarana (Kanan) -->
-            <div style="width: 290px;">
-                <p class="mb-0 print-tgl-dokumen" style="font-size: 0.85rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0" style="font-size: 0.85rem;">Kepala Sarana &amp; Prasarana</p>
-                <div style="height: 68px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.78rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+            <!-- Baris 2: Ketua STIKes Panti Waluya Malang (Tengah Bawah) -->
+            <div class="d-flex justify-content-center text-center mt-4">
+                <div style="width: 330px;">
+                    <p class="mb-0" style="font-size: 0.85rem;">Mengetahui,</p>
+                    <p class="fw-bold mb-0" style="font-size: 0.85rem;">Ketua STIKes Panti Waluya Malang</p>
+                    <div style="height: 68px;"></div>
+                    <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                    <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.78rem;">{{ $pejabat['nip_ketua'] }}</p>
+                </div>
             </div>
-        </div>
-
-        <!-- Baris 2: Ketua STIKes Panti Waluya Malang (Tengah Bawah) -->
-        <div class="d-flex justify-content-center text-center mt-4">
-            <div style="width: 330px;">
-                <p class="mb-0" style="font-size: 0.85rem;">Mengetahui,</p>
-                <p class="fw-bold mb-0" style="font-size: 0.85rem;">Ketua STIKes Panti Waluya Malang</p>
-                <div style="height: 68px;"></div>
-                <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.85rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
-                <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.78rem;">{{ $pejabat['nip_ketua'] }}</p>
+        @else
+            <!-- Rekap Global Seluruh Ruangan: Hanya Ketua STIKes Panti Waluya Malang & Kepala Sarana & Prasarana -->
+            <div class="d-flex justify-content-between align-items-start text-center">
+                <div style="width: 300px;">
+                    <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
+                    <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya Malang</p>
+                    <div style="height: 68px;"></div>
+                    <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
+                    <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
+                </div>
+                <div style="width: 300px;">
+                    <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
+                    <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Sarana &amp; Prasarana</p>
+                    <div style="height: 68px;"></div>
+                    <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
+                    <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>
 
@@ -1044,14 +1069,14 @@
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
-                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya Malang</p>
                 <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Sarana &amp; Prasarana</p>
                 <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
@@ -1144,14 +1169,14 @@
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
-                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya Malang</p>
                 <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Sarana &amp; Prasarana</p>
                 <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>
@@ -1244,14 +1269,14 @@
         <div class="d-flex justify-content-between align-items-start" style="font-family: 'Times New Roman', Times, serif;">
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0" style="font-size: 0.88rem;">Mengetahui,</p>
-                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Ketua STIKes Panti Waluya Malang</p>
                 <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-ketua" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_ketua'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-ketua" style="font-size: 0.8rem;">{{ $pejabat['nip_ketua'] }}</p>
             </div>
             <div class="text-center" style="width: 300px;">
                 <p class="mb-0 print-tgl-dokumen" style="font-size: 0.88rem;">{{ $pejabat['kota_dokumen'] }}, {{ \Carbon\Carbon::parse($pejabat['tanggal_dokumen'])->locale('id')->translatedFormat('d F Y') }}</p>
-                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Bagian Sarana & Prasarana</p>
+                <p class="fw-bold mb-0" style="font-size: 0.88rem;">Kepala Sarana &amp; Prasarana</p>
                 <div style="height: 68px;"></div>
                 <p class="fw-bold mb-0 text-decoration-underline print-nama-kabag" style="font-size: 0.88rem; white-space: nowrap;">{{ $pejabat['nama_kabag_sarpras'] }}</p>
                 <p class="mb-0 small font-monospace print-nip-kabag" style="font-size: 0.8rem;">{{ $pejabat['nip_kabag_sarpras'] }}</p>

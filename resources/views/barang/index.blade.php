@@ -40,7 +40,7 @@
                 <div>
                     <div class="stat-label">Jenis Aset</div>
                     <div class="stat-value mt-1">{{ number_format($stats['total_jenis'] ?? $barangs->count()) }}</div>
-                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-layer-group text-primary me-1"></i>Katalog Aset</div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;">Katalog Aset</div>
                 </div>
                 <div class="stat-icon primary">
                     <i class="fa-solid fa-box-open"></i>
@@ -54,7 +54,7 @@
                 <div>
                     <div class="stat-label">Total Unit</div>
                     <div class="stat-value mt-1">{{ number_format($stats['total_unit'] ?? $barangs->sum('jumlah')) }}</div>
-                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-calculator text-info me-1"></i>Fisik Barang</div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;">Fisik Barang</div>
                 </div>
                 <div class="stat-icon info">
                     <i class="fa-solid fa-cubes-stacked"></i>
@@ -68,7 +68,7 @@
                 <div>
                     <div class="stat-label">Kondisi Baik</div>
                     <div class="stat-value mt-1 text-success">{{ number_format($stats['total_baik'] ?? $barangs->where('kondisi', 'Baik')->sum('jumlah')) }}</div>
-                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-circle-check text-success me-1"></i>Siap Digunakan</div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;">Siap Digunakan</div>
                 </div>
                 <div class="stat-icon success">
                     <i class="fa-solid fa-circle-check"></i>
@@ -82,7 +82,7 @@
                 <div>
                     <div class="stat-label">Rusak / Servis</div>
                     <div class="stat-value mt-1 text-warning">{{ number_format($stats['total_rusak'] ?? $barangs->where('kondisi', '!=', 'Baik')->sum('jumlah')) }}</div>
-                    <div class="text-muted small mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-triangle-exclamation text-warning me-1"></i>Perlu Tindakan</div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;">Perlu Tindakan</div>
                 </div>
                 <div class="stat-icon warning">
                     <i class="fa-solid fa-wrench"></i>
@@ -148,9 +148,8 @@
 <div class="card">
     <div class="card-header-modern">
         <div class="d-flex align-items-center gap-2">
-            <i class="fa-solid fa-list-check text-primary"></i>
-            <span>Daftar Aset Inventaris</span>
-            <span class="badge bg-primary-subtle text-primary rounded-pill ms-2">{{ $barangs->count() }} Data</span>
+            <span class="fw-bold">Daftar Aset Inventaris</span>
+            <span class="badge bg-primary-subtle text-primary rounded-pill ms-1">{{ $barangs->count() }} Data</span>
         </div>
     </div>
     <div class="card-body p-0">
@@ -178,19 +177,19 @@
                             <div class="d-flex align-items-center gap-2 mt-1">
                                 @if($b->tahun_pengadaan)
                                     <span class="badge bg-light text-muted border px-2 py-0" style="font-size: 0.72rem;">
-                                        <i class="fa-regular fa-calendar me-1"></i>{{ $b->tahun_pengadaan }}
+                                        {{ $b->tahun_pengadaan }}
                                     </span>
                                 @endif
                                 @if($b->keterangan)
                                     <span class="text-muted small text-truncate" style="max-width: 220px; font-size: 0.75rem;" title="{{ $b->keterangan }}">
-                                        <i class="fa-regular fa-comment-dots me-1"></i>{{ $b->keterangan }}
+                                        {{ $b->keterangan }}
                                     </span>
                                 @endif
                             </div>
                         </td>
                         <td>
                             <span class="badge-category">
-                                <i class="fa-solid fa-tag me-1 text-secondary" style="font-size: 0.7rem;"></i>{{ $b->kategori->nama_kategori ?? '-' }}
+                                {{ $b->kategori->nama_kategori ?? '-' }}
                             </span>
                         </td>
                         <td>
@@ -219,11 +218,11 @@
                             <div class="mt-1">
                                 @if($b->bisa_dipinjam)
                                     <span class="badge bg-success-subtle text-success border border-success-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Aset ini diizinkan untuk dipinjam">
-                                        <i class="fa-solid fa-hand-holding-hand me-0.5"></i>Bisa Dipinjam
+                                        Bisa Dipinjam
                                     </span>
                                 @else
                                     <span class="badge bg-secondary-subtle text-muted border border-secondary-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Aset ini khusus di dalam ruangan">
-                                        <i class="fa-solid fa-lock me-0.5"></i>Khusus Ruangan
+                                        Khusus Ruangan
                                     </span>
                                 @endif
                             </div>
@@ -231,17 +230,17 @@
                         <td class="text-center pe-4">
                             <div class="d-inline-flex gap-1">
                                 <!-- Tombol Edit -->
-                                <button type="button" class="btn-icon btn-icon-primary" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $b->id }}" data-bs-toggle="tooltip" title="Edit Aset">
+                                <button type="button" class="btn-icon btn-icon-primary" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $b->id }}" title="Edit Aset">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
 
                                 <!-- Tombol Pindah Ruangan -->
-                                <button type="button" class="btn-icon btn-icon-info" data-bs-toggle="modal" data-bs-target="#modalPindah{{ $b->id }}" data-bs-toggle="tooltip" title="Mutasi / Pindah Ruangan">
+                                <button type="button" class="btn-icon btn-icon-info" data-bs-toggle="modal" data-bs-target="#modalPindah{{ $b->id }}" title="Mutasi / Pindah Ruangan">
                                     <i class="fa-solid fa-right-left"></i>
                                 </button>
 
                                 <!-- Tombol Kurangi Stok -->
-                                <button type="button" class="btn-icon btn-icon-warning" data-bs-toggle="modal" data-bs-target="#modalKurang{{ $b->id }}" data-bs-toggle="tooltip" title="Kurangi / Catat Kerusakan">
+                                <button type="button" class="btn-icon btn-icon-warning" data-bs-toggle="modal" data-bs-target="#modalKurang{{ $b->id }}" title="Kurangi / Catat Kerusakan">
                                     <i class="fa-solid fa-minus"></i>
                                 </button>
 
@@ -260,9 +259,7 @@
                                 <div class="modal-dialog modal-lg modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-primary text-white">
-                                            <h5 class="modal-title fw-bold">
-                                                <i class="fa-solid fa-pen-to-square me-2"></i>Edit Data Aset
-                                            </h5>
+                                            <h5 class="modal-title fw-bold">Edit Data Aset</h5>
                                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                         </div>
                                         <form action="{{ route('barang.update', $b->id) }}" method="POST">
@@ -274,14 +271,13 @@
                                                         <div class="d-flex justify-content-between align-items-center mb-1">
                                                             <label class="form-label mb-0" for="inputKodeBarangEdit{{ $b->id }}">Kode Aset / Barcode <span class="text-danger">*</span></label>
                                                             <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeBarangEdit('{{ $b->id }}')" aria-label="Generate ulang kode aset otomatis">
-                                                                <i class="fa-solid fa-wand-magic-sparkles me-1" aria-hidden="true"></i>Generate Ulang
+                                                                Generate Ulang
                                                             </button>
                                                         </div>
                                                         <div class="input-group">
-                                                            <span class="input-group-text bg-light"><i class="fa-solid fa-barcode" aria-hidden="true"></i></span>
                                                             <input type="text" id="inputKodeBarangEdit{{ $b->id }}" name="kode_barang" class="form-control font-monospace" value="{{ $b->kode_barang }}" required>
                                                             <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangEdit('{{ $b->id }}')" title="Generate Format Otomatis" aria-label="Generate format otomatis">
-                                                                <i class="fa-solid fa-bolt text-warning" aria-hidden="true"></i> Auto
+                                                                Auto
                                                             </button>
                                                         </div>
                                                         <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
@@ -335,7 +331,7 @@
                                                     <div class="col-12">
                                                         <div class="p-3 bg-light rounded-3 border d-flex align-items-center justify-content-between">
                                                             <div>
-                                                                <h6 class="fw-bold mb-0 small text-dark"><i class="fa-solid fa-hand-holding-hand text-primary me-2"></i>Status Izin Peminjaman Aset</h6>
+                                                                <h6 class="fw-bold mb-0 small text-dark">Status Izin Peminjaman Aset</h6>
                                                                 <small class="text-muted" style="font-size: 0.75rem;">Aktifkan jika aset ini boleh dipinjam oleh civitas kampus.</small>
                                                             </div>
                                                             <div class="form-check form-switch fs-5 mb-0">
@@ -348,7 +344,7 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                                                 <button type="submit" class="btn btn-primary fw-bold">
-                                                    <i class="fa-solid fa-floppy-disk me-1"></i> Simpan Perubahan
+                                                    Simpan Perubahan
                                                 </button>
                                             </div>
                                         </form>
@@ -361,9 +357,7 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-info text-white">
-                                            <h5 class="modal-title fw-bold">
-                                                <i class="fa-solid fa-right-left me-2"></i>Mutasi / Pindah Ruangan
-                                            </h5>
+                                            <h5 class="modal-title fw-bold">Mutasi / Pindah Ruangan</h5>
                                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                         </div>
                                         <form action="{{ route('barang.pindah', $b->id) }}" method="POST">
@@ -406,16 +400,15 @@
                                                     <div class="d-flex justify-content-between align-items-center mb-1">
                                                         <label class="form-label mb-0">Jumlah Unit Dipindahkan <span class="text-danger">*</span></label>
                                                         <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold" style="font-size: 0.78rem;" onclick="document.getElementById('inputJumlahPindah{{ $b->id }}').value = {{ $b->jumlah }}">
-                                                            <i class="fa-solid fa-arrows-to-circle me-1"></i>Pindahkan Semua ({{ $b->jumlah }})
+                                                            Pindahkan Semua ({{ $b->jumlah }})
                                                         </button>
                                                     </div>
                                                     <div class="input-group">
-                                                        <span class="input-group-text bg-light"><i class="fa-solid fa-cubes"></i></span>
                                                         <input type="number" id="inputJumlahPindah{{ $b->id }}" name="jumlah" class="form-control" max="{{ $b->jumlah }}" min="1" value="{{ $b->jumlah }}" required>
                                                         <span class="input-group-text bg-light">Unit</span>
                                                     </div>
                                                     <small class="text-muted" style="font-size: 0.75rem;">
-                                                        <i class="fa-solid fa-circle-info me-1"></i>Jika memindahkan sebagian unit, sistem akan memecah stok secara otomatis.
+                                                        Jika memindahkan sebagian unit, sistem akan memecah stok secara otomatis.
                                                     </small>
                                                 </div>
                                                 <div class="mb-3">
@@ -426,7 +419,7 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                                                 <button type="submit" class="btn btn-info text-white fw-bold">
-                                                    <i class="fa-solid fa-paper-plane me-1"></i> Proses Pemindahan
+                                                    Proses Pemindahan
                                                 </button>
                                             </div>
                                         </form>
@@ -439,9 +432,7 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-warning text-dark">
-                                            <h5 class="modal-title fw-bold">
-                                                <i class="fa-solid fa-circle-minus me-2"></i>Pengurangan / Kerusakan Aset
-                                            </h5>
+                                            <h5 class="modal-title fw-bold">Pengurangan / Kerusakan Aset</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
                                         <form action="{{ route('barang.kurangi', $b->id) }}" method="POST">
@@ -470,7 +461,7 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                                                 <button type="submit" class="btn btn-warning fw-bold">
-                                                    <i class="fa-solid fa-check me-1"></i> Simpan Pengurangan
+                                                    Simpan Pengurangan
                                                 </button>
                                             </div>
                                         </form>
@@ -483,13 +474,10 @@
                     @empty
                     <tr>
                         <td colspan="7" class="text-center py-5">
-                            <div class="text-muted mb-2">
-                                <i class="fa-solid fa-box-open fa-3x opacity-50"></i>
-                            </div>
                             <h6 class="fw-bold text-secondary mb-1">Belum Ada Data Aset</h6>
                             <p class="text-muted small mb-3">Data aset yang Anda cari atau tambahkan akan muncul di sini.</p>
                             <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahBarang">
-                                <i class="fa-solid fa-plus me-1"></i> Tambah Aset Pertama
+                                Tambah Aset Pertama
                             </button>
                         </td>
                     </tr>
@@ -505,9 +493,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title fw-bold">
-                    <i class="fa-solid fa-circle-plus text-primary me-2"></i>Tambah Aset Baru
-                </h5>
+                <h5 class="modal-title fw-bold">Tambah Aset Baru</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ route('barang.store') }}" method="POST">
@@ -516,10 +502,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Nama Barang / Aset <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fa-solid fa-box"></i></span>
-                                <input type="text" name="nama_barang" class="form-control" placeholder="Misal: Laptop Dell Vostro 3400" required>
-                            </div>
+                            <input type="text" name="nama_barang" class="form-control" placeholder="Misal: Laptop Dell Vostro 3400" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Lokasi / Ruangan <span class="text-danger">*</span></label>
@@ -534,18 +517,17 @@
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <label class="form-label mb-0" for="inputKodeBarangTambah">Kode Aset / Barcode</label>
                                 <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeBarangTambah()" aria-label="Generate ulang kode aset otomatis">
-                                    <i class="fa-solid fa-wand-magic-sparkles me-1" aria-hidden="true"></i>Generate Ulang
+                                    Generate Ulang
                                 </button>
                             </div>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fa-solid fa-barcode" aria-hidden="true"></i></span>
                                 <input type="text" id="inputKodeBarangTambah" name="kode_barang" class="form-control font-monospace" placeholder="Otomatis: INV-[Ruang]-[Kat]-[YY]-[No]">
                                 <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangTambah()" title="Generate Otomatis" aria-label="Generate format otomatis">
-                                    <i class="fa-solid fa-bolt text-warning" aria-hidden="true"></i> Auto
+                                    Auto
                                 </button>
                             </div>
                             <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
-                                <i class="fa-solid fa-circle-check text-success me-1" aria-hidden="true"></i>Format: <code class="fw-bold">INV-[Ruang]-[Kat]-[YY]-[No]</code> (bisa diedit manual).
+                                Format: <code class="fw-bold">INV-[Ruang]-[Kat]-[YY]-[No]</code> (bisa diedit manual).
                             </small>
                         </div>
                         <div class="col-md-6">
@@ -580,7 +562,7 @@
                         <div class="col-12">
                             <div class="p-3 bg-light rounded-3 border d-flex align-items-center justify-content-between">
                                 <div>
-                                    <h6 class="fw-bold mb-0 small text-dark"><i class="fa-solid fa-hand-holding-hand text-primary me-2"></i>Status Izin Peminjaman Aset</h6>
+                                    <h6 class="fw-bold mb-0 small text-dark">Status Izin Peminjaman Aset</h6>
                                     <small class="text-muted" style="font-size: 0.75rem;">Aktifkan jika aset ini diizinkan untuk dipinjam oleh mahasiswa, dosen, atau unit kerja lain.</small>
                                 </div>
                                 <div class="form-check form-switch fs-5 mb-0">
@@ -593,7 +575,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-modern-primary">
-                        <i class="fa-solid fa-floppy-disk"></i>
                         <span>Simpan Aset Baru</span>
                     </button>
                 </div>
@@ -607,20 +588,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-info text-white">
-                <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
-                    <i class="fa-solid fa-right-left"></i>
-                    <span>Mutasi & Pemindahan Aset Antar Ruangan</span>
-                </h5>
+                <h5 class="modal-title fw-bold">Mutasi & Pemindahan Aset Antar Ruangan</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ route('barang.pindah.global') }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <div class="alert alert-info py-2 small mb-3 d-flex align-items-center gap-2">
-                        <i class="fa-solid fa-circle-info fa-lg"></i>
-                        <div>
-                            Fitur ini digunakan untuk memindahkan aset atau mendistribusikan unit inventaris dari satu ruangan/lab ke ruangan/lab lainnya.
-                        </div>
+                    <div class="alert alert-info py-2 small mb-3">
+                        Fitur ini digunakan untuk memindahkan aset atau mendistribusikan unit inventaris dari satu ruangan/lab ke ruangan/lab lainnya.
                     </div>
 
                     <div class="row g-3">
@@ -665,15 +640,12 @@
                         <!-- Pilih Ruangan Tujuan -->
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Ruangan Tujuan Pemindahan <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fa-solid fa-door-open text-primary"></i></span>
-                                <select name="ruangan_tujuan_id" id="selectRuanganTujuanGlobal" class="form-select" required onchange="handlePindahGlobalTujuanChange(this)">
-                                    <option value="">-- Pilih Ruangan Tujuan --</option>
-                                    @foreach($ruangans as $r)
-                                        <option value="{{ $r->id }}" data-kode-ruangan="{{ $r->kode_ruangan }}" id="optRuanganTujuan{{ $r->id }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <select name="ruangan_tujuan_id" id="selectRuanganTujuanGlobal" class="form-select" required onchange="handlePindahGlobalTujuanChange(this)">
+                                <option value="">-- Pilih Ruangan Tujuan --</option>
+                                @foreach($ruangans as $r)
+                                    <option value="{{ $r->id }}" data-kode-ruangan="{{ $r->kode_ruangan }}" id="optRuanganTujuan{{ $r->id }}">{{ $r->nama_ruangan }} ({{ $r->kode_ruangan }})</option>
+                                @endforeach
+                            </select>
                             <div class="mt-2 p-2 bg-light border rounded-3 small" id="boxKodeBaruGlobal" style="display: none;">
                                 <div class="text-muted small">Penyesuaian Kode Aset Baru:</div>
                                 <span class="badge bg-success-subtle text-success border border-success fw-bold font-monospace mt-1" id="previewKodeBaruGlobal">-</span>
@@ -686,11 +658,10 @@
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <label class="form-label fw-bold mb-0">Jumlah Unit <span class="text-danger">*</span></label>
                                 <button type="button" id="btnPindahSemuaGlobal" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold" style="font-size: 0.78rem;" onclick="setPindahSemuaUnitGlobal()">
-                                    <i class="fa-solid fa-arrows-to-circle me-1"></i>Pindahkan Semua
+                                    Pindahkan Semua
                                 </button>
                             </div>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fa-solid fa-cubes"></i></span>
                                 <input type="number" id="inputJumlahGlobal" name="jumlah" class="form-control" min="1" value="1" required>
                                 <span class="input-group-text bg-light">Unit</span>
                             </div>
@@ -709,7 +680,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-info text-white fw-bold px-4">
-                        <i class="fa-solid fa-paper-plane me-1"></i> Proses Pemindahan Aset
+                        Proses Pemindahan Aset
                     </button>
                 </div>
             </form>

@@ -102,13 +102,24 @@ class LaporanController extends Controller
             'total_pinjam_ruangan'=> $peminjamanRuangans->count(),
         ];
 
+        $selectedRuangan = $request->filled('ruangan_id')
+            ? $ruangans->firstWhere('id', $request->ruangan_id)
+            : null;
+
+        $namaPjDefault = Pengaturan::get('nama_pj_ruangan', 'Penanggung Jawab Ruangan');
+        $nipPjDefault  = Pengaturan::get('nip_pj_ruangan', 'NIP. -');
+
         $pejabat = [
             'nama_ketua'         => Pengaturan::get('nama_ketua', 'apt. Wida Padminingsih, S.Farm., M.Farm.'),
             'nip_ketua'          => Pengaturan::get('nip_ketua', 'NIDN. 0725048201'),
             'nama_kabag_sarpras' => Pengaturan::get('nama_kabag_sarpras', 'Petrus Tobias, S.Kom.'),
             'nip_kabag_sarpras'  => Pengaturan::get('nip_kabag_sarpras', 'NIP. 2021.08.045'),
-            'nama_pj_ruangan'    => Pengaturan::get('nama_pj_ruangan', 'Penanggung Jawab Ruangan'),
-            'nip_pj_ruangan'     => Pengaturan::get('nip_pj_ruangan', 'NIP. -'),
+            'nama_pj_ruangan'    => ($selectedRuangan && !empty($selectedRuangan->penanggung_jawab))
+                                    ? $selectedRuangan->penanggung_jawab
+                                    : $namaPjDefault,
+            'nip_pj_ruangan'     => ($selectedRuangan && !empty($selectedRuangan->nip_penanggung_jawab))
+                                    ? $selectedRuangan->nip_penanggung_jawab
+                                    : $nipPjDefault,
             'kota_dokumen'       => Pengaturan::get('kota_dokumen', 'Malang'),
             'tanggal_dokumen'    => Pengaturan::get('tanggal_dokumen', date('Y-m-d')),
         ];
@@ -128,6 +139,7 @@ class LaporanController extends Controller
     public function updateTtd(Request $request)
     {
         $request->validate([
+            'ruangan_id'         => 'nullable|exists:ruangans,id',
             'nama_ketua'         => 'required|string|max:255',
             'nip_ketua'          => 'nullable|string|max:100',
             'nama_kabag_sarpras' => 'required|string|max:255',
@@ -142,8 +154,23 @@ class LaporanController extends Controller
         Pengaturan::set('nip_ketua', $request->nip_ketua ?? '');
         Pengaturan::set('nama_kabag_sarpras', $request->nama_kabag_sarpras);
         Pengaturan::set('nip_kabag_sarpras', $request->nip_kabag_sarpras ?? '');
-        Pengaturan::set('nama_pj_ruangan', $request->nama_pj_ruangan ?? '');
-        Pengaturan::set('nip_pj_ruangan', $request->nip_pj_ruangan ?? '');
+
+        if ($request->has('nama_pj_ruangan')) {
+            Pengaturan::set('nama_pj_ruangan', $request->nama_pj_ruangan ?? '');
+        }
+        if ($request->has('nip_pj_ruangan')) {
+            Pengaturan::set('nip_pj_ruangan', $request->nip_pj_ruangan ?? '');
+        }
+
+        if ($request->filled('ruangan_id')) {
+            $ruangan = Ruangan::find($request->ruangan_id);
+            if ($ruangan) {
+                $ruangan->update([
+                    'penanggung_jawab'     => $request->nama_pj_ruangan,
+                    'nip_penanggung_jawab' => $request->nip_pj_ruangan,
+                ]);
+            }
+        }
         if ($request->filled('kota_dokumen')) {
             Pengaturan::set('kota_dokumen', $request->kota_dokumen);
         }

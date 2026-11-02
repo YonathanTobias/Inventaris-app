@@ -32,6 +32,8 @@ class RuanganExport implements FromCollection, WithHeadings, WithMapping, WithTi
                 'No',
                 'Kode Ruangan',
                 'Nama Ruangan',
+                'Penanggung Jawab (PJ)',
+                'NIP / NIDN PJ',
                 'Status Peminjaman',
                 'Total Jenis Aset',
                 'Total Unit Fisik Aset',
@@ -49,6 +51,8 @@ class RuanganExport implements FromCollection, WithHeadings, WithMapping, WithTi
             $this->rowNumber,
             $ruangan->kode_ruangan ?? '-',
             $ruangan->nama_ruangan,
+            $ruangan->penanggung_jawab ?? '-',
+            $ruangan->nip_penanggung_jawab ?? '-',
             $ruangan->bisa_dipinjam ? 'Dapat Dipinjam Publik' : 'Khusus Penyimpanan Aset',
             $ruangan->barangs_count ?? 0,
             $totalUnit,
@@ -68,7 +72,7 @@ class RuanganExport implements FromCollection, WithHeadings, WithMapping, WithTi
         $sheet->getStyle('A1')->getFont()->setSize(13);
         
         // Bold untuk Heading Tabel (Baris ke-6)
-        $sheet->getStyle('A6:G6')->getFont()->setBold(true);
+        $sheet->getStyle('A6:I6')->getFont()->setBold(true);
 
         return [];
     }
