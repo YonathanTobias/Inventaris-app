@@ -4,13 +4,8 @@
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <div>
-        <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
-            <span class="p-2 rounded-3 bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                <i class="fa-solid fa-tags"></i>
-            </span>
-            <span>Master Data Kategori Barang</span>
-        </h4>
-        <p class="text-muted small mb-0 ms-md-5">Kelola klasifikasi dan pengelompokan jenis aset dalam sistem inventaris.</p>
+        <h4 class="fw-bold mb-1 text-dark" style="letter-spacing: -0.02em;">Master Data Kategori Barang</h4>
+        <p class="text-muted small mb-0">Kelola klasifikasi dan pengelompokan jenis aset dalam sistem inventaris.</p>
     </div>
 </div>
 
@@ -79,20 +74,15 @@
                         <input type="text" name="nama_kategori" id="inputNamaKategoriTambah" class="form-control" placeholder="Misal: Elektronik, Mebel, Alat Medis" required oninput="autoGenerateKodeKategori(this.value)">
                     </div>
                     <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label class="form-label fw-bold mb-0">Kode Kategori (Singkatan)</label>
-                            <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeKategori()">
-                                Generate Ulang
-                            </button>
-                        </div>
+                        <label class="form-label">Kode Kategori (Singkatan)</label>
                         <div class="input-group">
-                            <input type="text" name="kode_kategori" id="inputKodeKategoriTambah" class="form-control font-monospace text-uppercase" placeholder="Otomatis (atau ketik manual)" maxlength="10">
-                            <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeKategori()" title="Otomatis Buat Kode">
+                            <input type="text" name="kode_kategori" id="inputKodeKategoriTambah" class="form-control font-monospace text-uppercase" placeholder="Otomatis (misal: ELK)" maxlength="10">
+                            <button class="btn btn-outline-secondary px-3" type="button" onclick="triggerAutoKodeKategori()" title="Otomatis Buat Kode">
                                 Auto
                             </button>
                         </div>
                         <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
-                            Kode otomatis terisi mengikuti nama kategori (contoh: <code>ELK</code>, <code>MBL</code>, <code>MED</code>, <code>ATK</code>).
+                            Otomatis terisi sesuai nama kategori (contoh: <code>ELK</code>, <code>MBL</code>, <code>MED</code>).
                         </small>
                     </div>
                     <button type="submit" class="btn btn-modern-primary w-100 justify-content-center">

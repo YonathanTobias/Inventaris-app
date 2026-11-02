@@ -4,29 +4,24 @@
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <div>
-        <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
-            <span class="p-2 rounded-3 bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                <i class="fa-solid fa-boxes-stacked"></i>
-            </span>
-            <span>Master Data Aset & Inventaris</span>
-        </h4>
-        <p class="text-muted small mb-0 ms-md-5">Kelola, pantau, dan mutasikan seluruh data inventaris aset secara terstruktur.</p>
+        <h4 class="fw-bold mb-1 text-dark" style="letter-spacing: -0.02em;">Master Data Aset & Inventaris</h4>
+        <p class="text-muted small mb-0">Kelola, pantau, dan mutasikan seluruh data inventaris aset secara terstruktur.</p>
     </div>
     <div class="d-flex flex-wrap gap-2">
-        <a href="{{ route('laporan.export', request()->query()) }}" class="btn btn-success fw-bold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm">
-            <i class="fa-solid fa-file-excel"></i>
+        <a href="{{ route('laporan.export', request()->query()) }}" class="btn btn-outline-secondary d-inline-flex align-items-center gap-2">
+            <i class="fa-solid fa-file-excel text-success"></i>
             <span>Export Excel (.xlsx)</span>
         </a>
-        <button type="button" class="btn btn-info text-white fw-bold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalPindahAsetGlobal">
+        <button type="button" class="btn btn-outline-primary d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalPindahAsetGlobal">
             <i class="fa-solid fa-right-left"></i>
             <span>Pindah Aset</span>
         </button>
-        <a href="{{ route('barang.label.massal', request()->query()) }}" target="_blank" class="btn btn-outline-dark fw-semibold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm">
+        <a href="{{ route('barang.label.massal', request()->query()) }}" target="_blank" class="btn btn-outline-secondary d-inline-flex align-items-center gap-2">
             <i class="fa-solid fa-barcode text-primary"></i>
             <span>Cetak Label Stiker</span>
         </a>
         <button class="btn btn-modern-primary" data-bs-toggle="modal" data-bs-target="#modalTambahBarang">
-            <i class="fa-solid fa-circle-plus"></i>
+            <i class="fa-solid fa-plus"></i>
             <span>Tambah Aset Baru</span>
         </button>
     </div>
@@ -268,15 +263,10 @@
                                             <div class="modal-body">
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
-                                                        <div class="d-flex justify-content-between align-items-center mb-1">
-                                                            <label class="form-label mb-0" for="inputKodeBarangEdit{{ $b->id }}">Kode Aset / Barcode <span class="text-danger">*</span></label>
-                                                            <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeBarangEdit('{{ $b->id }}')" aria-label="Generate ulang kode aset otomatis">
-                                                                Generate Ulang
-                                                            </button>
-                                                        </div>
+                                                        <label class="form-label" for="inputKodeBarangEdit{{ $b->id }}">Kode Aset / Barcode <span class="text-danger">*</span></label>
                                                         <div class="input-group">
                                                             <input type="text" id="inputKodeBarangEdit{{ $b->id }}" name="kode_barang" class="form-control font-monospace" value="{{ $b->kode_barang }}" required>
-                                                            <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangEdit('{{ $b->id }}')" title="Generate Format Otomatis" aria-label="Generate format otomatis">
+                                                            <button class="btn btn-outline-secondary px-3" type="button" onclick="triggerAutoKodeBarangEdit('{{ $b->id }}')" title="Generate Format Otomatis" aria-label="Generate format otomatis">
                                                                 Auto
                                                             </button>
                                                         </div>
@@ -514,15 +504,10 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label mb-0" for="inputKodeBarangTambah">Kode Aset / Barcode</label>
-                                <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeBarangTambah()" aria-label="Generate ulang kode aset otomatis">
-                                    Generate Ulang
-                                </button>
-                            </div>
+                            <label class="form-label" for="inputKodeBarangTambah">Kode Aset / Barcode</label>
                             <div class="input-group">
                                 <input type="text" id="inputKodeBarangTambah" name="kode_barang" class="form-control font-monospace" placeholder="Otomatis: INV-[Ruang]-[Kat]-[YY]-[No]">
-                                <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeBarangTambah()" title="Generate Otomatis" aria-label="Generate format otomatis">
+                                <button class="btn btn-outline-secondary px-3" type="button" onclick="triggerAutoKodeBarangTambah()" title="Generate Otomatis" aria-label="Generate format otomatis">
                                     Auto
                                 </button>
                             </div>

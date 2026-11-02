@@ -12,13 +12,8 @@
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 no-print d-print-none page-web-header">
     <div>
-        <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
-            <span class="p-2 rounded-3 bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                <i class="fa-solid fa-file-invoice"></i>
-            </span>
-            <span>Pusat Laporan & Rekapitulasi Sarpras</span>
-        </h4>
-        <p class="text-muted small mb-0 ms-md-5">Cetak dan unduh rekapitulasi data inventaris KIR, laporan peminjaman aset, dan booking ruangan.</p>
+        <h4 class="fw-bold mb-1 text-dark" style="letter-spacing: -0.02em;">Pusat Laporan & Rekapitulasi Sarpras</h4>
+        <p class="text-muted small mb-0">Cetak dan unduh rekapitulasi data inventaris KIR, laporan peminjaman aset, dan booking ruangan.</p>
     </div>
 </div>
 

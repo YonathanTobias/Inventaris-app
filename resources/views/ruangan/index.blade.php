@@ -1,21 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $masterGedungLantai = $masterGedungLantai ?? [
+        'Gedung A' => ['Lantai Dasar', 'Lantai 1', 'Lantai 2', 'Lantai 3', 'Lantai 4', 'Lantai 5'],
+        'Gedung B' => [],
+    ];
+@endphp
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <div>
-        <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
-            <span class="p-2 rounded-3 bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                <i class="fa-solid fa-door-open"></i>
-            </span>
-            <span>Master Data Ruangan & Lokasi</span>
-        </h4>
-        <p class="text-muted small mb-0 ms-md-5">Kelola data ruangan, penempatan fisik inventaris, dan penanggung jawab aset.</p>
+        <h4 class="fw-bold mb-1 text-dark" style="letter-spacing: -0.02em;">Master Data Ruangan & Lokasi</h4>
+        <p class="text-muted small mb-0">Kelola data gedung, lantai, penempatan fisik inventaris, dan penanggung jawab ruangan.</p>
     </div>
     <div class="d-flex flex-wrap gap-2">
-        <a href="{{ route('ruangan.export') }}" class="btn btn-success fw-bold d-inline-flex align-items-center gap-2 rounded-3 shadow-sm px-3 py-2">
+        <button type="button" class="btn btn-outline-primary d-inline-flex align-items-center gap-2 px-3 py-2" data-bs-toggle="modal" data-bs-target="#modalKelolaGedungLantai">
+            <i class="fa-solid fa-building"></i>
+            <span>Kelola Gedung & Lantai</span>
+        </button>
+        <a href="{{ route('ruangan.export') }}" class="btn btn-modern-primary d-inline-flex align-items-center gap-2 px-3 py-2">
             <i class="fa-solid fa-file-excel"></i>
-            <span>Export Data Ruangan (.xlsx)</span>
+            <span>Export Excel (.xlsx)</span>
         </a>
     </div>
 </div>
@@ -90,42 +95,56 @@
         <div class="card">
             <div class="card-header-modern">
                 <span class="fw-bold">Tambah Ruangan Baru</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2.5" style="font-size: 0.74rem;" data-bs-toggle="modal" data-bs-target="#modalKelolaGedungLantai">
+                    + Gedung / Lantai
+                </button>
             </div>
             <div class="card-body p-4">
                 <form action="{{ route('ruangan.store') }}" method="POST">
                     @csrf
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Gedung <span class="text-danger">*</span></label>
+                            <select id="selectGedungTambah" name="gedung" class="form-select" required onchange="onChangeGedungTambah()">
+                                @foreach($masterGedungLantai as $namaGedung => $daftarLantai)
+                                    <option value="{{ $namaGedung }}">{{ $namaGedung }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Lantai</label>
+                            <select id="selectLantaiTambah" name="lantai" class="form-select" onchange="triggerAutoKodeRuangan()">
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label">Nama Ruangan <span class="text-danger">*</span></label>
-                        <input type="text" id="inputNamaRuangan" name="nama_ruangan" class="form-control" placeholder="Misal: Lab Kebidanan & Komunitas" required oninput="autoGenerateKodeRuangan(this.value)">
+                        <input type="text" id="inputNamaRuangan" name="nama_ruangan" class="form-control" placeholder="Misal: Lab Kebidanan" required oninput="autoGenerateKodeRuangan()">
                     </div>
                     <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label class="form-label mb-0">Kode Ruangan</label>
-                            <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.78rem;" onclick="triggerAutoKodeRuangan()">
-                                Generate Ulang
-                            </button>
-                        </div>
+                        <label class="form-label">Kode Ruangan</label>
                         <div class="input-group">
-                            <input type="text" id="inputKodeRuangan" name="kode_ruangan" class="form-control font-monospace" placeholder="Otomatis (atau ketik manual)">
-                            <button class="btn btn-outline-secondary" type="button" onclick="triggerAutoKodeRuangan()" title="Otomatis Buat Kode">
+                            <input type="text" id="inputKodeRuangan" name="kode_ruangan" class="form-control font-monospace" placeholder="Otomatis (misal: A1-LAB-01)">
+                            <button class="btn btn-outline-secondary px-3" type="button" onclick="triggerAutoKodeRuangan()" title="Buat Ulang Kode Otomatis">
                                 Auto
                             </button>
                         </div>
                         <small class="text-muted d-block mt-1" style="font-size: 0.73rem;">
-                            Kode otomatis terisi mengikuti nama ruangan dan dapat diedit jika perlu.
+                            Otomatis terisi sesuai Gedung, Lantai, dan Nama Ruangan.
                         </small>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Penanggung Jawab Ruangan (PJ)</label>
-                        <input type="text" name="penanggung_jawab" class="form-control" placeholder="Nama Lengkap & Gelar PJ Ruangan">
+                        <input type="text" name="penanggung_jawab" class="form-control" placeholder="Nama Lengkap & Gelar PJ">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">NIP / NIDN Penanggung Jawab</label>
-                        <input type="text" name="nip_penanggung_jawab" class="form-control font-monospace" placeholder="Contoh: NIP. 19850101... / NIDN. 07...">
+                        <input type="text" name="nip_penanggung_jawab" class="form-control font-monospace" placeholder="Contoh: 198501012010011001">
                         <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
-                            Otomatis tercantum pada tanda tangan cetak Kartu Inventaris Ruangan (KIR).
+                            Tercantum otomatis pada cetak Kartu Inventaris Ruangan (KIR).
                         </small>
                     </div>
 
@@ -163,11 +182,11 @@
                     <table class="table table-modern align-middle">
                         <thead>
                             <tr>
-                                <th class="ps-4" style="width: 130px;">Kode Ruangan</th>
-                                <th>Nama Ruangan</th>
+                                <th class="ps-4" style="width: 145px;">Kode Ruangan</th>
+                                <th>Nama Ruangan & Lokasi</th>
                                 <th>Penanggung Jawab (PJ)</th>
-                                <th class="text-center" style="width: 130px;">Koleksi Aset</th>
-                                <th class="text-center pe-4" style="width: 120px;">Aksi</th>
+                                <th class="text-center" style="width: 125px;">Koleksi Aset</th>
+                                <th class="text-center pe-4" style="width: 110px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -178,13 +197,18 @@
                                 </td>
                                 <td>
                                     <div class="fw-bold text-dark">{{ $r->nama_ruangan }}</div>
-                                    <div class="mt-1">
+                                    <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+                                        @if($r->gedung)
+                                            <span class="badge bg-primary-subtle" style="font-size: 0.7rem;">
+                                                {{ $r->gedung }}{{ $r->lantai && $r->lantai !== '-' ? ' • ' . $r->lantai : '' }}
+                                            </span>
+                                        @endif
                                         @if($r->bisa_dipinjam)
-                                            <span class="badge bg-success-subtle text-success border border-success-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Ruangan ini diizinkan untuk dipinjam publik">
+                                            <span class="badge bg-success-subtle" style="font-size: 0.7rem;" title="Ruangan ini diizinkan untuk dipinjam publik">
                                                 Bisa Dipinjam
                                             </span>
                                         @else
-                                            <span class="badge bg-secondary-subtle text-muted border border-secondary-subtle py-0.5 px-1.5" style="font-size: 0.68rem;" title="Ruangan khusus internal">
+                                            <span class="badge bg-secondary-subtle" style="font-size: 0.7rem;" title="Ruangan khusus internal">
                                                 Khusus Internal
                                             </span>
                                         @endif
@@ -201,7 +225,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge bg-info-subtle text-info-emphasis border px-2.5 py-1 fw-bold rounded-pill" style="font-size: 0.8rem;">
+                                    <span class="badge bg-info-subtle" style="font-size: 0.76rem;">
                                         {{ $r->barangs_count }} Jenis
                                     </span>
                                 </td>
@@ -234,13 +258,34 @@
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="modal-body">
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Kode Ruangan <span class="text-danger">*</span></label>
-                                                            <input type="text" name="kode_ruangan" class="form-control font-monospace" value="{{ $r->kode_ruangan }}" required>
+                                                        <div class="row g-2 mb-3">
+                                                            <div class="col-6">
+                                                                <label class="form-label">Gedung</label>
+                                                                <select name="gedung" id="selectGedungEdit{{ $r->id }}" class="form-select" onchange="onChangeGedungEdit({{ $r->id }})">
+                                                                    <option value="">-- Pilih Gedung --</option>
+                                                                    @foreach($masterGedungLantai as $namaGedung => $daftarLantai)
+                                                                        <option value="{{ $namaGedung }}" {{ $r->gedung === $namaGedung ? 'selected' : '' }}>{{ $namaGedung }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <label class="form-label">Lantai</label>
+                                                                <select name="lantai" id="selectLantaiEdit{{ $r->id }}" class="form-select" data-current-lantai="{{ $r->lantai }}" onchange="updateKodeEditRuangan({{ $r->id }})">
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label">Nama Ruangan <span class="text-danger">*</span></label>
-                                                            <input type="text" name="nama_ruangan" class="form-control" value="{{ $r->nama_ruangan }}" required>
+                                                            <input type="text" id="inputNamaEdit{{ $r->id }}" name="nama_ruangan" class="form-control" value="{{ $r->nama_ruangan }}" required oninput="updateKodeEditRuangan({{ $r->id }})">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Kode Ruangan <span class="text-danger">*</span></label>
+                                                            <div class="input-group">
+                                                                <input type="text" id="inputKodeEdit{{ $r->id }}" name="kode_ruangan" class="form-control font-monospace" value="{{ $r->kode_ruangan }}" required>
+                                                                <button class="btn btn-outline-secondary px-3" type="button" onclick="updateKodeEditRuangan({{ $r->id }}, true)" title="Sesuaikan Kode dengan Gedung & Lantai">
+                                                                    Auto
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label">Penanggung Jawab Ruangan (PJ)</label>
@@ -290,31 +335,186 @@
     </div>
 </div>
 
+<!-- MODAL KELOLA GEDUNG & LANTAI -->
+<div class="modal fade" id="modalKelolaGedungLantai" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold">Kelola Master Gedung & Lantai</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="text-muted small mb-3">
+                    Atur daftar Gedung dan Lantai untuk pilihan penempatan ruangan. Jika ke depannya ada pembangunan lantai baru atau gedung baru, Anda dapat menambahkannya di sini.
+                </p>
+
+                <!-- Daftar Gedung & Lantai Saat Ini -->
+                <div class="mb-4">
+                    <h6 class="fw-bold small text-uppercase text-secondary mb-2">Daftar Gedung & Lantai Saat Ini</h6>
+                    <div class="vstack gap-2">
+                        @foreach($masterGedungLantai as $namaGedung => $daftarLantai)
+                            <div class="p-3 rounded-3 border bg-light d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                                <div>
+                                    <div class="fw-bold text-dark mb-1">{{ $namaGedung }}</div>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @forelse($daftarLantai as $lt)
+                                            <span class="badge bg-white text-dark border d-inline-flex align-items-center gap-1 px-2 py-1">
+                                                <span>{{ $lt }}</span>
+                                                <form action="{{ route('ruangan.gedung-lantai.store') }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <input type="hidden" name="action" value="delete_lantai">
+                                                    <input type="hidden" name="gedung_target" value="{{ $namaGedung }}">
+                                                    <input type="hidden" name="nama_lantai" value="{{ $lt }}">
+                                                    <button type="submit" class="btn btn-link p-0 text-danger text-decoration-none ms-1" style="font-size: 0.7rem; line-height: 1;" title="Hapus {{ $lt }}">
+                                                        &times;
+                                                    </button>
+                                                </form>
+                                            </span>
+                                        @empty
+                                            <span class="badge bg-secondary-subtle text-secondary border px-2 py-1">
+                                                1 Lantai (Tanpa Nomor Lantai pada Kode Ruangan)
+                                            </span>
+                                        @endforelse
+                                    </div>
+                                </div>
+                                @if(count($masterGedungLantai ?? []) > 1)
+                                    <form action="{{ route('ruangan.gedung-lantai.store') }}" method="POST" onsubmit="return confirm('Hapus {{ $namaGedung }} dari daftar pilihan?')">
+                                        @csrf
+                                        <input type="hidden" name="action" value="delete_gedung">
+                                        <input type="hidden" name="gedung_target" value="{{ $namaGedung }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            Hapus Gedung
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <!-- Form Tambah Lantai ke Gedung yang Ada -->
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 border h-100">
+                            <h6 class="fw-bold text-dark mb-2">Tambah Lantai pada Gedung</h6>
+                            <form action="{{ route('ruangan.gedung-lantai.store') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="action" value="add_lantai">
+                                <div class="mb-2">
+                                    <label class="form-label">Pilih Gedung</label>
+                                    <select name="gedung_target" class="form-select form-select-sm" required>
+                                        @foreach($masterGedungLantai as $namaGedung => $daftarLantai)
+                                            <option value="{{ $namaGedung }}">{{ $namaGedung }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Nama / Nomor Lantai Baru</label>
+                                    <input type="text" name="nama_lantai" class="form-control form-control-sm" placeholder="Contoh: Lantai 6, Lantai 2, atau Dasar" required>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-modern-primary w-100 justify-content-center">
+                                    + Tambah Lantai
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Form Tambah Gedung Baru -->
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 border h-100">
+                            <h6 class="fw-bold text-dark mb-2">Tambah Gedung Baru</h6>
+                            <form action="{{ route('ruangan.gedung-lantai.store') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="action" value="add_gedung">
+                                <div class="mb-2">
+                                    <label class="form-label">Nama Gedung Baru</label>
+                                    <input type="text" name="nama_gedung" class="form-control form-control-sm" placeholder="Contoh: Gedung C" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Daftar Lantai (Pisahkan dengan koma)</label>
+                                    <input type="text" name="lantai_awal" class="form-control form-control-sm" placeholder="Kosongkan jika 1 lantai, atau: Dasar, 1, 2, 3">
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-modern-primary w-100 justify-content-center">
+                                    + Tambah Gedung Baru
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    const masterGedungLantai = {!! json_encode($masterGedungLantai) !!};
+
     let manualKodeEdited = false;
 
     document.getElementById('inputKodeRuangan')?.addEventListener('input', function() {
         manualKodeEdited = this.value.trim().length > 0;
     });
 
-    function autoGenerateKodeRuangan(nama) {
-        if (manualKodeEdited) return;
-        generateKodeFromText(nama);
+    function populateLantaiOptions(selectGedungEl, selectLantaiEl, selectedLantai = '') {
+        if (!selectGedungEl || !selectLantaiEl) return;
+        const gedung = selectGedungEl.value;
+        const lantaiList = masterGedungLantai[gedung] || [];
+
+        selectLantaiEl.innerHTML = '';
+
+        if (lantaiList.length === 0) {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = '1 Lantai (Tanpa Lantai)';
+            selectLantaiEl.appendChild(opt);
+            selectLantaiEl.disabled = true;
+        } else {
+            selectLantaiEl.disabled = false;
+            lantaiList.forEach((lt) => {
+                const opt = document.createElement('option');
+                opt.value = lt;
+                opt.textContent = lt;
+                if (selectedLantai && selectedLantai === lt) {
+                    opt.selected = true;
+                }
+                selectLantaiEl.appendChild(opt);
+            });
+        }
     }
 
-    function triggerAutoKodeRuangan() {
-        manualKodeEdited = false;
-        let nama = document.getElementById('inputNamaRuangan').value;
-        generateKodeFromText(nama);
-    }
-
-    function generateKodeFromText(nama) {
-        if (!nama || nama.trim() === '') {
-            document.getElementById('inputKodeRuangan').value = '';
-            return;
+    function extractGedungLantaiCode(gedung, lantai) {
+        let gedungCode = '';
+        if (gedung) {
+            let gClean = gedung.toUpperCase().replace(/\bGEDUNG\b/gi, '').trim().replace(/[^A-Z0-9]/g, '');
+            gedungCode = gClean || gedung.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 1);
         }
 
-        let clean = nama.trim().toUpperCase();
+        const lantaiList = masterGedungLantai[gedung] || [];
+        if (lantaiList.length === 0 || !lantai || lantai.trim() === '' || lantai.trim() === '-') {
+            return gedungCode;
+        }
+
+        let lUpper = lantai.toUpperCase().trim();
+        let lantaiCode = '';
+        if (lUpper.includes('DASAR') || lUpper.includes('GROUND') || lUpper === '0' || lUpper === 'LANTAI 0') {
+            lantaiCode = '0';
+        } else {
+            let match = lUpper.match(/(\d+)/);
+            if (match) {
+                lantaiCode = match[1];
+            } else {
+                lantaiCode = lUpper.replace(/\bLANTAI\b/gi, '').trim().replace(/[^A-Z0-9]/g, '').substring(0, 2);
+            }
+        }
+
+        return gedungCode + lantaiCode;
+    }
+
+    function buildRoomTypeCode(nama) {
+        let clean = (nama || '').trim().toUpperCase();
         let prefix = 'RNG';
         let sub = '';
 
@@ -343,10 +543,93 @@
             }
         }
 
+        return sub ? `${prefix}-${sub}` : prefix;
+    }
+
+    function onChangeGedungTambah() {
+        const selectGedung = document.getElementById('selectGedungTambah');
+        const selectLantai = document.getElementById('selectLantaiTambah');
+        populateLantaiOptions(selectGedung, selectLantai);
+        triggerAutoKodeRuangan();
+    }
+
+    function autoGenerateKodeRuangan() {
+        if (manualKodeEdited) return;
+        const nama = document.getElementById('inputNamaRuangan')?.value || '';
+        generateKodeFromText(nama);
+    }
+
+    function triggerAutoKodeRuangan() {
+        manualKodeEdited = false;
+        const nama = document.getElementById('inputNamaRuangan')?.value || '';
+        generateKodeFromText(nama);
+    }
+
+    function generateKodeFromText(nama) {
+        const kodeInput = document.getElementById('inputKodeRuangan');
+        if (!kodeInput) return;
+
+        if (!nama || nama.trim() === '') {
+            kodeInput.value = '';
+            return;
+        }
+
+        const gedung = document.getElementById('selectGedungTambah')?.value || '';
+        const lantai = document.getElementById('selectLantaiTambah')?.value || '';
+        const locPrefix = extractGedungLantaiCode(gedung, lantai);
+        const typeBase = buildRoomTypeCode(nama);
+
         let count = {{ $ruangans->count() + 1 }};
         let seq = count < 10 ? '0' + count : count;
-        let finalCode = sub ? `${prefix}-${sub}-${seq}` : `${prefix}-${seq}`;
-        document.getElementById('inputKodeRuangan').value = finalCode;
+        let finalCode = locPrefix ? `${locPrefix}-${typeBase}-${seq}` : `${typeBase}-${seq}`;
+        kodeInput.value = finalCode;
     }
+
+    function onChangeGedungEdit(roomId) {
+        const selectGedung = document.getElementById('selectGedungEdit' + roomId);
+        const selectLantai = document.getElementById('selectLantaiEdit' + roomId);
+        const currentLantai = selectLantai?.getAttribute('data-current-lantai') || '';
+        populateLantaiOptions(selectGedung, selectLantai, currentLantai);
+        updateKodeEditRuangan(roomId, true);
+    }
+
+    function updateKodeEditRuangan(roomId, forceUpdate = false) {
+        const selectGedung = document.getElementById('selectGedungEdit' + roomId);
+        const selectLantai = document.getElementById('selectLantaiEdit' + roomId);
+        const inputNama = document.getElementById('inputNamaEdit' + roomId);
+        const inputKode = document.getElementById('inputKodeEdit' + roomId);
+        if (!inputKode || !inputNama) return;
+
+        const gedung = selectGedung?.value || '';
+        const lantai = selectLantai?.value || '';
+        const locPrefix = extractGedungLantaiCode(gedung, lantai);
+        const typeBase = buildRoomTypeCode(inputNama.value);
+
+        // Pertahankan nomor urut di bagian akhir kode jika ada
+        let existingParts = inputKode.value.trim().split('-');
+        let seq = existingParts.length > 0 && /^\d+$/.test(existingParts[existingParts.length - 1])
+            ? existingParts[existingParts.length - 1]
+            : '01';
+
+        inputKode.value = locPrefix ? `${locPrefix}-${typeBase}-${seq}` : `${typeBase}-${seq}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectGedungTambah = document.getElementById('selectGedungTambah');
+        const selectLantaiTambah = document.getElementById('selectLantaiTambah');
+        if (selectGedungTambah && selectLantaiTambah) {
+            populateLantaiOptions(selectGedungTambah, selectLantaiTambah);
+        }
+
+        @foreach($ruangans as $r)
+            (function() {
+                const gEl = document.getElementById('selectGedungEdit{{ $r->id }}');
+                const lEl = document.getElementById('selectLantaiEdit{{ $r->id }}');
+                if (gEl && lEl) {
+                    populateLantaiOptions(gEl, lEl, {!! json_encode($r->lantai ?? '') !!});
+                }
+            })();
+        @endforeach
+    });
 </script>
 @endsection

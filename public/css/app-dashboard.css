@@ -360,20 +360,20 @@ body {
 /* Style UI Cards & Surfaces */
 .card {
     background-color: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
     overflow: hidden;
     transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-header-modern {
     background: var(--bg-surface);
-    border-bottom: 1px solid var(--border-color);
-    padding: 1rem 1.35rem;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 1.1rem 1.4rem;
     font-weight: 700;
     font-size: 0.94rem;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -383,18 +383,18 @@ body {
 .card-stat {
     position: relative;
     overflow: hidden;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
     background: var(--bg-surface);
-    padding: 1.2rem 1.35rem;
-    box-shadow: var(--shadow-card);
+    padding: 1.25rem 1.4rem;
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
     transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-stat:hover {
     transform: translateY(-2px);
-    border-color: #cbd5e1;
-    box-shadow: var(--shadow-lg);
+    border-color: rgba(30, 58, 138, 0.22);
+    box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08);
 }
 
 /* Enhanced Stat Filter Cards (Peminjaman & Booking) */
@@ -477,22 +477,26 @@ body {
 }
 
 .table-modern thead th {
-    background-color: #f8fafc;
-    color: #475569;
-    font-size: 0.74rem;
+    background-color: rgba(15, 23, 42, 0.02);
+    color: #64748b;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding: 0.85rem 1rem;
-    border-bottom: 1px solid var(--border-color);
+    padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid var(--border-subtle);
     vertical-align: middle;
 }
 
 .table-modern tbody td {
-    padding: 0.85rem 1rem;
+    padding: 0.95rem 1.15rem;
     vertical-align: middle;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 0.875rem;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+    font-size: 0.865rem;
+}
+
+.table-modern tbody tr:last-child td {
+    border-bottom: none;
 }
 
 .table-modern tbody tr:hover {
@@ -500,6 +504,52 @@ body {
 }
 
 /* Style UI Minimal Badges (Inspired by .price-badge) */
+.badge {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.badge.bg-primary-subtle,
+.badge.bg-success-subtle,
+.badge.bg-warning-subtle,
+.badge.bg-danger-subtle,
+.badge.bg-info-subtle,
+.badge.bg-secondary-subtle {
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 0.28rem 0.6rem !important;
+    font-weight: 600 !important;
+}
+
+.badge.bg-primary-subtle {
+    background-color: var(--badge-os-bg) !important;
+    color: var(--badge-os-text) !important;
+}
+
+.badge.bg-success-subtle {
+    background-color: var(--badge-free-bg) !important;
+    color: var(--badge-free-text) !important;
+}
+
+.badge.bg-warning-subtle {
+    background-color: var(--badge-freemium-bg) !important;
+    color: var(--badge-freemium-text) !important;
+}
+
+.badge.bg-danger-subtle {
+    background-color: rgba(239, 68, 68, 0.14) !important;
+    color: #dc2626 !important;
+}
+
+.badge.bg-info-subtle {
+    background-color: rgba(14, 165, 233, 0.14) !important;
+    color: #0284c7 !important;
+}
+
+.badge.bg-secondary-subtle {
+    background-color: rgba(100, 116, 139, 0.12) !important;
+    color: #475569 !important;
+}
 .badge-status {
     display: inline-flex;
     align-items: center;
@@ -589,11 +639,61 @@ body {
 
 /* Style UI Pill Buttons & Actions */
 .btn {
-    border-radius: var(--radius-md);
+    border-radius: 9999px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     letter-spacing: -0.01em;
+    padding: 0.48rem 1.05rem;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-sm {
+    padding: 0.32rem 0.8rem;
+    font-size: 0.78rem;
+}
+
+.btn-link {
+    padding: 0;
+    border-radius: 4px;
+    box-shadow: none !important;
+}
+
+.input-group .form-control {
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.input-group .btn {
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.btn-outline-secondary,
+.btn-outline-primary {
+    background-color: var(--bg-surface);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    color: var(--text-primary);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-primary:hover {
+    background-color: var(--bg-surface-hover);
+    border-color: var(--color-sapphire);
+    color: var(--color-sapphire);
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background-color: #059669;
+    border-color: #047857;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.18);
+}
+
+.btn-success:hover {
+    background-color: #047857;
+    border-color: #065f46;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.25);
 }
 
 .btn-modern-primary {
@@ -724,28 +824,46 @@ body {
     margin-bottom: 0.35rem;
 }
 
-/* Modals */
+/* Modals (Style UI Clean Elevated Surface) */
 .modal-content {
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 20px 48px -12px rgba(15, 23, 42, 0.25);
+    border-radius: 18px;
+    border: 1px solid var(--border-subtle);
+    background-color: var(--bg-surface);
+    box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.18), 0 4px 16px -2px rgba(15, 23, 42, 0.06);
     overflow: hidden;
 }
 
 .modal-header {
-    padding: 1.1rem 1.4rem;
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--bg-surface);
+    padding: 1.15rem 1.5rem;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    background: var(--bg-surface) !important;
+    color: var(--text-primary) !important;
+}
+
+.modal-header .modal-title {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.015em;
+    color: var(--text-primary) !important;
+}
+
+.modal-header .btn-close-white {
+    filter: none !important;
+}
+
+[data-bs-theme="dark"] .modal-header .btn-close,
+[data-bs-theme="dark"] .modal-header .btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%) !important;
 }
 
 .modal-body {
-    padding: 1.4rem;
+    padding: 1.5rem;
 }
 
 .modal-footer {
-    padding: 0.9rem 1.4rem;
-    border-top: 1px solid var(--border-color);
-    background-color: var(--bg-canvas);
+    padding: 0.95rem 1.5rem;
+    border-top: 1px solid var(--border-subtle) !important;
+    background-color: var(--bg-canvas) !important;
 }
 
 /* Timeline for Activity */
