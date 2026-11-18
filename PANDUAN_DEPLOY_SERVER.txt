@@ -1,0 +1,122 @@
+================================================================================
+PANDUAN DEPLOYMENT SISTEM INVENTARIS & PEMINJAMAN SARPRAS (SPARTA-PW)
+STIKES PANTI WALUYA MALANG
+================================================================================
+
+Aplikasi ini berbasis Laravel 11 (PHP 8.2+).
+Paket ZIP ini sudah berisi source code lengkap beserta folder `vendor`
+(dependensi Composer sudah terinstall), sehingga tim IT Support tidak perlu
+menjalankan composer install secara manual di server jika akses terbatas.
+
+--------------------------------------------------------------------------------
+1. SPESIFIKASI MINIMAL SERVER
+--------------------------------------------------------------------------------
+- PHP: Versi 8.2 atau lebih baru
+- Ekstensi PHP yang Wajib Aktif:
+  * pdo_mysql
+  * mbstring
+  * openssl
+  * tokenizer
+  * xml
+  * ctype
+  * json
+  * bcmath
+  * fileinfo
+  * gd
+  * zip
+- Web Server: Apache (mod_rewrite aktif) atau Nginx
+- Database: MySQL 5.7+ / 8.0+ atau MariaDB 10.3+
+
+--------------------------------------------------------------------------------
+2. KONFIGURASI WEB SERVER (APACHE / NGINX / CPANEL)
+--------------------------------------------------------------------------------
+PENTING:
+Document Root web server HARUS diarahkan ke subfolder `/public`.
+Contoh pada Apache VirtualHost:
+    DocumentRoot "/var/www/sparta-pw/public"
+    <Directory "/var/www/sparta-pw/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+Jika menggunakan cPanel / Shared Hosting:
+- Upload seluruh isi aplikasi ke direktori di luar public_html (misal: /home/user/sparta-pw/)
+- Pindahkan isi folder `/public` ke dalam `public_html`, lalu sesuaikan path `index.php`
+  (require __DIR__.'/../sparta-pw/vendor/autoload.php' dan $app = require_once __DIR__.'/../sparta-pw/bootstrap/app.php')
+  ATAU cukup atur DocumentRoot subdomain/domain utama langsung ke folder `sparta-pw/public`.
+
+--------------------------------------------------------------------------------
+3. KONFIGURASI ENVIRONMENT (.env)
+--------------------------------------------------------------------------------
+1. File `.env` sudah disertakan di root project.
+2. Buka dan sesuaikan file `.env`:
+   - APP_NAME="SPARTA-PW"
+   - APP_ENV=production
+   - APP_DEBUG=false
+   - APP_URL=https://nama-domain-anda.ac.id
+   
+   Konfigurasi Database MySQL:
+   - DB_CONNECTION=mysql
+   - DB_HOST=127.0.0.1 (atau localhost / host database server)
+   - DB_PORT=3306
+   - DB_DATABASE=nama_database_anda
+   - DB_USERNAME=user_database_anda
+   - DB_PASSWORD=password_database_anda
+
+--------------------------------------------------------------------------------
+4. PERMISSION / HAK AKSES FOLDER
+--------------------------------------------------------------------------------
+Pastikan folder `storage` dan `bootstrap/cache` memiliki izin tulis (writable)
+oleh user web server (www-data / nginx / apache):
+    chmod -R 775 storage bootstrap/cache
+    chown -R www-data:www-data storage bootstrap/cache
+
+--------------------------------------------------------------------------------
+5. MIGRASI & SEEDER DATABASE
+--------------------------------------------------------------------------------
+Jalankan perintah Artisan berikut di root direktori project:
+    php artisan migrate --seed
+
+Perintah ini akan membuat seluruh tabel database sekaligus mengisi data awal:
+- Akun Pengguna / Administrator
+- Master Kategori Inventaris
+- Master Gedung & Ruangan STIKES Panti Waluya Malang
+
+--------------------------------------------------------------------------------
+6. AKSES LOGIN & AKUN DEFAULT
+--------------------------------------------------------------------------------
+- Halaman Utama (Portal Publik Dosen & Mahasiswa):
+  URL: https://nama-domain-anda.ac.id/
+  (Untuk permohonan pinjam aset, booking ruangan, lacak status, dan cek QR)
+
+- Halaman Login Petugas & Admin:
+  URL: https://nama-domain-anda.ac.id/sugar
+  (Catatan: demi keamanan, rute login menggunakan endpoint khusus '/sugar')
+
+- Akun Bawaan (Default Credentials):
+  1) Admin IT (Super User):
+     Email    : adminit@pantiwaluya.ac.id  (atau: adminit@inventaris.com)
+     Password : password123
+     Role     : it (Manajemen User, Hak Akses, Master Data)
+
+  2) Admin SARPRAS:
+     Email    : sarpras@pantiwaluya.ac.id  (atau: sarpras@inventaris.com)
+     Password : password123
+     Role     : sarpras (Approval Pinjam Aset, Approval Ruangan, Mutasi, KIR)
+
+*PENTING: Segera ganti password akun bawaan setelah sistem berhasil live di server.
+
+--------------------------------------------------------------------------------
+7. OPTIMASI PERFORMA PRODUKSI (OPSIONAL TAPI DISARANKAN)
+--------------------------------------------------------------------------------
+Jalankan perintah ini di server production untuk performa maksimal:
+    php artisan storage:link
+    php artisan config:cache
+    php artisan route:cache
+    php artisan view:cache
+
+Jika sewaktu-waktu ada perubahan konfigurasi .env di server:
+    php artisan config:clear
+    php artisan cache:clear
+
+================================================================================
