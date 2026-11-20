@@ -8,52 +8,11 @@ use Illuminate\Http\Request;
 
 class PeminjamanRuanganController extends Controller
 {
-    // Dashboard Petugas / Kepala Sarpras: Kelola Booking Ruangan
+    // Dashboard Petugas / Kepala Sarpras: Kelola Booking Ruangan (Unified Single Page)
     public function index(Request $request)
     {
-        $query = PeminjamanRuangan::with(['ruangan', 'penyetujui', 'penyerah']);
-
-        // Filter status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        // Filter tanggal
-        if ($request->filled('tanggal')) {
-            $query->where('tanggal_pemakaian', $request->tanggal);
-        }
-
-        // Filter pencarian
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('nama_peminjam', 'like', "%{$search}%")
-                  ->orWhere('nomor_identitas', 'like', "%{$search}%")
-                  ->orWhere('kode_booking', 'like', "%{$search}%")
-                  ->orWhere('prodi_unit', 'like', "%{$search}%")
-                  ->orWhereHas('ruangan', function($qb) use ($search) {
-                      $qb->where('nama_ruangan', 'like', "%{$search}%")
-                         ->orWhere('kode_ruangan', 'like', "%{$search}%");
-                  });
-            });
-        }
-
-        $peminjamans = $query->latest('tanggal_pemakaian')->latest('jam_mulai')->get();
-
-        // Statistik Dashboard Booking Ruangan
-        $stats = [
-            'total'       => PeminjamanRuangan::count(),
-            'menunggu'    => PeminjamanRuangan::where('status', 'Menunggu')->count(),
-            'disetujui'   => PeminjamanRuangan::where('status', 'Disetujui')->count(),
-            'digunakan'   => PeminjamanRuangan::where('status', 'Digunakan')->count(),
-            'selesai'     => PeminjamanRuangan::where('status', 'Selesai')->count(),
-            'ditolak'     => PeminjamanRuangan::where('status', 'Ditolak')->count(),
-        ];
-
-        // Daftar ruangan yang bisa dipinjam untuk form booking internal
-        $ruanganBisaDipinjam = Ruangan::where('bisa_dipinjam', true)->orderBy('nama_ruangan')->get();
-
-        return view('peminjaman_ruangan.index', compact('peminjamans', 'stats', 'ruanganBisaDipinjam'));
+        $request->merge(['tab' => 'ruangan']);
+        return app(PeminjamanController::class)->index($request);
     }
 
     // Aksi 1: Approval / Persetujuan oleh Kepala Sarpras

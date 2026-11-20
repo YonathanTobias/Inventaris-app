@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\Mutasi;
 use App\Models\Peminjaman;
+use App\Models\PeminjamanRuangan;
+use App\Models\Ruangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,22 +15,30 @@ class PeminjamanController extends Controller
     // Dashboard Petugas / Kepala Sarpras
     public function index(Request $request)
     {
-        // Update status terlambat bagi peminjaman yang sudah diambil tetapi melewati tenggat kembali
+        // Update status terlambat bagi peminjaman aset yang sudah diambil tetapi melewati tenggat kembali
         Peminjaman::where('status', 'Diambil')
             ->where('tenggat_kembali', '<', now()->toDateString())
             ->update(['status' => 'Terlambat']);
 
-        $query = Peminjaman::with(['barang.ruangan', 'details.barang.ruangan', 'penyetujui', 'penyerah']);
-
-        // Filter status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        $activeTab = $request->input('tab', 'aset');
+        if (!in_array($activeTab, ['aset', 'ruangan'])) {
+            $activeTab = 'aset';
         }
 
-        // Filter pencarian
-        if ($request->filled('search')) {
+        // ==========================================
+        // 1. DATA PEMINJAMAN ASET SARPRAS
+        // ==========================================
+        $queryAset = Peminjaman::with(['barang.ruangan', 'details.barang.ruangan', 'penyetujui', 'penyerah']);
+
+        // Filter status aset (hanya jika tab aset aktif atau tanpa tab)
+        if (($activeTab === 'aset' || !$request->filled('tab')) && $request->filled('status')) {
+            $queryAset->where('status', $request->status);
+        }
+
+        // Filter pencarian aset
+        if (($activeTab === 'aset' || !$request->filled('tab')) && $request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $queryAset->where(function($q) use ($search) {
                 $q->where('nama_peminjam', 'like', "%{$search}%")
                   ->orWhere('nomor_identitas', 'like', "%{$search}%")
                   ->orWhere('kode_peminjaman', 'like', "%{$search}%")
@@ -44,10 +54,10 @@ class PeminjamanController extends Controller
             });
         }
 
-        $peminjamans = $query->latest()->get();
+        $peminjamansAset = $queryAset->latest()->get();
 
-        // Statistik Dashboard Peminjaman
-        $stats = [
+        // Statistik Dashboard Peminjaman Aset
+        $statsAset = [
             'total'       => Peminjaman::count(),
             'menunggu'    => Peminjaman::where('status', 'Menunggu')->count(),
             'disetujui'   => Peminjaman::where('status', 'Disetujui')->count(),
@@ -64,7 +74,66 @@ class PeminjamanController extends Controller
             ->orderBy('nama_barang')
             ->get();
 
-        return view('peminjaman.index', compact('peminjamans', 'stats', 'barangBisaDipinjam'));
+        // ==========================================
+        // 2. DATA PEMINJAMAN RUANGAN KEGIATAN
+        // ==========================================
+        $queryRuangan = PeminjamanRuangan::with(['ruangan', 'penyetujui', 'penyerah']);
+
+        // Filter status ruangan (jika tab ruangan aktif)
+        if ($activeTab === 'ruangan' && $request->filled('status')) {
+            $queryRuangan->where('status', $request->status);
+        }
+
+        // Filter tanggal ruangan (jika tab ruangan aktif)
+        if ($activeTab === 'ruangan' && $request->filled('tanggal')) {
+            $queryRuangan->where('tanggal_pemakaian', $request->tanggal);
+        }
+
+        // Filter pencarian ruangan
+        if ($activeTab === 'ruangan' && $request->filled('search')) {
+            $search = $request->search;
+            $queryRuangan->where(function($q) use ($search) {
+                $q->where('nama_peminjam', 'like', "%{$search}%")
+                  ->orWhere('nomor_identitas', 'like', "%{$search}%")
+                  ->orWhere('kode_booking', 'like', "%{$search}%")
+                  ->orWhere('prodi_unit', 'like', "%{$search}%")
+                  ->orWhereHas('ruangan', function($qb) use ($search) {
+                      $qb->where('nama_ruangan', 'like', "%{$search}%")
+                         ->orWhere('kode_ruangan', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $peminjamansRuangan = $queryRuangan->latest('tanggal_pemakaian')->latest('jam_mulai')->get();
+
+        // Statistik Dashboard Booking Ruangan
+        $statsRuangan = [
+            'total'       => PeminjamanRuangan::count(),
+            'menunggu'    => PeminjamanRuangan::where('status', 'Menunggu')->count(),
+            'disetujui'   => PeminjamanRuangan::where('status', 'Disetujui')->count(),
+            'digunakan'   => PeminjamanRuangan::where('status', 'Digunakan')->count(),
+            'selesai'     => PeminjamanRuangan::where('status', 'Selesai')->count(),
+            'ditolak'     => PeminjamanRuangan::where('status', 'Ditolak')->count(),
+        ];
+
+        // Daftar ruangan yang bisa dipinjam untuk form booking internal
+        $ruanganBisaDipinjam = Ruangan::where('bisa_dipinjam', true)->orderBy('nama_ruangan')->get();
+
+        // Kompatibilitas variabel lama
+        $peminjamans = $peminjamansAset;
+        $stats = $statsAset;
+
+        return view('peminjaman.index', compact(
+            'peminjamansAset',
+            'statsAset',
+            'barangBisaDipinjam',
+            'peminjamansRuangan',
+            'statsRuangan',
+            'ruanganBisaDipinjam',
+            'activeTab',
+            'peminjamans',
+            'stats'
+        ));
     }
 
     // Aksi 1: Approval / Persetujuan oleh Kepala Sarpras

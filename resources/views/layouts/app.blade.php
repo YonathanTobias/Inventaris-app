@@ -79,9 +79,9 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom shadow border-0 rounded-3 mt-2 p-1.5">
                             <li>
-                                <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('peminjaman.*') ? 'active' : '' }}" href="{{ route('peminjaman.index') }}">
+                                <a class="dropdown-item dropdown-item-custom {{ (request()->routeIs('peminjaman.*') && request('tab', 'aset') === 'aset') ? 'active' : '' }}" href="{{ route('peminjaman.index', ['tab' => 'aset']) }}">
                                     <div class="d-flex align-items-center justify-content-between w-100">
-                                        <span>Peminjaman Aset</span>
+                                        <span><i class="fa-solid fa-boxes-stacked me-1.5 text-secondary"></i> Peminjaman Aset</span>
                                         @if(isset($pendingAsetCount) && $pendingAsetCount > 0)
                                             <span class="badge bg-danger rounded-pill px-2 py-0.5 ms-2 font-monospace" style="font-size: 0.68rem;">
                                                 {{ $pendingAsetCount > 99 ? '99+' : $pendingAsetCount }}
@@ -91,9 +91,9 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item dropdown-item-custom {{ request()->routeIs('peminjaman-ruangan.*') ? 'active' : '' }}" href="{{ route('peminjaman-ruangan.index') }}">
+                                <a class="dropdown-item dropdown-item-custom {{ (request()->routeIs('peminjaman-ruangan.*') || request('tab') === 'ruangan') ? 'active' : '' }}" href="{{ route('peminjaman.index', ['tab' => 'ruangan']) }}">
                                     <div class="d-flex align-items-center justify-content-between w-100">
-                                        <span>Peminjaman Ruangan</span>
+                                        <span><i class="fa-solid fa-door-open me-1.5 text-secondary"></i> Peminjaman Ruangan</span>
                                         @if(isset($pendingRuanganCount) && $pendingRuanganCount > 0)
                                             <span class="badge bg-danger rounded-pill px-2 py-0.5 ms-2 font-monospace" style="font-size: 0.68rem;">
                                                 {{ $pendingRuanganCount > 99 ? '99+' : $pendingRuanganCount }}
