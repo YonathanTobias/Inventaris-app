@@ -101,20 +101,22 @@
 <body>
 
     <nav class="navbar bg-white border-bottom py-2 no-print">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2">
-                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 38px; width: auto; object-fit: contain;">
-                <div>
+        <div class="container d-flex justify-content-between align-items-center flex-nowrap">
+            <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2 flex-shrink-0">
+                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES" style="height: 36px; width: auto; object-fit: contain;">
+                <div class="text-nowrap">
                     <span class="fw-extrabold text-dark small d-block" style="line-height: 1.1;">SPARTA-PW</span>
-                    <small class="text-muted" style="font-size: 0.65rem;">STIKES PANTI WALUYA MALANG</small>
+                    <small class="text-muted d-none d-sm-block" style="font-size: 0.65rem;">STIKES PANTI WALUYA MALANG</small>
                 </div>
             </a>
-            <div class="d-flex gap-2">
-                <a href="{{ url('/') }}" class="btn btn-sm btn-outline-secondary">
-                    <i class="fa-solid fa-arrow-left me-1"></i> Form Baru
+            <div class="d-flex gap-1.5 gap-sm-2 flex-shrink-0">
+                <a href="{{ url('/') }}" class="btn btn-sm btn-outline-secondary px-2 px-sm-3" title="Form Baru">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="d-none d-sm-inline ms-1">Form Baru</span>
                 </a>
-                <a href="{{ route('publik.lacak') }}" class="btn btn-sm btn-outline-primary">
-                    <i class="fa-solid fa-magnifying-glass me-1"></i> Lacak Pengajuan
+                <a href="{{ route('publik.lacak') }}" class="btn btn-sm btn-outline-primary px-2 px-sm-3" title="Lacak Pengajuan">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span class="d-none d-sm-inline ms-1">Lacak</span>
                 </a>
             </div>
         </div>

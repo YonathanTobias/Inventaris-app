@@ -34,36 +34,40 @@
 
     <!-- NAVBAR ATAS -->
     <nav class="public-nav">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2">
-                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" style="height: 44px; width: auto; object-fit: contain;">
-                <div>
-                    <h5 class="fw-extrabold mb-0 text-dark" style="letter-spacing: -0.03em;">SPARTA-PW</h5>
-                    <small class="text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em;">PORTAL PEMINJAMAN ASET & RUANGAN STIKES PANTI WALUYA</small>
+        <div class="container d-flex justify-content-between align-items-center flex-nowrap">
+            <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none gap-2 flex-shrink-0">
+                <img src="{{ asset('images/logo-stikes.png') }}" alt="Logo STIKES Panti Waluya" class="brand-logo-img">
+                <div class="text-nowrap">
+                    <h5 class="fw-extrabold mb-0 text-dark brand-title" style="letter-spacing: -0.03em;">SPARTA-PW</h5>
+                    <small class="text-muted d-none d-lg-block brand-subtitle" style="font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;">PORTAL PEMINJAMAN ASET & RUANGAN STIKES PANTI WALUYA</small>
                 </div>
             </a>
 
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-1.5 gap-sm-2 flex-shrink-0">
                 <!-- Theme Switch Toggle Button -->
                 <button type="button" class="theme-toggle-btn-public" id="btnThemeTogglePublic" onclick="togglePublicTheme()" title="Ganti Mode Gelap / Terang" aria-label="Toggle theme">
                     <i class="fa-solid fa-moon" id="themeIconPublic"></i>
                 </button>
 
                 <!-- Tombol Buka Daftar Pinjam di Navbar -->
-                <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-3 px-3 py-1.5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart">
-                    <i class="fa-solid fa-clipboard-list me-1"></i> Keranjang
-                    <span class="badge bg-primary text-white ms-1 rounded-pill" id="navCartCount">0</span>
+                <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-3 px-2 px-sm-3 py-1.5 d-flex align-items-center gap-1.5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" title="Keranjang Pinjam">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <span class="d-none d-sm-inline">Keranjang</span>
+                    <span class="badge bg-primary text-white rounded-pill px-1.5 py-0.5 font-monospace" id="navCartCount" style="font-size: 0.72rem;">0</span>
                 </button>
 
                 <!-- Tombol Lacak Status -->
-                <a href="{{ route('publik.lacak') }}" class="btn btn-sm btn-outline-secondary fw-semibold rounded-3 px-3 py-1.5">
-                    <i class="fa-solid fa-magnifying-glass me-1"></i> Lacak Pengajuan
+                <a href="{{ route('publik.lacak') }}" class="btn btn-sm btn-outline-secondary fw-semibold rounded-3 px-2 px-sm-3 py-1.5 d-flex align-items-center gap-1.5" title="Lacak Pengajuan">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span class="d-none d-md-inline">Lacak Pengajuan</span>
+                    <span class="d-none d-sm-inline d-md-none">Lacak</span>
                 </a>
 
                 @auth
                     <!-- Jika Sudah Login -->
-                    <a href="{{ route('barang.index') }}" class="btn btn-sm btn-primary fw-bold rounded-3 px-3 py-1.5 shadow-sm">
-                        <i class="fa-solid fa-gauge me-1"></i> Dashboard Petugas
+                    <a href="{{ route('barang.index') }}" class="btn btn-sm btn-primary fw-bold rounded-3 px-2 px-sm-3 py-1.5 shadow-sm d-flex align-items-center gap-1.5" title="Dashboard Petugas">
+                        <i class="fa-solid fa-gauge"></i>
+                        <span class="d-none d-lg-inline">Dashboard</span>
                     </a>
                 @endauth
             </div>
