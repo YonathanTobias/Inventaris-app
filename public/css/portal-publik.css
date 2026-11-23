@@ -79,6 +79,21 @@ body {
     transition: height 0.2s ease;
 }
 
+#navCartCount {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    padding: 0 5px !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    border-radius: 9999px !important;
+    line-height: 1 !important;
+    background-color: #2563EB !important;
+    color: #ffffff !important;
+}
+
 @media (max-width: 575.98px) {
     .public-nav {
         padding: 0.45rem 0 !important;
@@ -94,6 +109,18 @@ body {
         width: 32px !important;
         height: 32px !important;
         font-size: 0.82rem !important;
+        flex-shrink: 0;
+    }
+    .public-nav .btn-sm {
+        height: 32px;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        font-size: 0.8rem;
+    }
+    #navCartCount {
+        min-width: 18px !important;
+        height: 18px !important;
+        font-size: 0.68rem !important;
     }
 }
 

@@ -43,21 +43,21 @@
                 </div>
             </a>
 
-            <div class="d-flex align-items-center gap-1.5 gap-sm-2 flex-shrink-0">
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
                 <!-- Theme Switch Toggle Button -->
                 <button type="button" class="theme-toggle-btn-public" id="btnThemeTogglePublic" onclick="togglePublicTheme()" title="Ganti Mode Gelap / Terang" aria-label="Toggle theme">
                     <i class="fa-solid fa-moon" id="themeIconPublic"></i>
                 </button>
 
                 <!-- Tombol Buka Daftar Pinjam di Navbar -->
-                <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-3 px-2 px-sm-3 py-1.5 d-flex align-items-center gap-1.5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" title="Keranjang Pinjam">
-                    <i class="fa-solid fa-clipboard-list"></i>
+                <button type="button" class="btn btn-sm btn-outline-primary fw-bold rounded-3 px-2.5 px-sm-3 py-1.5 d-inline-flex align-items-center" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" title="Keranjang Pinjam" style="gap: 6px;">
+                    <i class="fa-solid fa-clipboard-list text-primary"></i>
                     <span class="d-none d-sm-inline">Keranjang</span>
-                    <span class="badge bg-primary text-white rounded-pill px-1.5 py-0.5 font-monospace" id="navCartCount" style="font-size: 0.72rem;">0</span>
+                    <span class="badge bg-primary text-white rounded-pill font-monospace" id="navCartCount">0</span>
                 </button>
 
                 <!-- Tombol Lacak Status -->
-                <a href="{{ route('publik.lacak') }}" class="btn btn-sm btn-outline-secondary fw-semibold rounded-3 px-2 px-sm-3 py-1.5 d-flex align-items-center gap-1.5" title="Lacak Pengajuan">
+                <a href="{{ route('publik.lacak') }}" class="btn btn-sm btn-outline-secondary fw-semibold rounded-3 px-2.5 px-sm-3 py-1.5 d-inline-flex align-items-center" title="Lacak Pengajuan" style="gap: 6px;">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <span class="d-none d-md-inline">Lacak Pengajuan</span>
                     <span class="d-none d-sm-inline d-md-none">Lacak</span>
@@ -65,7 +65,7 @@
 
                 @auth
                     <!-- Jika Sudah Login -->
-                    <a href="{{ route('barang.index') }}" class="btn btn-sm btn-primary fw-bold rounded-3 px-2 px-sm-3 py-1.5 shadow-sm d-flex align-items-center gap-1.5" title="Dashboard Petugas">
+                    <a href="{{ route('barang.index') }}" class="btn btn-sm btn-primary fw-bold rounded-3 px-2.5 px-sm-3 py-1.5 shadow-sm d-inline-flex align-items-center" title="Dashboard Petugas" style="gap: 6px;">
                         <i class="fa-solid fa-gauge"></i>
                         <span class="d-none d-lg-inline">Dashboard</span>
                     </a>
