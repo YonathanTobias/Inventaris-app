@@ -14,14 +14,14 @@ use Illuminate\Support\Facades\Route;
 
 // Halaman Utama Publik: Portal Peminjaman Aset & Ruangan Mandiri (Dosen & Mahasiswa)
 Route::get('/', [PeminjamanPublikController::class, 'index'])->name('home');
-Route::post('/pinjam', [PeminjamanPublikController::class, 'store'])->name('publik.store');
-Route::get('/pinjam/lacak', [PeminjamanPublikController::class, 'lacak'])->name('publik.lacak');
+Route::post('/pinjam', [PeminjamanPublikController::class, 'store'])->middleware('throttle:15,1')->name('publik.store');
+Route::get('/pinjam/lacak', [PeminjamanPublikController::class, 'lacak'])->middleware('throttle:30,1')->name('publik.lacak');
 Route::get('/pinjam/sukses/{kode}', [PeminjamanPublikController::class, 'sukses'])->name('publik.sukses');
 
 // Publik: Booking Ruangan
-Route::post('/booking-ruangan', [PeminjamanRuanganPublikController::class, 'store'])->name('publik.ruangan.store');
+Route::post('/booking-ruangan', [PeminjamanRuanganPublikController::class, 'store'])->middleware('throttle:15,1')->name('publik.ruangan.store');
 Route::get('/booking-ruangan/sukses/{kode}', [PeminjamanRuanganPublikController::class, 'sukses'])->name('publik.ruangan.sukses');
-Route::get('/api/jadwal-ruangan', [PeminjamanRuanganPublikController::class, 'jadwal'])->name('publik.ruangan.jadwal');
+Route::get('/api/jadwal-ruangan', [PeminjamanRuanganPublikController::class, 'jadwal'])->middleware('throttle:60,1')->name('publik.ruangan.jadwal');
 
 // Halaman Publik: Verifikasi Scan QR Code Aset (Bisa diakses tanpa login)
 Route::get('/cek/{kode_barang}', [BarangController::class, 'cekAsetPublik'])->name('aset.cek');

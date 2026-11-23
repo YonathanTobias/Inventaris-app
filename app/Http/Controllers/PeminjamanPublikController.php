@@ -35,19 +35,57 @@ class PeminjamanPublikController extends Controller
     // Pemrosesan Pengajuan Peminjaman Mandiri (Mendukung Multi-Item Keranjang)
     public function store(Request $request)
     {
+        // 1. Honeypot check (jika bot spammer mengisi input jebakan tersembunyi)
+        if ($request->filled('_hp_security_check')) {
+            // Berikan respons sukses palsu agar bot mengira berhasil dan berhenti spamming tanpa menyentuh database
+            return redirect()->route('home')->with('success', 'Permohonan peminjaman mandiri Anda telah diterima.');
+        }
+
         $request->validate([
             'kategori_peminjam' => 'required|in:Dosen,Mahasiswa,Staf / Tendik',
-            'nama_peminjam'     => 'required|string|max:255',
-            'nomor_identitas'   => 'required|string|max:100',
+            'nama_peminjam'     => [
+                'required',
+                'string',
+                'max:100',
+                'regex:/^[\pL\s.,\'’`\-]+$/u',
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/(pg_sleep|dbms_pipe|waitfor|select|union|benchmark|--|\/\*)/i', $value)) {
+                        $fail('Nama peminjam mengandung format yang tidak diizinkan.');
+                    }
+                },
+            ],
+            'nomor_identitas'   => [
+                'required',
+                'string',
+                'max:50',
+                'regex:/^[a-zA-Z0-9\/\-.]+$/',
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/(select|union|pg_sleep|dbms_pipe|--|\/\*)/i', $value)) {
+                        $fail('Nomor identitas mengandung format yang tidak diizinkan.');
+                    }
+                },
+            ],
             'prodi_unit'        => 'required|string|max:150',
-            'kontak_peminjam'   => 'required|string|max:50',
+            'kontak_peminjam'   => 'required|string|max:30|regex:/^[0-9+\-\s()]+$/',
             'tanggal_pinjam'    => 'required|date',
             'tenggat_kembali'   => 'required|date|after_or_equal:tanggal_pinjam',
-            'keperluan'         => 'required|string|max:500',
+            'keperluan'         => [
+                'required',
+                'string',
+                'max:500',
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/(pg_sleep|dbms_pipe|waitfor|benchmark\(|union\s+select)/i', $value)) {
+                        $fail('Keperluan peminjaman mengandung karakter tidak valid.');
+                    }
+                },
+            ],
         ], [
-            'nama_peminjam.required'     => 'Nama peminjam wajib diisi.',
-            'nomor_identitas.required'   => 'NIM / NIP / NIDN wajib diisi.',
-            'kontak_peminjam.required'   => 'Nomor WhatsApp wajib diisi untuk konfirmasi persetujuan.',
+            'nama_peminjam.required'         => 'Nama peminjam wajib diisi.',
+            'nama_peminjam.regex'            => 'Nama peminjam hanya boleh berisi huruf, spasi, dan tanda baca nama.',
+            'nomor_identitas.required'       => 'NIM / NIP / NIDN wajib diisi.',
+            'nomor_identitas.regex'          => 'Format nomor identitas hanya boleh berisi huruf, angka, dan garis miring.',
+            'kontak_peminjam.required'       => 'Nomor WhatsApp wajib diisi untuk konfirmasi persetujuan.',
+            'kontak_peminjam.regex'          => 'Format nomor WhatsApp tidak valid.',
             'tenggat_kembali.after_or_equal' => 'Tanggal pengembalian tidak boleh mendahului tanggal peminjaman.',
         ]);
 

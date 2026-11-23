@@ -11,22 +11,60 @@ class PeminjamanRuanganPublikController extends Controller
     // Pemrosesan Pengajuan Booking / Peminjaman Ruangan dari Dosen & Mahasiswa
     public function store(Request $request)
     {
+        // 1. Honeypot check (jika bot spammer mengisi input jebakan tersembunyi)
+        if ($request->filled('_hp_security_check')) {
+            // Berikan respons sukses palsu agar bot mengira berhasil dan berhenti spamming tanpa menyentuh database
+            return redirect()->route('home')->with('success', 'Permohonan booking ruangan Anda telah diterima.');
+        }
+
         $request->validate([
             'ruangan_id'        => 'required|exists:ruangans,id',
             'kategori_peminjam' => 'required|in:Dosen,Mahasiswa / Ormawa,Staf / Tendik',
-            'nama_peminjam'     => 'required|string|max:255',
-            'nomor_identitas'   => 'required|string|max:100',
+            'nama_peminjam'     => [
+                'required',
+                'string',
+                'max:100',
+                'regex:/^[\pL\s.,\'’`\-]+$/u',
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/(pg_sleep|dbms_pipe|waitfor|select|union|benchmark|--|\/\*)/i', $value)) {
+                        $fail('Nama pemohon mengandung format yang tidak diizinkan.');
+                    }
+                },
+            ],
+            'nomor_identitas'   => [
+                'required',
+                'string',
+                'max:50',
+                'regex:/^[a-zA-Z0-9\/\-.]+$/',
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/(select|union|pg_sleep|dbms_pipe|--|\/\*)/i', $value)) {
+                        $fail('Nomor identitas mengandung format yang tidak diizinkan.');
+                    }
+                },
+            ],
             'prodi_unit'        => 'required|string|max:150',
-            'kontak_peminjam'   => 'required|string|max:50',
+            'kontak_peminjam'   => 'required|string|max:30|regex:/^[0-9+\-\s()]+$/',
             'tanggal_pemakaian' => 'required|date',
             'jam_mulai'         => 'required',
             'jam_selesai'       => 'required|after:jam_mulai',
-            'keperluan'         => 'required|string|max:500',
+            'keperluan'         => [
+                'required',
+                'string',
+                'max:500',
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/(pg_sleep|dbms_pipe|waitfor|benchmark\(|union\s+select)/i', $value)) {
+                        $fail('Keperluan peminjaman ruangan mengandung karakter tidak valid.');
+                    }
+                },
+            ],
         ], [
             'ruangan_id.required'        => 'Silakan pilih ruangan yang ingin dipinjam / dibooking.',
             'nama_peminjam.required'     => 'Nama pemohon wajib diisi.',
+            'nama_peminjam.regex'        => 'Nama pemohon hanya boleh berisi huruf, spasi, dan tanda baca nama.',
             'nomor_identitas.required'   => 'NIM / NIP wajib diisi.',
+            'nomor_identitas.regex'      => 'Format nomor identitas hanya boleh berisi huruf, angka, dan garis miring.',
             'kontak_peminjam.required'   => 'Nomor WhatsApp aktif wajib diisi untuk konfirmasi persetujuan.',
+            'kontak_peminjam.regex'      => 'Format nomor WhatsApp tidak valid.',
             'jam_selesai.after'          => 'Jam selesai harus lebih akhir dari jam mulai pemakaian.',
             'keperluan.required'         => 'Keperluan penggunaan ruangan wajib diisi.',
         ]);

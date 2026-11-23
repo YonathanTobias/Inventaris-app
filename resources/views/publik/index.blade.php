@@ -363,6 +363,11 @@
                     <form action="{{ route('publik.store') }}" method="POST" id="formPeminjamanMandiri">
                         @csrf
 
+                        <!-- Honeypot Anti-Bot Security Field (Disembunyikan dari manusia, menjebak bot spammer) -->
+                        <div class="d-none" aria-hidden="true" style="display:none !important; position:absolute; left:-9999px;">
+                            <input type="text" name="_hp_security_check" value="" tabindex="-1" autocomplete="off">
+                        </div>
+
                         <!-- Hidden Input untuk Menyimpan Data Keranjang -->
                         <input type="hidden" name="cart_data" id="hiddenCartData" value="">
 
@@ -719,6 +724,11 @@
 
                     <form action="{{ route('publik.ruangan.store') }}" method="POST" id="formBookingRuangan">
                         @csrf
+
+                        <!-- Honeypot Anti-Bot Security Field (Disembunyikan dari manusia, menjebak bot spammer) -->
+                        <div class="d-none" aria-hidden="true" style="display:none !important; position:absolute; left:-9999px;">
+                            <input type="text" name="_hp_security_check" value="" tabindex="-1" autocomplete="off">
+                        </div>
 
                         <!-- SEGMENT CARD 1: PILIHAN RUANGAN & JADWAL -->
                         <div class="form-segment-card">
